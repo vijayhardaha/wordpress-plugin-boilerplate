@@ -1,0 +1,48 @@
+# Copyright (C) 2021 Custom Plugin 1.0.0
+# This file is distributed under the same license as the Custom Plugin 1.0.0 package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom Plugin 1.0.0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. translators: %s: Minimum WordPress version
+#: ../includes/class-custom-plugin.php:113
+msgid "Update required: Custom Plugin require WordPress version %s or newer to work properly. Please update to required version to have best experience."
+msgstr ""
+
+#: ../includes/class-custom-plugin.php:106
+msgid "Update required: Custom Plugin require PHP version %1$s or newer (%2$s or higher recommended) to work properly. Please update to required version to have best experience."
+msgstr ""
+
+#: ../includes/class-custom-plugin.php:98
+msgid "Update required: Custom Plugin require PHP version %1$s or newer (%2$s or higher recommended) and WordPress version %3$s or newer to work properly. Please update to required version to have best experience."
+msgstr ""
+
+#. translators: 1: error message 2: file name and path 3: line number
+#: ../includes/class-custom-plugin.php:140
+msgid "%1$s in %2$s on line %3$s"
+msgstr ""
+
+#: ../includes/admin/class-custom-plugin-admin.php:44
+msgid "Custom Plugin Page Title"
+msgstr ""
+
+#: ../includes/admin/class-custom-plugin-admin.php:44
+msgid "Custom Plugin Menu Title"
+msgstr ""
+
+#: ../includes/admin/class-custom-plugin-admin.php:45, ../includes/admin/class-custom-plugin-admin.php:45, ../includes/admin/class-custom-plugin-admin.php:132
+msgid "Settings"
+msgstr ""
+
+#: ../includes/admin/class-custom-plugin-admin.php:121
+msgid "Page title"
+msgstr ""

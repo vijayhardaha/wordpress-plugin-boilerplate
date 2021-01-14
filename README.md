@@ -58,7 +58,7 @@ To replace keywords in files quickly you can use [replace-in-files-cli](https://
 ├── assets  
 ├── src  
 │  ├── fonts  
-│  ├── images 
+│  ├── images  
 │  ├── css  
 │  │  ├── admin.scss  
 │  │  └── frontend.scss  

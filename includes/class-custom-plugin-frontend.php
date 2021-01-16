@@ -11,6 +11,10 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+if ( class_exists( 'Custom_Plugin_Frontend' ) ) {
+	return new Custom_Plugin_Frontend();
+}
+
 /**
  * Custom_Plugin_Frontend class.
  */
@@ -54,14 +58,14 @@ class Custom_Plugin_Frontend {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		// Register scripts.
-		wp_register_script( 'custom_plugin-frontend', custom_plugin()->plugin_url() . '/assets/js/frontend' . $suffix . '.js', array( 'jquery' ), CUSTOM_PLUGIN_VERSION, true );
+		wp_register_script( 'custom-plugin-frontend', custom_plugin()->plugin_url() . '/assets/js/frontend' . $suffix . '.js', array( 'jquery' ), CUSTOM_PLUGIN_VERSION, true );
 
 		// Enqueue frontend scripts.
-		wp_enqueue_script( 'custom_plugin-frontend' );
+		wp_enqueue_script( 'custom-plugin-frontend' );
 		$params = array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 		);
-		wp_localize_script( 'custom_plugin-frontend', 'custom_plugin_params', $params );
+		wp_localize_script( 'custom-plugin-frontend', 'custom_plugin_params', $params );
 	}
 }
 

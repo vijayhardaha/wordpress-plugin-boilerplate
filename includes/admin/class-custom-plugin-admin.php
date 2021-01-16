@@ -11,6 +11,10 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+if ( class_exists( 'Custom_Plugin_Admin' ) ) {
+	return new Custom_Plugin_Admin();
+}
+
 /**
  * Custom_Plugin_Admin class.
  */
@@ -87,7 +91,7 @@ class Custom_Plugin_Admin {
 
 		// Admin styles for custom_plugin pages only.
 		if ( $this->is_valid_screen( $screen_id ) ) {
-			wp_enqueue_style( 'custom_plugin-admin-styles' );
+			wp_enqueue_style( 'custom-plugin-admin-styles' );
 		}
 	}
 
@@ -100,15 +104,15 @@ class Custom_Plugin_Admin {
 		$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		// Register scripts.
-		wp_register_script( 'custom_plugin-admin', custom_plugin()->plugin_url() . '/assets/js/admin' . $suffix . '.js', array( 'jquery' ), CUSTOM_PLUGIN_VERSION, true );
+		wp_register_script( 'custom-plugin-admin', custom_plugin()->plugin_url() . '/assets/js/admin' . $suffix . '.js', array( 'jquery' ), CUSTOM_PLUGIN_VERSION, true );
 
 		// Admin scripts for custom_plugin pages only.
 		if ( $this->is_valid_screen( $screen_id ) ) {
-			wp_enqueue_script( 'custom_plugin-admin' );
+			wp_enqueue_script( 'custom-plugin-admin' );
 			$params = array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 			);
-			wp_localize_script( 'custom_plugin-admin', 'custom_plugin_admin_params', $params );
+			wp_localize_script( 'custom-plugin-admin', 'custom_plugin_admin_params', $params );
 		}
 	}
 

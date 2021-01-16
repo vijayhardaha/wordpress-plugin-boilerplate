@@ -1,13 +1,23 @@
 {
   "dependencies": {
-    "app.js": {
+    "frontend.js": {
       "files": [
         "js/frontend.js"
       ]
     },
-    "main.css": {
+    "frontend.css": {
       "files": [
         "css/frontend.scss"
+      ]
+    },
+    "admin.js": {
+      "files": [
+        "js/admin.js"
+      ]
+    },
+    "admin.css": {
+      "files": [
+        "css/admin.scss"
       ]
     }
   },

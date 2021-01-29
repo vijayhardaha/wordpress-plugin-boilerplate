@@ -31,18 +31,18 @@ msgstr ""
 msgid "%1$s in %2$s on line %3$s"
 msgstr ""
 
-#: ../includes/admin/class-custom-plugin-admin.php:44
+#: ../includes/admin/class-custom-plugin-admin.php:48
 msgid "Custom Plugin Page Title"
 msgstr ""
 
-#: ../includes/admin/class-custom-plugin-admin.php:44
+#: ../includes/admin/class-custom-plugin-admin.php:48
 msgid "Custom Plugin Menu Title"
 msgstr ""
 
-#: ../includes/admin/class-custom-plugin-admin.php:45, ../includes/admin/class-custom-plugin-admin.php:45, ../includes/admin/class-custom-plugin-admin.php:132
+#: ../includes/admin/class-custom-plugin-admin.php:49, ../includes/admin/class-custom-plugin-admin.php:49, ../includes/admin/class-custom-plugin-admin.php:136
 msgid "Settings"
 msgstr ""
 
-#: ../includes/admin/class-custom-plugin-admin.php:121
+#: ../includes/admin/class-custom-plugin-admin.php:125
 msgid "Page title"
 msgstr ""

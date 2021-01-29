@@ -12,18 +12,12 @@ end_of_line = lf
 indent_size = 4
 indent_style = tab
 insert_final_newline = false
-trim_trailing_whitespace = true
+trim_trailing_whitespace = false
 
 [*.php]
 insert_final_newline = true
-
-[*.{css,scss,js,html}]
-trim_trailing_whitespace = false
-
-[*.txt]
-trim_trailing_whitespace = false
+trim_trailing_whitespace = true
 
 [*.{md,json,yml}]
-trim_trailing_whitespace = false
 indent_style = space
 indent_size = 2

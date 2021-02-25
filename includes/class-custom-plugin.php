@@ -42,6 +42,13 @@ final class Custom_Plugin {
 	 * Custom_Plugin Constructor.
 	 */
 	public function __construct() {
+		// Check if WooCommerce is active.
+		require_once ABSPATH . '/wp-admin/includes/plugin.php';
+		if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) && ! function_exists( 'WC' ) ) {
+			return;
+		}
+		// NOTE: Remove the above lines if you don't have any plugin dependencies.
+
 		$this->define_constants();
 		$this->includes();
 		$this->init_hooks();

@@ -52,10 +52,12 @@ class Custom_Plugin_Admin {
 	/**
 	 * Valid screen ids for plugin scripts & styles
 	 *
-	 * @param   string $screen_id   screen id.
 	 * @return  array
 	 */
-	public function is_valid_screen( $screen_id ) {
+	public function is_valid_screen() {
+		$screen    = get_current_screen();
+		$screen_id = $screen ? $screen->id : '';
+
 		$valid_screen_ids = apply_filters(
 			'custom_plugin_valid_admin_screen_ids',
 			array(
@@ -83,14 +85,11 @@ class Custom_Plugin_Admin {
 	public function admin_styles() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		$screen    = get_current_screen();
-		$screen_id = $screen ? $screen->id : '';
-
 		// Register admin styles.
 		wp_register_style( 'custom-plugin-admin-styles', custom_plugin()->plugin_url() . '/assets/css/admin' . $suffix . '.css', array(), CUSTOM_PLUGIN_VERSION );
 
 		// Admin styles for custom_plugin pages only.
-		if ( $this->is_valid_screen( $screen_id ) ) {
+		if ( $this->is_valid_screen() ) {
 			wp_enqueue_style( 'custom-plugin-admin-styles' );
 		}
 	}
@@ -99,20 +98,18 @@ class Custom_Plugin_Admin {
 	 * Enqueue scripts.
 	 */
 	public function admin_scripts() {
-		$screen    = get_current_screen();
-		$screen_id = $screen ? $screen->id : '';
-		$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		// Register scripts.
 		wp_register_script( 'custom-plugin-admin', custom_plugin()->plugin_url() . '/assets/js/admin' . $suffix . '.js', array( 'jquery' ), CUSTOM_PLUGIN_VERSION, true );
 
 		// Admin scripts for custom_plugin pages only.
-		if ( $this->is_valid_screen( $screen_id ) ) {
+		if ( $this->is_valid_screen() ) {
 			wp_enqueue_script( 'custom-plugin-admin' );
 			$params = array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 			);
-			wp_localize_script( 'custom-plugin-admin', 'custom_plugin_admin_params', $params );
+			wp_localize_script( 'custom-plugin-admin', 'custom_plugin_params', $params );
 		}
 	}
 

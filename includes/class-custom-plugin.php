@@ -132,6 +132,8 @@ final class Custom_Plugin {
 	 * @since 1.0.0
 	 */
 	public function install() {
+		// Do database table create/update/delete.
+		// Save default data on database on plugin activate.
 	}
 
 	/**
@@ -147,7 +149,7 @@ final class Custom_Plugin {
 				$error_message = sprintf( __( '%1$s in %2$s on line %3$s', 'custom-plugin' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL;
 				// phpcs:disable WordPress.PHP.DevelopmentFunctions
 				error_log( $error_message );
-				// phpcs:enable
+				// phpcs:enable WordPress.PHP.DevelopmentFunctions
 			}
 		}
 	}

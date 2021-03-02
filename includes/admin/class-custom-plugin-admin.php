@@ -45,7 +45,7 @@ class Custom_Plugin_Admin {
 	 * Add menu items.
 	 */
 	public function admin_menu() {
-		add_menu_page( __( 'Custom Plugin Page Title', 'custom-plugin' ), __( 'Custom Plugin Menu Title', 'custom-plugin' ), 'manage_options', 'custom-plugin-page', array( $this, 'admin_menu_page' ), 'dashicons-screenoptions', '60' );
+		add_menu_page( __( 'Custom Plugin', 'custom-plugin' ), __( 'Custom Plugin', 'custom-plugin' ), 'manage_options', 'custom-plugin-page', array( $this, 'admin_menu_page' ), 'dashicons-screenoptions', '60' );
 		add_submenu_page( 'custom-plugin-page', __( 'Settings', 'custom-plugin' ), __( 'Settings', 'custom-plugin' ), 'manage_options', 'custom-plugin-page-settings', array( $this, 'settings_menu_page' ) );
 	}
 

@@ -49,6 +49,7 @@ const autoprefixer = require( "autoprefixer" ),
   discardDuplicates = require( "postcss-discard-duplicates" ),
   flatten = require( "gulp-flatten" ),
   imagemin = require( "gulp-imagemin" ),
+  gcmq = require('gulp-group-css-media-queries'),
   jshint = require( "gulp-jshint" ),
   lazypipe = require( "lazypipe" ),
   merge = require( "merge-stream" ),
@@ -79,6 +80,7 @@ var cssTasks = ( filename ) => {
       precision: 10,
       includePaths: [ "." ],
     } ) )
+    .pipe( gcmq )
     .pipe( concat, filename )
     .pipe( () => postcss( [ discardDuplicates(), autoprefixer() ] ) )
     .pipe( () => cssbeautify( {

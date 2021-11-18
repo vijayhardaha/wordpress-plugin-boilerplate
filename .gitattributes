@@ -8,13 +8,17 @@ LICENSE export-ignore
 README.md export-ignore
 
 # src files
-src export-ignore
+/src export-ignore
 
 # node files
 node_modules export-ignore
 package.json export-ignore
+package-lock.json export-ignore
 bower_components export-ignore
 bower.json export-ignore
 gulpfile.js export-ignore
 .browserslistrc export-ignore
 .editorconfig export-ignore
+composer.lock export-ignore
+composer.json export-ignore
+.DS_Store export-ignore

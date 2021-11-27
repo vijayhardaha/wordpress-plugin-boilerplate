@@ -1,3 +1,10 @@
-.custom-plugin {
-    display: block;
+/*=============================================
+=            Backend Css            =
+=============================================*/
+
+.custom-plugin * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
+
+/*=====  End of Backend Css  ======*/

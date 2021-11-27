@@ -1,85 +1,111 @@
-const fs = require( 'fs' );
+/**
+ * Define Packages.
+ */
+const fs = require( 'fs' ).promises;
 const path = require( 'path' );
-const promisify = require( 'util' ).promisify;
 const prompts = require( 'prompts' );
 const ora = require( 'ora' );
-const spinner = ora( {
-  text: ''
-} );
 const replace = require( 'replace-in-file' );
+const rimraf = require( 'rimraf' );
 
-const readDir = promisify( fs.readdir );
-const statp = promisify( fs.stat );
+// Valid files and path to be used for replace and rename.
+const validKeys = [ "includes", "languages", "gulpfile.js", "custom-plugin", 'package.json' ];
 
-const validKeys = [ "includes", "languages", "gulpfile.js", "custom-plugin" ];
+/**
+ * Validate if path is valid for replace and rename.
+ * 
+ * @param {String} path Path value.
+ * @returns {Bool}
+ */
+const isValidPath = ( path ) => validKeys.filter( key => path.match( new RegExp( k, "g" ) ) || path === key ).length ? true : false;
 
-const isValidPath = ( p ) => {
-  const match = validKeys.filter( k => {
-    const reg = new RegExp( k, "g" );
-    return p.match( reg ) || p === k;
-  } );
-  return match.length ? true : false;
-}
-
+/**
+ * Scan dir recursively.
+ * 
+ * @param {Strin} dir Path value.
+ * @param {Array} results Array to restore the recursive values.
+ * @returns {Array}
+ */
 const scan = async ( dir = './', results = [] ) => {
-  let files = await readDir( dir );
-  for ( let f of files ) {
-    let fullPath = path.join( dir, f );
-    if ( isValidPath( fullPath ) ) {
-      let stat = await statp( fullPath );
+  const items = await fs.readdir( dir );
+  for ( const item of items ) {
+    const itemPath = path.join( dir, item );
+    if ( isValidPath( itemPath ) ) {
+      const stat = await fs.stat( itemPath );
       if ( stat.isDirectory() ) {
-        await scan( fullPath, results );
+        await scan( itemPath, results );
       } else {
-        results.push( fullPath );
+        results.push( itemPath );
       }
     }
   }
   return results;
 }
 
+/**
+ * Replace "custom-plugin" text in files with new file prefix name.
+ * 
+ * @param {Array} files Array of files path.
+ * @param {String} key String that has to be replaced with "custom-plugin" text.
+ */
 const renameFiles = async ( files, key = "" ) => {
   for ( oldpath of files ) {
     const newpath = key.length ? oldpath.replace( "custom-plugin", key ) : oldpath;
-    fs.rename( oldpath, newpath, ( error ) => {
-      if ( error ) {
-        throw error;
-      }
-    } );
+    await fs.rename( oldpath, newpath );
   }
 }
 
 /**
+ * Check if string type is "String".
+ * 
+ * @param {String} string String text.
+ * @returns {Bool}
+ */
+const isString = ( string ) => typeof string === "string" && string.length;
+
+/**
+ * Change the case of string.
  * 
  * @param {String} string String to be coverted.
  * @param {String} type In which type to be converted, accecpt 4 type [domain,constant,function,class]
+ * @returns {String}
  */
 const changeCase = ( string = "", type = "" ) => {
-  if ( typeof string === "string" && string.length ) {
-    let str;
-    str = string.split( " " ).map( word => word.split( "" ).map( ( letter, i ) => 0 === i ? letter.toUpperCase() : letter.toLowerCase() ).join( "" ) ).join( " " );
-    str = str.split( " " ).map( ( word, i ) => 0 === i && [ "Wp", "Wc" ].includes( word ) ? word.toUpperCase() : word ).join( " " );
-    switch ( type ) {
-      case "domain":
-        str = str.split( " " ).join( "-" ).toLowerCase();
-        break;
-      case "constant":
-        str = str.split( " " ).join( "_" ).toUpperCase();
-        break;
-      case "function":
-        str = str.split( " " ).join( "_" ).toLowerCase();
-        break;
-      case "class":
-        str = str.split( " " ).join( "_" );
-        break;
-      default:
-        break;
-    }
-    return str;
+  if ( isString( string ) ) {
+    throw "Plugin name is not a string";
   }
-  return string;
+
+  let str = string;
+  str = str.split( " " ).map( word => word.split( "" ).map( ( letter, i ) => 0 === i ? letter.toUpperCase() : letter.toLowerCase() ).join( "" ) ).join( " " );
+  str = str.split( " " ).map( ( word, i ) => 0 === i && [ "wp", "wc" ].includes( word.toLowerCase() ) ? word.toUpperCase() : word ).join( " " );
+  switch ( type ) {
+    case "domain":
+      str = str.split( " " ).join( "-" ).toLowerCase();
+      break;
+    case "constant":
+      str = str.split( " " ).join( "_" ).toUpperCase();
+      break;
+    case "function":
+      str = str.split( " " ).join( "_" ).toLowerCase();
+      break;
+    case "class":
+      str = str.split( " " ).join( "_" );
+      break;
+    default:
+      break;
+  }
+  return str;
 }
 
-/* 
+async const updatePackageJson = () => {
+  let pkg = await fs.readFile( './package.json' );
+  pkg = JSON.parse( pkg )
+  delete pkg.scripts.setup;
+  await fs.writeFile( './package.json', JSON.stringify( pkg, null, 2 ) );
+}
+
+/**
+ * Start the async process.
  */
 ( async () => {
   const answers = await prompts( {
@@ -90,35 +116,58 @@ const changeCase = ( string = "", type = "" ) => {
   } );
 
   try {
-    const pn = answers.name;
-    const replacements = [ changeCase( pn ), changeCase( pn, "class" ), changeCase( pn, "constant" ), changeCase( pn, "domain" ), changeCase( pn, "function" ) ];
+    // Store plugin name from input.
+    const pluginName = answers.name;
+
+    const replacements = [
+      // Title case: {Custom Plugin}.
+      changeCase( pluginName ),
+      // Pascal case with snake case: {Custom_Plugin}.
+      changeCase( pluginName, "class" ),
+      // Upper case with snake case: {CUSTOM_PLUGIN}
+      changeCase( pluginName, "constant" ),
+      // Lower case with kebab case: {custom-plugin}
+      changeCase( pluginName, "domain" ),
+      // Lower case with snake case: {custom_plugin}
+      changeCase( pluginName, "function" )
+    ];
+
+    const spinner = ora( { text: 'Processing...' } );
+    spinner.start();
+
     // Read all the file that need to be renamed.
-    spinner.info( `Rendering plugin files...` );
-    spinner.start( `\n` );
     const files = await scan( "./" );
-    if ( files.length ) {
-      spinner.succeed( `${files.length} plugin files found.\n` );
-
-      spinner.info( "Renaming plugin files..." );
-      spinner.start( `\n` );
-      await renameFiles( files, changeCase( pn, "domain" ) );
-      spinner.succeed( `${files.length} plugin files renamed.\n` );
-
-      spinner.info( "Replacing plugin keywords in files..." );
-      spinner.start( `\n` );
-      const options = {
-        files: files.map( f => f.replace( "custom-plugin", changeCase( pn, "domain" ) ) ),
-        from: [ /Custom Plugin/g, /Custom_Plugin/g, /CUSTOM_PLUGIN/g, /custom-plugin/g, /custom_plugin/g ],
-        to: replacements,
-      }
-      const results = await replace( options );
-      spinner.succeed( `Keywords replaced in ${files.length} plugin files.\n` );
-    } else {
-      spinner.info( "No files found to process." );
+    if ( !files.length ) {
+      throw "Unable to find files for replacements. Please try to reclone the site and run the setup again."
     }
-  } catch ( error ) {
-    spinner.warn( `Error occurred` );
-    spinner.warn( `${error.message}` );
-    console.log();
+
+    // Rename "custom-plugin" word in all the matched files
+    // with new file prefix.
+    await renameFiles( files, changeCase( pluginName, "domain" ) );
+
+    // Replae in files options.
+    const options = {
+      files: files.map( f => f.replace( "custom-plugin", changeCase( pluginName, "domain" ) ) ),
+      from: [ /Custom Plugin/g, /Custom_Plugin/g, /CUSTOM_PLUGIN/g, /custom-plugin/g, /custom_plugin/g ],
+      to: replacements,
+    }
+
+    // Start the replacement in files.
+    await replace( options );
+
+    await updatePackageJson();
+
+    spinner.succeed( "Complete!" );
+
+    rimraf( "./setup.js", error => {
+      if ( error ) throw new Error( error );
+    } );
+
+    // Resolve the promise at the end.
+    return Promise.resolve();
+  } catch ( err ) {
+    spinner.fail( "Failed!" );
+    console.log( "Runtime Exception: " + ( err.message ? err.message : err ) );
+    process.exit( 1 );
   }
 } )();

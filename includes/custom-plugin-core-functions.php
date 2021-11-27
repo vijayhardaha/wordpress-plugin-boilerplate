@@ -15,19 +15,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Undocumented function
  *
- * @return void
  * @since 1.0.0
  */
-function custom_plugin_core_function_1() {
-	// Write your code here.
-}
-
-/**
- * Undocumented function
- *
- * @return void
- * @since 1.0.0
- */
-function custom_plugin_core_function_2() {
+function custom_plugin_core_function() {
 	// Write your code here.
 }

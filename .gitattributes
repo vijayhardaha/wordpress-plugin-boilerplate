@@ -1,4 +1,5 @@
 # used to remove files from deployment using `git archive`
+
 # git files
 .gitattributes export-ignore
 .gitignore export-ignore
@@ -14,11 +15,21 @@ README.md export-ignore
 node_modules export-ignore
 package.json export-ignore
 package-lock.json export-ignore
+
+# bower files
 bower_components export-ignore
 bower.json export-ignore
+
+# gulp files
 gulpfile.js export-ignore
+
+# config files
 .browserslistrc export-ignore
 .editorconfig export-ignore
+
+# composer files
 composer.lock export-ignore
 composer.json export-ignore
+
+# MacOs files
 .DS_Store export-ignore

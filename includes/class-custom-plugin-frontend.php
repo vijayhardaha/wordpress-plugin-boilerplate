@@ -21,6 +21,8 @@ if ( class_exists( 'Custom_Plugin_Frontend' ) ) {
 class Custom_Plugin_Frontend {
 	/**
 	 * Constructor.
+	 *
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		// Includes files.
@@ -33,6 +35,8 @@ class Custom_Plugin_Frontend {
 
 	/**
 	 * Include any classes/functions we need within frontend.
+	 *
+	 * @since 1.0.0
 	 */
 	public function includes() {
 		// Include your required frontend files here.
@@ -53,6 +57,8 @@ class Custom_Plugin_Frontend {
 
 	/**
 	 * Enqueue scripts.
+	 *
+	 * @since 1.0.0
 	 */
 	public function frontend_scripts() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';

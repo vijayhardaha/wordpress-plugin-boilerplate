@@ -21,6 +21,8 @@ if ( class_exists( 'Custom_Plugin_Admin' ) ) {
 class Custom_Plugin_Admin {
 	/**
 	 * Constructor.
+	 *
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		// Includes files.
@@ -36,6 +38,8 @@ class Custom_Plugin_Admin {
 
 	/**
 	 * Include any classes/functions we need within admin.
+	 *
+	 * @since 1.0.0
 	 */
 	public function includes() {
 		// Include your required backend files here.
@@ -45,13 +49,14 @@ class Custom_Plugin_Admin {
 	 * Add menu items.
 	 */
 	public function admin_menu() {
-		add_menu_page( __( 'Custom Plugin', 'custom-plugin' ), __( 'Custom Plugin', 'custom-plugin' ), 'manage_options', 'custom-plugin-page', array( $this, 'admin_menu_page' ), 'dashicons-screenoptions', '60' );
-		add_submenu_page( 'custom-plugin-page', __( 'Settings', 'custom-plugin' ), __( 'Settings', 'custom-plugin' ), 'manage_options', 'custom-plugin-page-settings', array( $this, 'settings_menu_page' ) );
+		add_menu_page( __( 'Custom Plugin', 'custom-plugin' ), __( 'Custom Plugin', 'custom-plugin' ), 'manage_options', 'custom-plugin-page', array( $this, 'admin_menu_page' ), 'dashicons-wordpress', '60' );
+		add_submenu_page( 'custom-plugin-page', __( 'Submenu Item', 'custom-plugin' ), __( 'Submenu Item', 'custom-plugin' ), 'manage_options', 'custom-plugin-page-submenu', array( $this, 'submenu_page' ) );
 	}
 
 	/**
 	 * Valid screen ids for plugin scripts & styles
 	 *
+	 * @since 1.0.0
 	 * @return  array
 	 */
 	public function is_valid_screen() {
@@ -61,7 +66,7 @@ class Custom_Plugin_Admin {
 		$valid_screen_ids = apply_filters(
 			'custom_plugin_valid_admin_screen_ids',
 			array(
-				'custom-plugin-page-settings',
+				'custom-plugin-page-submenu',
 				'custom-plugin-page',
 			)
 		);
@@ -81,6 +86,8 @@ class Custom_Plugin_Admin {
 
 	/**
 	 * Enqueue styles.
+	 *
+	 * @since 1.0.0
 	 */
 	public function admin_styles() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -96,6 +103,8 @@ class Custom_Plugin_Admin {
 
 	/**
 	 * Enqueue scripts.
+	 *
+	 * @since 1.0.0
 	 */
 	public function admin_scripts() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -115,6 +124,8 @@ class Custom_Plugin_Admin {
 
 	/**
 	 * Display admin page
+	 *
+	 * @since 1.0.0
 	 */
 	public function admin_menu_page() {
 		?>
@@ -125,12 +136,14 @@ class Custom_Plugin_Admin {
 	}
 
 	/**
-	 * Display settings page
+	 * Display submenu page
+	 *
+	 * @since 1.0.0
 	 */
-	public function settings_menu_page() {
+	public function submenu_page() {
 		?>
 		<div class="wrap" id="custom-plugin">
-			<h2><?php esc_html_e( 'Settings', 'custom-plugin' ); ?></h2>
+			<h2><?php esc_html_e( 'Submenu Item', 'custom-plugin' ); ?></h2>
 		</div>
 		<?php
 	}

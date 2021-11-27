@@ -1,9 +1,9 @@
 "use strict";
 
 const pluginInfo = {
-  "name": "Custom Plugin",
-  "version": "1.0.0",
-  "domain": "custom-plugin"
+  name: "Custom Plugin",
+  version: "1.0.0",
+  domain: "custom-plugin",
 };
 
 /* Use this command to install all packages */
@@ -45,22 +45,23 @@ const autoprefixer = require( "autoprefixer" ),
   cleanCSS = require( "gulp-clean-css" ),
   concat = require( "gulp-concat" ),
   cssbeautify = require( "gulp-cssbeautify" ),
+  dartSass = require( "sass" ),
   del = require( "del" ),
   discardDuplicates = require( "postcss-discard-duplicates" ),
   flatten = require( "gulp-flatten" ),
   imagemin = require( "gulp-imagemin" ),
-  gcmq = require('gulp-group-css-media-queries'),
+  gcmq = require( "gulp-group-css-media-queries" ),
   jshint = require( "gulp-jshint" ),
   lazypipe = require( "lazypipe" ),
   merge = require( "merge-stream" ),
   plumber = require( "gulp-plumber" ),
   postcss = require( "gulp-postcss" ),
   rename = require( "gulp-rename" ),
-  scss = require( "gulp-sass" ),
+  gulpSass = require( "gulp-sass" ),
   uglify = require( "gulp-terser" ),
   wpPot = require( "wp-pot" );
 
-scss.compiler = require( "node-sass" );
+const scss = gulpSass( dartSass );
 
 // ## Reusable Pipelines
 // See https://github.com/OverZealous/lazypipe
@@ -75,41 +76,52 @@ scss.compiler = require( "node-sass" );
 var cssTasks = ( filename ) => {
   return lazypipe()
     .pipe( plumber )
-    .pipe( () => scss( {
-      outputStyle: "expanded",
-      precision: 10,
-      includePaths: [ "." ],
-    } ) )
+    .pipe( () =>
+      scss( {
+        outputStyle: "expanded",
+        precision: 10,
+        includePaths: [ "." ],
+      } )
+    )
     .pipe( gcmq )
     .pipe( concat, filename )
     .pipe( () => postcss( [ discardDuplicates(), autoprefixer() ] ) )
-    .pipe( () => cssbeautify( {
-      autosemicolon: true
-    } ) )();
+    .pipe( () =>
+      cssbeautify( {
+        autosemicolon: true,
+      } )
+    )();
 };
 
 // ### Build css
 // `gulp styles` - Compiles, combines, and optimizes  CSS and project CSS.
 // By default this task will only log a warning if a precompiler error is
 // raised.
-function buildCSS( done ) {
+function buildCSS ( done ) {
   let merged = merge();
 
-  manifest.forEachDependency( "css", function( dep ) {
-    merged.add( gulp.src( dep.globs, {
-        base: "css"
+  manifest.forEachDependency( "css", function ( dep ) {
+    merged.add(
+      gulp
+      .src( dep.globs, {
+        base: "css",
       } )
-      .pipe( cssTasks( dep.name ) ) );
+      .pipe( cssTasks( dep.name ) )
+    );
   } );
 
   merged
     .pipe( gulp.dest( DEST_CSS ) )
-    .pipe( cleanCSS( {
-      compatibility: "ie8"
-    } ) )
-    .pipe( rename( {
-      suffix: ".min"
-    } ) )
+    .pipe(
+      cleanCSS( {
+        compatibility: "ie8",
+      } )
+    )
+    .pipe(
+      rename( {
+        suffix: ".min",
+      } )
+    )
     .pipe( gulp.dest( DEST_CSS ) );
 
   done();
@@ -123,21 +135,21 @@ function buildCSS( done ) {
 //   .pipe(gulp.dest(path.dist + "scripts"))
 // ```
 var jsTasks = ( filename ) => {
-  return lazypipe()
-    .pipe( plumber )
-    .pipe( concat, filename )();
+  return lazypipe().pipe( plumber ).pipe( concat, filename )();
 };
 
 // ### JSHint
 // `gulp jshint` - Lints configuration JSON and project JS.
-function lintJS( done ) {
-  const files = project.js.filter( str => !str.includes( '.min.js' ) );
+function lintJS ( done ) {
+  const files = project.js.filter( ( str ) => !str.includes( ".min.js" ) );
 
   gulp.src( files )
-    .pipe( jshint( {
-      "esversion": 5
-    } ) )
-    .pipe( jshint.reporter( 'default' ) );
+    .pipe(
+      jshint( {
+        esversion: 5,
+      } )
+    )
+    .pipe( jshint.reporter( "default" ) );
 
   done();
 }
@@ -145,13 +157,14 @@ function lintJS( done ) {
 // ### Build JS
 // `gulp scripts` - compiles, combines, and optimizes JS
 // and project JS.
-function buildJS( done ) {
+function buildJS ( done ) {
   let merged = merge();
 
-  manifest.forEachDependency( "js", function( dep ) {
+  manifest.forEachDependency( "js", function ( dep ) {
     merged.add(
-      gulp.src( dep.globs, {
-        base: "js"
+      gulp
+      .src( dep.globs, {
+        base: "js",
       } )
       .pipe( jsTasks( dep.name ) )
     );
@@ -160,9 +173,11 @@ function buildJS( done ) {
   merged
     .pipe( gulp.dest( DEST_JS ) )
     .pipe( uglify() )
-    .pipe( rename( {
-      suffix: ".min"
-    } ) )
+    .pipe(
+      rename( {
+        suffix: ".min",
+      } )
+    )
     .pipe( gulp.dest( DEST_JS ) );
 
   done();
@@ -171,7 +186,7 @@ function buildJS( done ) {
 // ### Build Fonts
 // `gulp fonts` - Grabs all the fonts and outputs them in a flattened directory
 // structure. See: https://github.com/armed/gulp-flatten
-function buildFonts( done ) {
+function buildFonts ( done ) {
   gulp.src( globs.fonts )
     .pipe( flatten() )
     .pipe( gulp.dest( path.dist + "fonts" ) );
@@ -181,15 +196,17 @@ function buildFonts( done ) {
 
 // ### Build Images
 // `gulp images` - Run lossless compression on all the images.
-function buildImages( done ) {
+function buildImages ( done ) {
   gulp.src( globs.images )
-    .pipe( imagemin( {
-      progressive: true,
-      interlaced: true,
-      svgoPlugins: [ {
-        removeUnknownsAndDefaults: false
-      } ]
-    } ) )
+    .pipe(
+      imagemin( {
+        progressive: true,
+        interlaced: true,
+        svgoPlugins: [ {
+          removeUnknownsAndDefaults: false,
+        }, ],
+      } )
+    )
     .pipe( gulp.dest( path.dist + "images" ) );
 
   done();
@@ -197,18 +214,18 @@ function buildImages( done ) {
 
 // ### Clean
 // `gulp clean` - Deletes the build folder entirely.
-function clean( done ) {
+function clean ( done ) {
   del.sync( path.dist );
   done();
 }
 
 // ### Make Pot
-function makePot( done ) {
+function makePot ( done ) {
   wpPot( {
     destFile: `./languages/${pluginInfo.domain}.pot`,
     domain: pluginInfo.domain,
     package: `${pluginInfo.name} ${pluginInfo.version}`,
-    src: "**/*.php"
+    src: "**/*.php",
   } );
 
   done();
@@ -220,7 +237,7 @@ function makePot( done ) {
 // `manifest.config.devUrl`. When a modification is made to an asset, run the
 // build step for that asset and inject the changes into the page.
 // See: http://www.browsersync.io
-function watch( done ) {
+function watch ( done ) {
   gulp.watch( [ path.source + "css/**/*" ], gulp.parallel( buildCSS ) );
   gulp.watch( [ path.source + "js/**/*" ], gulp.parallel( lintJS, buildJS ) );
   gulp.watch( [ path.source + "images/**/*" ], buildImages );
@@ -230,8 +247,15 @@ function watch( done ) {
 }
 
 // EXPORT methods
-const js = gulp.series( lintJS, buildJS )
-const build = gulp.parallel( clean, buildCSS, buildFonts, buildImages, js, makePot );
+const js = gulp.series( lintJS, buildJS );
+const build = gulp.parallel(
+  clean,
+  buildCSS,
+  buildFonts,
+  buildImages,
+  js,
+  makePot
+);
 
 exports.css = buildCSS;
 exports.js = js;

@@ -10,12 +10,18 @@
  * License URI: http://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain: custom-plugin
  * Domain Path: /languages/
+ * Requires at least: 5.6
+ * Requires PHP: 7.0
  *
  * @package Custom_Plugin
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+if ( ! function_exists( 'get_plugin_data' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+}
 
 if ( ! defined( 'CUSTOM_PLUGIN_PLUGIN_FILE' ) ) {
 	define( 'CUSTOM_PLUGIN_PLUGIN_FILE', __FILE__ );

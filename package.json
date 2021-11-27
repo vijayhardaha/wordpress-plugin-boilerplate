@@ -8,7 +8,7 @@
     "start": "gulp watch",
     "build": "gulp build",
     "makepot": "gulp makepot",
-    "setup": "node setup.js"
+    "setup": "node setup.js && npm install"
   },
   "repository": {
     "type": "git",
@@ -41,7 +41,7 @@
     "jshint": "^2.13.1",
     "lazypipe": "^1.0.2",
     "merge-stream": "^2.0.0",
-    "ora": "^6.0.1",
+    "ora": "^5.4.1",
     "postcss": "^8.4.3",
     "postcss-discard-duplicates": "^5.0.1",
     "prompts": "^2.4.2",

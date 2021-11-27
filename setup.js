@@ -1,32 +1,42 @@
 /**
  * Define Packages.
  */
-const fs = require( 'fs' ).promises;
-const path = require( 'path' );
-const prompts = require( 'prompts' );
-const ora = require( 'ora' );
-const replace = require( 'replace-in-file' );
-const rimraf = require( 'rimraf' );
+const fs = require( "fs" ).promises;
+const path = require( "path" );
+const prompts = require( "prompts" );
+const ora = require( "ora" );
+const replace = require( "replace-in-file" );
+const rimraf = require( "rimraf" );
 
 // Valid files and path to be used for replace and rename.
-const validKeys = [ "includes", "languages", "gulpfile.js", "custom-plugin", 'package.json' ];
+const validKeys = [
+  "includes",
+  "languages",
+  "gulpfile.js",
+  "custom-plugin",
+  "package.json",
+];
 
 /**
  * Validate if path is valid for replace and rename.
- * 
+ *
  * @param {String} path Path value.
  * @returns {Bool}
  */
-const isValidPath = ( path ) => validKeys.filter( key => path.match( new RegExp( k, "g" ) ) || path === key ).length ? true : false;
+const isValidPath = ( path ) =>
+  validKeys.filter( ( key ) => path.match( new RegExp( key, "g" ) ) || path === key )
+  .length ?
+  true :
+  false;
 
 /**
  * Scan dir recursively.
- * 
+ *
  * @param {Strin} dir Path value.
  * @param {Array} results Array to restore the recursive values.
  * @returns {Array}
  */
-const scan = async ( dir = './', results = [] ) => {
+const scan = async ( dir = "./", results = [] ) => {
   const items = await fs.readdir( dir );
   for ( const item of items ) {
     const itemPath = path.join( dir, item );
@@ -40,24 +50,26 @@ const scan = async ( dir = './', results = [] ) => {
     }
   }
   return results;
-}
+};
 
 /**
  * Replace "custom-plugin" text in files with new file prefix name.
- * 
+ *
  * @param {Array} files Array of files path.
  * @param {String} key String that has to be replaced with "custom-plugin" text.
  */
 const renameFiles = async ( files, key = "" ) => {
   for ( oldpath of files ) {
-    const newpath = key.length ? oldpath.replace( "custom-plugin", key ) : oldpath;
+    const newpath = key.length ?
+      oldpath.replace( "custom-plugin", key ) :
+      oldpath;
     await fs.rename( oldpath, newpath );
   }
-}
+};
 
 /**
  * Check if string type is "String".
- * 
+ *
  * @param {String} string String text.
  * @returns {Bool}
  */
@@ -65,19 +77,36 @@ const isString = ( string ) => typeof string === "string" && string.length;
 
 /**
  * Change the case of string.
- * 
+ *
  * @param {String} string String to be coverted.
  * @param {String} type In which type to be converted, accecpt 4 type [domain,constant,function,class]
  * @returns {String}
  */
 const changeCase = ( string = "", type = "" ) => {
-  if ( isString( string ) ) {
+  if ( !isString( string ) ) {
     throw "Plugin name is not a string";
   }
 
   let str = string;
-  str = str.split( " " ).map( word => word.split( "" ).map( ( letter, i ) => 0 === i ? letter.toUpperCase() : letter.toLowerCase() ).join( "" ) ).join( " " );
-  str = str.split( " " ).map( ( word, i ) => 0 === i && [ "wp", "wc" ].includes( word.toLowerCase() ) ? word.toUpperCase() : word ).join( " " );
+  str = str
+    .split( " " )
+    .map( ( word ) =>
+      word
+      .split( "" )
+      .map( ( letter, i ) =>
+        0 === i ? letter.toUpperCase() : letter.toLowerCase()
+      )
+      .join( "" )
+    )
+    .join( " " );
+  str = str
+    .split( " " )
+    .map( ( word, i ) =>
+      0 === i && [ "wp", "wc" ].includes( word.toLowerCase() ) ?
+      word.toUpperCase() :
+      word
+    )
+    .join( " " );
   switch ( type ) {
     case "domain":
       str = str.split( " " ).join( "-" ).toLowerCase();
@@ -95,25 +124,34 @@ const changeCase = ( string = "", type = "" ) => {
       break;
   }
   return str;
-}
+};
 
-async const updatePackageJson = () => {
-  let pkg = await fs.readFile( './package.json' );
-  pkg = JSON.parse( pkg )
+const updatePackageJson = async () => {
+  let pkg = await fs.readFile( "./package.json" );
+  pkg = JSON.parse( pkg );
   delete pkg.scripts.setup;
-  await fs.writeFile( './package.json', JSON.stringify( pkg, null, 2 ) );
-}
+  delete pkg.devDependencies[ "setup;" ];
+  delete pkg.devDependencies[ "prompts" ];
+  delete pkg.devDependencies[ "ora" ];
+  delete pkg.devDependencies[ "replace-in-file" ];
+  delete pkg.devDependencies[ "rimraf" ];
+  await fs.writeFile( "./package.json", JSON.stringify( pkg, null, 2 ) );
+};
 
 /**
  * Start the async process.
  */
 ( async () => {
   const answers = await prompts( {
-    type: 'text',
-    name: 'name',
-    message: 'What will be your Plugin name?',
-    validate: value => ( value.trim().length && value.trim().match( /^[a-zA-Z ]*$/ ) ) ? true : `Please provide a valid plugin name. Example: WP Bulk Uploader`
+    type: "text",
+    name: "name",
+    message: "What will be your Plugin name?",
+    validate: ( value ) =>
+      value.trim().length && value.trim().match( /^[a-zA-Z ]*$/ ) ?
+      true : `Please provide a valid plugin name. Example: WP Bulk Uploader`,
   } );
+
+  const spinner = ora( { text: "Processing..." } );
 
   try {
     // Store plugin name from input.
@@ -129,16 +167,15 @@ async const updatePackageJson = () => {
       // Lower case with kebab case: {custom-plugin}
       changeCase( pluginName, "domain" ),
       // Lower case with snake case: {custom_plugin}
-      changeCase( pluginName, "function" )
+      changeCase( pluginName, "function" ),
     ];
 
-    const spinner = ora( { text: 'Processing...' } );
     spinner.start();
 
     // Read all the file that need to be renamed.
     const files = await scan( "./" );
     if ( !files.length ) {
-      throw "Unable to find files for replacements. Please try to reclone the site and run the setup again."
+      throw "Unable to find files for replacements. Please try to reclone the site and run the setup again.";
     }
 
     // Rename "custom-plugin" word in all the matched files
@@ -147,10 +184,18 @@ async const updatePackageJson = () => {
 
     // Replae in files options.
     const options = {
-      files: files.map( f => f.replace( "custom-plugin", changeCase( pluginName, "domain" ) ) ),
-      from: [ /Custom Plugin/g, /Custom_Plugin/g, /CUSTOM_PLUGIN/g, /custom-plugin/g, /custom_plugin/g ],
+      files: files.map( ( f ) =>
+        f.replace( "custom-plugin", changeCase( pluginName, "domain" ) )
+      ),
+      from: [
+        /Custom Plugin/g,
+        /Custom_Plugin/g,
+        /CUSTOM_PLUGIN/g,
+        /custom-plugin/g,
+        /custom_plugin/g,
+      ],
       to: replacements,
-    }
+    };
 
     // Start the replacement in files.
     await replace( options );
@@ -159,7 +204,7 @@ async const updatePackageJson = () => {
 
     spinner.succeed( "Complete!" );
 
-    rimraf( "./setup.js", error => {
+    rimraf( "./setup.js", ( error ) => {
       if ( error ) throw new Error( error );
     } );
 
@@ -167,7 +212,7 @@ async const updatePackageJson = () => {
     return Promise.resolve();
   } catch ( err ) {
     spinner.fail( "Failed!" );
-    console.log( "Runtime Exception: " + ( err.message ? err.message : err ) );
+    console.log( "Runtime Exception: " + err );
     process.exit( 1 );
   }
 } )();

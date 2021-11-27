@@ -14,7 +14,6 @@ const validKeys = [
   "languages",
   "gulpfile.js",
   "custom-plugin",
-  "package.json",
 ];
 
 /**
@@ -205,6 +204,10 @@ const updatePackageJson = async () => {
     spinner.succeed( "Complete!" );
 
     rimraf( "./setup.js", ( error ) => {
+      if ( error ) throw new Error( error );
+    } );
+
+    rimraf( "./git", ( error ) => {
       if ( error ) throw new Error( error );
     } );
 

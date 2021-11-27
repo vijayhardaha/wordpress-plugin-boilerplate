@@ -38,9 +38,9 @@ if ( ! class_exists( 'Custom_Plugin', false ) ) {
  * @since  1.0.0
  * @return Custom_Plugin
  */
-function custom_plugin() {
+function Custom_Plugin() { // @codingStandardsIgnoreLine
 	return Custom_Plugin::instance();
 }
 
 // Global for backwards compatibility.
-$GLOBALS['custom_plugin'] = custom_plugin();
+$GLOBALS['Custom_Plugin'] = Custom_Plugin();

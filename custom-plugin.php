@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Custom Plugin
- * Plugin URI: https://example.com
+ * Plugin URI: https://github.com/vijayhardaha/
  * Description: This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version: 1.0.0
  * Author: Vijay Hardaha
- * Author URI: https://example.com
+ * Author URI: https://twitter.com/vijayhardaha/
  * License: GPL-3.0+
  * License URI: http://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain: custom-plugin

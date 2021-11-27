@@ -15,7 +15,6 @@ defined( 'ABSPATH' ) || exit;
  * @class Custom_Plugin
  */
 final class Custom_Plugin {
-
 	/**
 	 * This class instance.
 	 *

@@ -12,11 +12,15 @@ Then navigate to the folder in command line using `cd` command. Example `cd wp-d
 
 Then you have to install the npm packages using this command:
 
-<pre>npm install</pre>
+```bash
+npm install
+```
 
 Once your package installation is finish, You can setup your plugin file using this command:
 
-<pre>npm run setup</pre>
+```bash
+npm run setup
+```
 
 After running this command you'll be asked to enter the plugin name. You have to use `Title Case` unique plugin name in input.
 Few Examples: `WP Mail Cheker`, `Bulk Email Sender`, `WP User Importer` etc.

@@ -207,7 +207,7 @@ const updatePackageJson = async () => {
       if ( error ) throw new Error( error );
     } );
 
-    rimraf( "./git", ( error ) => {
+    rimraf( "./.git", ( error ) => {
       if ( error ) throw new Error( error );
     } );
 

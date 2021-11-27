@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vijayhardaha/wordpress-plugin-boilerplate-gulp.git"
+    "url": "git+https://github.com/vijayhardaha/wordpress-plugin-boilerplate.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vijayhardaha/wordpress-plugin-boilerplate-gulp/issues"
+    "url": "https://github.com/vijayhardaha/wordpress-plugin-boilerplate/issues"
   },
-  "homepage": "https://github.com/vijayhardaha/wordpress-plugin-boilerplate-gulp#readme",
+  "homepage": "https://github.com/vijayhardaha/wordpress-plugin-boilerplate#readme",
   "devDependencies": {
     "asset-builder": "^2.0.0",
     "autoprefixer": "^10.4.0",

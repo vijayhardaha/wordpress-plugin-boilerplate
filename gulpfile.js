@@ -1,21 +1,19 @@
 "use strict";
 
+// Used on Pot Build.
 const pluginInfo = {
   name: "Custom Plugin",
   version: "1.0.0",
   domain: "custom-plugin",
 };
 
-/* Use this command to install all packages */
-// npm install --save-dev asset-builder autoprefixer del gulp-clean-css gulp-concat gulp-cssbeautify gulp-flatten gulp-imagemin gulp-jshint gulp-plumber gulp-postcss gulp-rename gulp-sass gulp-terser gulp jshint lazypipe merge-stream node-sass postcss-discard-duplicates postcss wp-pot
-
 // See https://github.com/austinpray/asset-builder
-var manifest = require( "asset-builder" )( "./src/manifest.json" );
+const manifest = require( "asset-builder" )( "./src/manifest.json" );
 
 // `path` - Paths to base asset directories. With trailing slashes.
 // - `path.source` - Path to the source files. Default: `assets/`
 // - `path.dist` - Path to the build directory. Default: `dist/`
-var path = manifest.paths;
+const path = manifest.paths;
 
 // `globs` - These ultimately end up in their respective `gulp.src`.
 // - `globs.js` - Array of asset-builder JS dependency objects. Example:
@@ -29,12 +27,12 @@ var path = manifest.paths;
 // - `globs.fonts` - Array of font path globs.
 // - `globs.images` - Array of image path globs.
 // - `globs.bower` - Array of all the main Bower files.
-var globs = manifest.globs;
+const globs = manifest.globs;
 
 // `project` - paths to first-party assets.
 // - `project.js` - Array of first-party JS assets.
 // - `project.css` - Array of first-party CSS assets.
-var project = manifest.getProjectGlobs();
+const project = manifest.getProjectGlobs();
 
 const DEST_CSS = path.dist + "css";
 const DEST_JS = path.dist + "js";
@@ -73,7 +71,7 @@ const scss = gulpSass( dartSass );
 //   .pipe(cssTasks("main.css")
 //   .pipe(gulp.dest(path.dist + "styles"))
 // ```
-var cssTasks = ( filename ) => {
+const cssTasks = ( filename ) => {
   return lazypipe()
     .pipe( plumber )
     .pipe( () =>
@@ -134,7 +132,7 @@ function buildCSS ( done ) {
 //   .pipe(jsTasks("main.js")
 //   .pipe(gulp.dest(path.dist + "scripts"))
 // ```
-var jsTasks = ( filename ) => {
+const jsTasks = ( filename ) => {
   return lazypipe().pipe( plumber ).pipe( concat, filename )();
 };
 

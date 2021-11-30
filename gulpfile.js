@@ -47,15 +47,16 @@ const autoprefixer = require( "autoprefixer" ),
   del = require( "del" ),
   discardDuplicates = require( "postcss-discard-duplicates" ),
   flatten = require( "gulp-flatten" ),
-  imagemin = require( "gulp-imagemin" ),
   gcmq = require( "gulp-group-css-media-queries" ),
+  gulpSass = require( "gulp-sass" ),
+  imagemin = require( "gulp-imagemin" ),
   jshint = require( "gulp-jshint" ),
   lazypipe = require( "lazypipe" ),
   merge = require( "merge-stream" ),
   plumber = require( "gulp-plumber" ),
   postcss = require( "gulp-postcss" ),
   rename = require( "gulp-rename" ),
-  gulpSass = require( "gulp-sass" ),
+  strip = require( "gulp-strip-css-comments" ),
   uglify = require( "gulp-terser" ),
   wpPot = require( "wp-pot" );
 
@@ -81,6 +82,7 @@ const cssTasks = ( filename ) => {
         includePaths: [ "." ],
       } )
     )
+    .pipe( () => strip() )
     .pipe( gcmq )
     .pipe( concat, filename )
     .pipe( () => postcss( [ discardDuplicates(), autoprefixer() ] ) )

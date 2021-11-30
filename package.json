@@ -37,6 +37,7 @@
     "gulp-postcss": "^9.0.1",
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^5.0.0",
+    "gulp-strip-css-comments": "^2.0.0",
     "gulp-terser": "^2.1.0",
     "jshint": "^2.13.1",
     "lazypipe": "^1.0.2",

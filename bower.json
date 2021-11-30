@@ -3,10 +3,11 @@
   "description": "A Wordpress starter pack with pre-configured Gulp to setup custom Wordpress Plugin Boilerplate in a minute.",
   "main": "gulpfile.js",
   "authors": [
-    "vijayhardaha <vijayhardaha@gmail.com>"
+    "Vijay Hardaha <https://twitter.com/vijayhardaha>"
   ],
-  "license": "ISC",
-  "homepage": "https://github.com/vijayhardaha/wordpress-plugin-boilerplate-gulp",
+  "license": "MIT",
+  "homepage": "https://github.com/vijayhardaha/wordpress-plugin-boilerplate",
+  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",

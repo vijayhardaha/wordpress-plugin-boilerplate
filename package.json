@@ -15,8 +15,8 @@
     "url": "git+https://github.com/vijayhardaha/wordpress-plugin-boilerplate.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Vijay Hardaha <https://twitter.com/vijayhardaha>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/vijayhardaha/wordpress-plugin-boilerplate/issues"
   },

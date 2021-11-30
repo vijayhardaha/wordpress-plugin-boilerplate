@@ -26,6 +26,7 @@ gulpfile.js export-ignore
 # config files
 .browserslistrc export-ignore
 .editorconfig export-ignore
+.jsbeautifyrc export-ignore
 
 # composer files
 composer.lock export-ignore

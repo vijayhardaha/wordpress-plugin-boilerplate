@@ -6,12 +6,12 @@
  * Version: 1.0.0
  * Author: Vijay Hardaha
  * Author URI: https://twitter.com/vijayhardaha/
- * License: GPL-3.0+
- * License URI: http://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain: custom-plugin
  * Domain Path: /languages/
  * Requires at least: 5.6
  * Requires PHP: 7.0
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
  * @package Custom_Plugin
  */
@@ -38,7 +38,7 @@ if ( ! class_exists( 'Custom_Plugin', false ) ) {
  * @since  1.0.0
  * @return Custom_Plugin
  */
-function Custom_Plugin() { // @codingStandardsIgnoreLine
+function Custom_Plugin() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
 	return Custom_Plugin::instance();
 }
 

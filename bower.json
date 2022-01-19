@@ -1,5 +1,5 @@
 {
-  "name": "wordpress-plugin-boilerplate-gulp",
+  "name": "custom-plugin",
   "description": "A Wordpress starter pack with pre-configured Gulp to setup custom Wordpress Plugin Boilerplate in a minute.",
   "main": "gulpfile.js",
   "authors": [

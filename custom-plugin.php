@@ -35,12 +35,12 @@ if ( ! class_exists( 'Custom_Plugin', false ) ) {
 /**
  * Returns the main instance of Custom_Plugin.
  *
- * @since  1.0.0
+ * @since 1.0.0
  * @return Custom_Plugin
  */
-function Custom_Plugin() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
+function custom_plugin() {
 	return Custom_Plugin::instance();
 }
 
 // Global for backwards compatibility.
-$GLOBALS['Custom_Plugin'] = Custom_Plugin();
+$GLOBALS['custom_plugin'] = custom_plugin();

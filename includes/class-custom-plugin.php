@@ -1,8 +1,10 @@
 <?php
 /**
- * Custom Plugin setup
+ * Main class of Custom Plugin.
  *
+ * @class Custom_Plugin
  * @package Custom_Plugin
+ * @subpackage Custom_Plugin\Classes
  * @since 1.0.0
  */
 
@@ -15,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @class Custom_Plugin
  */
 final class Custom_Plugin {
+
 	/**
 	 * This class instance.
 	 *
@@ -139,8 +142,8 @@ final class Custom_Plugin {
 	/**
 	 * Define constant if not already set.
 	 *
-	 * @param string      $name  Constant name.
-	 * @param string|bool $value Constant value.
+	 * @param string      $name     Constant name.
+	 * @param string|bool $value    Constant value.
 	 *
 	 * @since 1.0.0
 	 */
@@ -153,9 +156,9 @@ final class Custom_Plugin {
 	/**
 	 * What type of request is this?
 	 *
-	 * @param  string $type admin, ajax, cron or frontend.
-	 *
 	 * @since 1.0.0
+	 *
+	 * @param string $type  Admin, ajax, cron or frontend.
 	 * @return bool
 	 */
 	private function is_request( $type ) {
@@ -355,8 +358,6 @@ final class Custom_Plugin {
 	/**
 	 * Determines if the server environment is compatible with this plugin.
 	 *
-	 * Override this method to add checks for more than just the PHP version.
-	 *
 	 * @since 1.0.0
 	 * @return bool
 	 */
@@ -385,9 +386,7 @@ final class Custom_Plugin {
 	 * @since 1.0.0
 	 */
 	public function includes() {
-		/**
-		 * Core classes.
-		 */
+		// Core files.
 		include_once CUSTOM_PLUGIN_ABSPATH . 'includes/custom-plugin-core-functions.php';
 
 		// Admin files.

@@ -5,8 +5,8 @@
  * Core functions available on both the front-end and admin.
  *
  * @package Custom_Plugin
- * @subpackage Custom_Plugin/Functions
- * @version 1.0.0
+ * @subpackage Custom_Plugin\Functions
+ * @since 1.0.0
  */
 
 // Exit if accessed directly.

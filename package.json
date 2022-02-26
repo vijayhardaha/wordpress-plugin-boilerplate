@@ -9,6 +9,8 @@
     "dev": "gulp watch",
     "build": "gulp build",
     "makepot": "gulp makepot",
+    "cs:scan": "phpcs --standard=Wordpress custom-plugin.php includes",
+    "cs:fix": "phpcbf --standard=Wordpress custom-plugin.php includes",
     "setup": "node setup.js && npm install"
   },
   "repository": {

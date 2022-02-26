@@ -1,11 +1,11 @@
 <?php
 /**
- * Custom Plugin Frontend
+ * Frontend class of Custom Plugin.
  *
  * @class Custom_Plugin_Frontend
  * @package Custom_Plugin
- * @subpackage Custom_Plugin/Frontend
- * @version 1.0.0
+ * @subpackage Custom_Plugin\Frontend
+ * @since 1.0.0
  */
 
 // Exit if accessed directly.
@@ -17,8 +17,11 @@ if ( class_exists( 'Custom_Plugin_Frontend' ) ) {
 
 /**
  * Custom_Plugin_Frontend class.
+ *
+ * @class Custom_Plugin_Frontend
  */
 class Custom_Plugin_Frontend {
+
 	/**
 	 * Constructor.
 	 *
@@ -44,6 +47,8 @@ class Custom_Plugin_Frontend {
 
 	/**
 	 * Enqueue styles.
+	 *
+	 * @since 1.0.0
 	 */
 	public function frontend_styles() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';

@@ -4,8 +4,8 @@
  *
  * @class Custom_Plugin_Admin
  * @package Custom_Plugin
- * @subpackage Custom_Plugin/Admin
- * @version 1.0.0
+ * @subpackage Custom_Plugin\Admin
+ * @since 1.0.0
  */
 
 // Exit if accessed directly.
@@ -17,8 +17,11 @@ if ( class_exists( 'Custom_Plugin_Admin' ) ) {
 
 /**
  * Custom_Plugin_Admin class.
+ *
+ * @class Custom_Plugin_Admin
  */
 class Custom_Plugin_Admin {
+
 	/**
 	 * Constructor.
 	 *
@@ -47,6 +50,8 @@ class Custom_Plugin_Admin {
 
 	/**
 	 * Add menu items.
+	 *
+	 * @since 1.0.0
 	 */
 	public function admin_menu() {
 		add_menu_page( __( 'Custom Plugin', 'custom-plugin' ), __( 'Custom Plugin', 'custom-plugin' ), 'manage_options', 'custom-plugin-page', array( $this, 'admin_menu_page' ), 'dashicons-wordpress', '60' );
@@ -57,7 +62,7 @@ class Custom_Plugin_Admin {
 	 * Valid screen ids for plugin scripts & styles
 	 *
 	 * @since 1.0.0
-	 * @return  array
+	 * @return array
 	 */
 	public function is_valid_screen() {
 		$screen    = get_current_screen();

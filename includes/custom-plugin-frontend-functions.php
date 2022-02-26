@@ -1,14 +1,15 @@
 <?php
 /**
- * Custom Plugin frontend functions & definations
+ * Custom Plugin frontend functions & definations.
  *
  * Functions for frontend specific things.
  *
  * @package Custom_Plugin
- * @subpackage Custom_Plugin/Functions
- * @version 1.0.0
+ * @subpackage Custom_Plugin\Functions
+ * @since 1.0.0
  */
 
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**

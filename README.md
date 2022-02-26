@@ -61,7 +61,7 @@ In this repositary code above **Important Keywords** are used in a way that help
 
 ## Start Development
 
-Run `npm start` to start development. `gulp watch` task will be started and as soon as you'll make changes on your assets files, your new assets will be generated automatically.
+Run `npm run dev` to start development. `gulp watch` task will be started and as soon as you'll make changes on your assets files, your new assets will be generated automatically.
 
 ## Build
 

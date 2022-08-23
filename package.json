@@ -1,15 +1,14 @@
 {
   "name": "custom-plugin",
   "pluginName": "Custom Plugin",
-  "version": "1.1.1",
+  "version": "1.0.0",
   "description": "A Wordpress starter pack with pre-configured Gulp to setup custom Wordpress Plugin Boilerplate in a minute.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vijayhardaha/wordpress-plugin-boilerplate.git"
   },
-  "keywords": [],
   "author": "Vijay Hardaha <https://twitter.com/vijayhardaha>",
-  "license": "MIT",
+  "license": "GPLv2+",
   "bugs": {
     "url": "https://github.com/vijayhardaha/wordpress-plugin-boilerplate/issues"
   },

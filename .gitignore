@@ -37,5 +37,24 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-# MacOs
+# Operating system specific files
 .DS_Store
+
+# Ignore other .gitignore files to allow for personal customizations
+.gitignore
+
+# Files related to applying patches
+*.rej
+*.orig
+*.patch
+*.diff
+
+# Php
+/composer.lock
+/vendor
+/tests/phpunit/build
+.phpunit.result.cache
+/phpunit.xml
+/.phpcs.xml
+/phpcs.xml
+.cache/*

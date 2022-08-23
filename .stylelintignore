@@ -1,0 +1,12 @@
+vendor/
+node_modules/
+src/images
+src/fonts
+*.php
+*.map
+*.png
+*.json
+*.js
+LICENSE
+composer.lock
+*.txt

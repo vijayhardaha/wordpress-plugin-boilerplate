@@ -1,0 +1,24 @@
+{
+  "[css]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint"
+  },
+  "[php]": {
+    "editor.defaultFormatter": "wongjn.php-sniffer"
+  },
+  "css.validate": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "eslint.executeAutofix": true,
+    "stylelint.executeAutofix": true
+  },
+  "eslint.format.enable": true,
+  "files.trimFinalNewlines": true,
+  "less.validate": false,
+  "scss.validate": false,
+  "stylelint.enable": true,
+  "stylelint.snippet": ["css", "scss"],
+  "stylelint.validate": ["css", "scss"]
+}

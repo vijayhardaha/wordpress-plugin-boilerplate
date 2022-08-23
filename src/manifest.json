@@ -1,24 +1,16 @@
 {
   "dependencies": {
     "frontend.js": {
-      "files": [
-        "js/frontend.js"
-      ]
-    },
-    "frontend.css": {
-      "files": [
-        "css/frontend.scss"
-      ]
+      "files": ["js/frontend.js"]
     },
     "admin.js": {
-      "files": [
-        "js/admin.js"
-      ]
+      "files": ["js/admin.js"]
+    },
+    "frontend.css": {
+      "files": ["scss/frontend.scss"]
     },
     "admin.css": {
-      "files": [
-        "css/admin.scss"
-      ]
+      "files": ["scss/admin.scss"]
     }
   },
   "paths": {

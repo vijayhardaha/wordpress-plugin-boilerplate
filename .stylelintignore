@@ -1,12 +1,15 @@
-vendor/
-node_modules/
-src/images
-src/fonts
-*.php
-*.map
-*.png
-*.json
-*.js
-LICENSE
-composer.lock
-*.txt
+# Files & Directories related to build & test tools.
+.idea/
+.vscode/
+/build
+/dist
+/node_modules
+/tests
+/vendor
+
+# Plugin files and folders.
+assets/
+includes/
+languages/
+!src/**/*.scss
+!src/**/*.css

@@ -1,12 +1,14 @@
-# Files and folders related to build/test tools
+# Files & Directories related to build & test tools.
+.idea/
+.vscode/
 /build
+/dist
 /node_modules
 /tests
 /vendor
-/tools
-/assets
 
-# 3rd party js files
-/src/js/**/*.min.js
-
-# Ignore root js files gulpfile.js etc
+# Project Files & Directories.
+assets/
+includes/
+languages/
+src/js/**/*.min.js

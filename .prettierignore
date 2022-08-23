@@ -1,7 +1,13 @@
-# Files and folders related to build/test tools
+# Files & Directories related to build & test tools.
+.idea/
 /build
+/dist
 /node_modules
 /tests
 /vendor
-/tools
-/src/js
+
+# Project Files & Directories.
+assets/
+includes/
+languages/
+src/

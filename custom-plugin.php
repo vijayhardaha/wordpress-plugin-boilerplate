@@ -20,7 +20,7 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! function_exists( 'get_plugin_data' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
 }
 
 if ( ! defined( 'CUSTOM_PLUGIN_PLUGIN_FILE' ) ) {

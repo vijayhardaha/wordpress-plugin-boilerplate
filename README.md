@@ -1,74 +1,72 @@
 # WordPress Plugin Boilerplate
-A Wordpress starter pack with pre-configured Gulp to setup custom Wordpress Plugin Boilerplate in a minute.
 
-## Setup Your Plugin
+A Wordpress starter pack with pre-configured Gulp to set up a custom Wordpress Plugin Boilerplate in a minute.
 
-Download this repositary and extract and rename the folder to your desired plugin name or clone this repositary using this following command:
+## Getting started
 
-```bash
-git clone https://github.com/vijayhardaha/wordpress-plugin-boilerplate.git wp-demo-plugin
-```
-**wp-demo-plugin** is just an example of plugin name. You have to write your plugin name that you want to create.
+-   Clone the GitHub repository into your plugins directory.
+-   `git clone https://github.com/vijayhardaha/wordpress-plugin-boilerplate.git wp-demo-plugin`
+-   Use your desired plugin name in place of **_wp-demo-plugin_** in above command.
+-   Navigate to the cloned directory using `cd` command.
+-   In the plugin directory run `npm i` and `composer install`.
+-   Run `npm run setup` to start automated setup process.
+-   You will be prompt to enter the plugin name. Use the desired unique plugin name in input.\
+    These are some examples of plugin names: **WP Mail Checker**, **Bulk Email Sender**, **WP Users Importer**
+-   After a valid input, In a few seconds, you'll see **Complete!** message if everything goes ok.
+-   Run `npm run dev` to start development.
+-   Run `npm run build` to build the assets files & .pot file.
 
-Then navigate to the folder in command line using `cd` command. Example `cd wp-demo-plugin`
+## Important keywords
 
-Then you have to install the npm packages using this command:
+| Keyword       | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| custom-plugin | Used as prefix/postfix in class/Fn(s) filenames.             |
+| Custom Plugin | Used as a plugin name across all plugin files.               |
+| Custom_Plugin | Used in the final class name & as other class name prefixes. |
+| CUSTOM_PLUGIN | Used in constants prefix.                                    |
+| custom-plugin | Used as WordPress text domain and prefix for enqueue assets. |
+| custom_plugin | Used as main Fn name and as other Fn(s) name prefix.         |
 
-```bash
-npm install
-```
+## How setup works?
 
-Once your package installation is finish, You can setup your plugin file using this command:
+In this plugin boilerplate code above **Important keywords** are used in a way that helps the setup code to match and replace the keywords with your given plugin name.
 
-```bash
-npm run setup
-```
+`npm run setup` is a one-time command, After successful completion, the setup code and script will be removed from the `package.json` and some of the packages that are used in the setup will be removed as well and you'll only have packages that are used in plugin development ahead.
 
-After running this command you'll be asked to enter the plugin name. You have to use `Title Case` unique plugin name in input.
-Few Examples: `WP Mail Cheker`, `Bulk Email Sender`, `WP User Importer` etc.
+## Plugin structure
 
-After a valid input, In few seconds you'll see **Complete!** message and `npm install` will be execute just after that to remove some setup package that won't be needed in your plugin development after setup is completed.
+**custom-plugin.php**\
+Main plugin file which contains all the plugin information and some defined CONST and a global functions that returns main class instance.
 
-## Important Keywords
+**gulpfile.js**\
+It has all the tasks setup for **_js, css, image, and font_** files.
 
-Keyword | Description
----|---
-custom-plugin | Filename prefix/posfix which is used for main plugin file name and class and functions php files.
-Custom Plugin | Plugin name used in main plugin file and gulp file.
-Custom_Plugin | Final class name and prefix for other classes. Also used for package info in comment doc. 
-CUSTOM_PLUGIN | Prefix for defined CONSTANTS
-custom-plugin | Used for WordPress text-domain and enqueue script/style name prefix.
-custom_plugin | Used for main function name and as other functions name prefix.
+**languages**\
+This directory contains a .pot file that will be used for translation.
 
-## How Setup Works
+**includes**\
+This directory contains all the php files.\
+class-based files will start with `class-` prefix and functions files will end with `-functions.php` postfix.\
+All the backend-related files will be inside the `admin` directory.
 
-In this repositary code above **Important Keywords** are used in a way that help the setup code to match and replace the keywords with your given plugin name.
-`npm run setup` is one-time command, After successfully completion, setup code and script will be removed from the `package.json` and some of packages that are used in setup will be removed as well and you'll have only have packages that are used in Plugin Development ahead.
+**src**\
+This directory contains all the source files for plugin assets.\
+**_js, css, image, and font_** files will be in the related directory.\
+This setup uses [asset-builder](https://www.npmjs.com/package/asset-builder) package, Check their documentations to know more about it.
 
-## Plugin Structure Guide
+**assets**\
+This directory contains all the compressed & optimized **_js, css, image, and font_** files.\
+All the build assets will be auto-generated with the help of **gulp** tasks in this directory, You don't have to write/create anything inside it.
 
-**custom-plugin.php** is the main plugin file which contains all the plugin informations and some defined CONST and global function with main Class file instance call.
+## License
 
-**gulpfile.js** has all all the task setup for **js, css, images, fonts**
+WordPress Plugin Boilerplate, Copyright (C) 2021-2022, Vijay Hardaha.\
+WordPress Plugin Boilerplate is distributed under the terms of the GNU GPL.
 
-**languages** directory contains .pot file which is useful for translation.
+## Contributions
 
-**includes** directory contains all the php files. Class based files will start `class-` prefix and functions files will end with `-functions.php` postfix. All the backend related files will be inside `admin` directory.
+Anyone is welcome to contribute.
 
-**src** directory contains all the source files for plugin assets. **js, css, images, fonts** files will be in related directory. This setup use [asset-builder](https://www.npmjs.com/package/asset-builder) package, you can read about if you have any problem with assets files set up.
+---
 
-**assets** directory contains all the compressed & optimized `js, css, images, fonts` files. you don't write anything in directory it will auto-generated with the help of `gulp`.
-
-## Start Development
-
-Run `npm run dev` to start development. `gulp watch` task will be started and as soon as you'll make changes on your assets files, your new assets will be generated automatically.
-
-## Build
-
-Run `npm run build` to build the final assets & .pot file.
-
-## Author
-
-Vijay Hardaha
-
-[Peopleperhour](https://pph.me/vijayhardaha) - [Twitter](https://twitter.com/vijayhardaha)
+Made with ❤ by [Vijay Hardaha](https://twitter.com/vijayhardaha)

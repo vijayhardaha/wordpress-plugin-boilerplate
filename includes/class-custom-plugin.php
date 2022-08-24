@@ -113,7 +113,7 @@ final class Custom_Plugin {
 		$error = error_get_last();
 		if ( $error && in_array( $error['type'], array( E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ), true ) ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
-				/* translators: 1: error message 2: file name and path 3: line number */
+				/* translators: 1: Error Message 2: File Name and Path 3: Line Number */
 				$error_message = sprintf( __( '%1$s in %2$s on line %3$s', 'custom-plugin' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL;
 				// phpcs:disable WordPress.PHP.DevelopmentFunctions
 				error_log( $error_message );
@@ -179,18 +179,18 @@ final class Custom_Plugin {
 	 */
 	public function activation_check() {
 		if ( ! $this->is_environment_compatible() ) {
+
 			$this->deactivate_plugin();
+
 			wp_die(
 				sprintf(
-					/* translators: %s Plugin Name */
-					esc_html__(
-						'%1$s could not be activated. %2$s',
-						'custom-plugin'
-					),
+					/* translators: 1: Plugin Name 2: Incompatible Environment Message */
+					esc_html__( '%1$s could not be activated. %2$s', 'custom-plugin' ),
 					esc_html( CUSTOM_PLUGIN_PLUGIN_NAME ),
 					esc_html( $this->get_environment_message() )
 				)
 			);
+
 		}
 	}
 
@@ -201,16 +201,20 @@ final class Custom_Plugin {
 	 */
 	public function check_environment() {
 		if ( ! $this->is_environment_compatible() && is_plugin_active( CUSTOM_PLUGIN_PLUGIN_BASENAME ) ) {
+
 			$this->deactivate_plugin();
+
 			$this->add_admin_notice(
 				'bad_environment',
 				'error',
 				sprintf(
-					/* translators: %s Plugin Name */
-					__( '%s has been deactivated.', 'custom-plugin' ),
-					CUSTOM_PLUGIN_PLUGIN_NAME
-				) . ' ' . $this->get_environment_message()
+					/* translators: 1: Plugin Name 2: Incompatible Environment Message */
+					__( '%1$s has been deactivated. %2$s', 'custom-plugin' ),
+					esc_html( CUSTOM_PLUGIN_PLUGIN_NAME ),
+					esc_html( $this->get_environment_message() )
+				)
 			);
+
 		}
 	}
 
@@ -221,6 +225,7 @@ final class Custom_Plugin {
 	 */
 	public function add_plugin_notices() {
 		if ( ! $this->is_wp_compatible() ) {
+
 			$this->add_admin_notice(
 				'update_wordpress',
 				'error',
@@ -233,10 +238,13 @@ final class Custom_Plugin {
 					'</a>'
 				)
 			);
+
 		}
 
 		$missing_dependencies = $this->missing_dependencies();
+
 		if ( ! empty( $missing_dependencies ) ) {
+
 			$this->add_admin_notice(
 				'install_required_plugins',
 				'error',
@@ -247,6 +255,7 @@ final class Custom_Plugin {
 					join( ', ', $missing_dependencies )
 				)
 			);
+
 		}
 	}
 
@@ -268,6 +277,7 @@ final class Custom_Plugin {
 	 */
 	private function missing_dependencies() {
 		$missing_dependencies = array();
+
 		if ( empty( $this->required_plugins ) ) {
 			return $missing_dependencies;
 		}
@@ -333,20 +343,7 @@ final class Custom_Plugin {
 		foreach ( (array) $this->notices as $notice_key => $notice ) {
 			?>
 			<div class="<?php echo esc_attr( $notice['class'] ); ?>">
-				<p>
-					<?php
-					echo wp_kses(
-						$notice['message'],
-						array(
-							'strong' => array(),
-							'a'      => array(
-								'href'   => array(),
-								'target' => array(),
-							),
-						)
-					);
-					?>
-				</p>
+				<p><?php echo wp_kses( $notice['message'], array( 'strong' => array(), 'a' => array( 'href' => array(), 'target' => array() ) ) ); // @codingStandardsIgnoreLine ?></p>
 			</div>
 			<?php
 		}

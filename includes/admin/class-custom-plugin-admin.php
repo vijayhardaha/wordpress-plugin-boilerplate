@@ -1,11 +1,9 @@
 <?php
 /**
- * Custom Plugin Admin
+ * Custom Plugin Admin Class.
  *
- * @class Custom_Plugin_Admin
- * @package Custom_Plugin
- * @subpackage Custom_Plugin\Admin
  * @since 1.0.0
+ * @package Custom_Plugin
  */
 
 // Exit if accessed directly.
@@ -16,7 +14,7 @@ if ( class_exists( 'Custom_Plugin_Admin' ) ) {
 }
 
 /**
- * Custom_Plugin_Admin class.
+ * Custom_Plugin_Admin Class.
  *
  * @class Custom_Plugin_Admin
  */
@@ -34,13 +32,12 @@ class Custom_Plugin_Admin {
 		// Add menus.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 
-		// Enqueue scripts.
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
+		// Enqueue assets.
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 	}
 
 	/**
-	 * Include any classes/functions we need within admin.
+	 * Include classes/functions files that we need within admin.
 	 *
 	 * @since 1.0.0
 	 */
@@ -54,12 +51,12 @@ class Custom_Plugin_Admin {
 	 * @since 1.0.0
 	 */
 	public function admin_menu() {
-		add_menu_page( __( 'Custom Plugin', 'custom-plugin' ), __( 'Custom Plugin', 'custom-plugin' ), 'manage_options', 'custom-plugin-page', array( $this, 'admin_menu_page' ), 'dashicons-wordpress', '60' );
-		add_submenu_page( 'custom-plugin-page', __( 'Submenu Item', 'custom-plugin' ), __( 'Submenu Item', 'custom-plugin' ), 'manage_options', 'custom-plugin-page-submenu', array( $this, 'submenu_page' ) );
+		add_menu_page( __( 'Custom Plugin', 'custom-plugin' ), __( 'Custom Plugin', 'custom-plugin' ), 'manage_options', 'custom-plugin-page', array( $this, 'render_admin_menu_page' ), 'dashicons-wordpress', '60' );
+		add_submenu_page( 'custom-plugin-page', __( 'Submenu Item', 'custom-plugin' ), __( 'Submenu Item', 'custom-plugin' ), 'manage_options', 'custom-plugin-page-submenu', array( $this, 'render_submenu_page' ) );
 	}
 
 	/**
-	 * Valid screen ids for plugin scripts & styles
+	 * Valid screen ids for plugin admin assets.
 	 *
 	 * @since 1.0.0
 	 * @return array
@@ -90,65 +87,51 @@ class Custom_Plugin_Admin {
 	}
 
 	/**
-	 * Enqueue styles.
+	 * Enqueue assets.
 	 *
 	 * @since 1.0.0
 	 */
-	public function admin_styles() {
+	public function enqueue_assets() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-		// Register admin styles.
-		wp_register_style( 'custom-plugin-admin-styles', custom_plugin()->plugin_url() . '/assets/css/admin' . $suffix . '.css', array(), CUSTOM_PLUGIN_VERSION );
 
 		// Admin styles for custom_plugin pages only.
 		if ( $this->is_valid_screen() ) {
-			wp_enqueue_style( 'custom-plugin-admin-styles' );
-		}
-	}
+			// Styles.
+			wp_enqueue_style( 'custom-plugin-admin-styles', custom_plugin()->plugin_url() . '/assets/css/admin' . $suffix . '.css', array(), CUSTOM_PLUGIN_VERSION );
 
-	/**
-	 * Enqueue scripts.
-	 *
-	 * @since 1.0.0
-	 */
-	public function admin_scripts() {
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+			// Scripts.
+			wp_enqueue_script( 'custom-plugin-admin', custom_plugin()->plugin_url() . '/assets/js/admin' . $suffix . '.js', array( 'jquery' ), CUSTOM_PLUGIN_VERSION, true );
 
-		// Register scripts.
-		wp_register_script( 'custom-plugin-admin', custom_plugin()->plugin_url() . '/assets/js/admin' . $suffix . '.js', array( 'jquery' ), CUSTOM_PLUGIN_VERSION, true );
-
-		// Admin scripts for custom_plugin pages only.
-		if ( $this->is_valid_screen() ) {
-			wp_enqueue_script( 'custom-plugin-admin' );
-			$params = array(
+			// Localize scripts.
+			$localize_params = array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 			);
-			wp_localize_script( 'custom-plugin-admin', 'custom_plugin_params', $params );
+			wp_localize_script( 'custom-plugin-admin', 'custom_plugin_params', $localize_params );
 		}
 	}
 
 	/**
-	 * Display admin page
+	 * Render admin menu page.
 	 *
 	 * @since 1.0.0
 	 */
-	public function admin_menu_page() {
+	public function render_admin_menu_page() {
 		?>
-		<div class="wrap" id="custom-plugin">
-			<h2><?php esc_html_e( 'Page title', 'custom-plugin' ); ?></h2>
+		<div class="wrap" id="custom-plugin-page">
+			<h1><?php esc_html_e( 'Admin Menu Page', 'custom-plugin' ); ?></h1>
 		</div>
 		<?php
 	}
 
 	/**
-	 * Display submenu page
+	 * Render submenu page.
 	 *
 	 * @since 1.0.0
 	 */
-	public function submenu_page() {
+	public function render_submenu_page() {
 		?>
-		<div class="wrap" id="custom-plugin">
-			<h2><?php esc_html_e( 'Submenu Item', 'custom-plugin' ); ?></h2>
+		<div class="wrap" id="custom-plugin-page">
+			<h1><?php esc_html_e( 'Submenu Page', 'custom-plugin' ); ?></h1>
 		</div>
 		<?php
 	}

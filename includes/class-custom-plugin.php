@@ -1,11 +1,9 @@
 <?php
 /**
- * Main class of Custom Plugin.
+ * Custom Plugin class for plugin setup.
  *
- * @class Custom_Plugin
- * @package Custom_Plugin
- * @subpackage Custom_Plugin\Classes
  * @since 1.0.0
+ * @package Custom_Plugin
  */
 
 // Exit if accessed directly.
@@ -21,24 +19,24 @@ final class Custom_Plugin {
 	/**
 	 * This class instance.
 	 *
-	 * @var Custom_Plugin single instance of this class.
 	 * @since 1.0.0
+	 * @var Custom_Plugin single instance of this class.
 	 */
 	private static $instance;
 
 	/**
 	 * Admin notices to add.
 	 *
-	 * @var array Array of admin notices.
 	 * @since 1.0.0
+	 * @var array Array of admin notices.
 	 */
 	private $notices = array();
 
 	/**
 	 * Required plugins to check.
 	 *
-	 * @var array Array of required plugins.
 	 * @since 1.0.0
+	 * @var array Array of required plugins.
 	 */
 	private $required_plugins = array(
 		'woocommerce/woocommerce.php'       => array(
@@ -125,7 +123,7 @@ final class Custom_Plugin {
 	}
 
 	/**
-	 * Define WC Constants.
+	 * Define constants.
 	 *
 	 * @since 1.0.0
 	 */
@@ -157,8 +155,7 @@ final class Custom_Plugin {
 	 * What type of request is this?
 	 *
 	 * @since 1.0.0
-	 *
-	 * @param string $type  Admin, ajax, cron or frontend.
+	 * @param string $type Admin, ajax, cron or frontend.
 	 * @return bool
 	 */
 	private function is_request( $type ) {
@@ -177,9 +174,8 @@ final class Custom_Plugin {
 	/**
 	 * Checks the server environment and other factors and deactivates plugins as necessary.
 	 *
-	 * Based on http://wptavern.com/how-to-prevent-wordpress-plugins-from-activating-on-sites-with-incompatible-hosting-environments
-	 *
 	 * @since 1.0.0
+	 * @link http://wptavern.com/how-to-prevent-wordpress-plugins-from-activating-on-sites-with-incompatible-hosting-environments
 	 */
 	public function activation_check() {
 		if ( ! $this->is_environment_compatible() ) {
@@ -219,7 +215,7 @@ final class Custom_Plugin {
 	}
 
 	/**
-	 * Adds notices for out-of-date WordPress and/or WooCommerce versions.
+	 * Adds notices for missing compatibilities & dependencies.
 	 *
 	 * @since 1.0.0
 	 */
@@ -229,7 +225,7 @@ final class Custom_Plugin {
 				'update_wordpress',
 				'error',
 				sprintf(
-					/* translators: 1: Plugin Name 2: Minimum WP Version 3: Update Url */
+					/* translators: 1: Plugin Name 2: Minimum WP Version 3: Update Url 4: Close Anchor Tag */
 					__( '%1$s requires WordPress version %2$s or higher. Please %3$supdate WordPress &raquo;%4$s', 'custom-plugin' ),
 					CUSTOM_PLUGIN_PLUGIN_NAME,
 					CUSTOM_PLUGIN_MIN_WP_VERSION,
@@ -295,6 +291,7 @@ final class Custom_Plugin {
 		if ( ! CUSTOM_PLUGIN_MIN_WP_VERSION ) {
 			return true;
 		}
+
 		return version_compare( get_bloginfo( 'version' ), CUSTOM_PLUGIN_MIN_WP_VERSION, '>=' );
 	}
 
@@ -337,19 +334,19 @@ final class Custom_Plugin {
 			?>
 			<div class="<?php echo esc_attr( $notice['class'] ); ?>">
 				<p>
-				<?php
-				echo wp_kses(
-					$notice['message'],
-					array(
-						'strong' => array(),
-						'a'      => array(
-							'href'   => array(),
-							'target' => array(),
-						),
-					)
-				);
-				?>
-					</p>
+					<?php
+					echo wp_kses(
+						$notice['message'],
+						array(
+							'strong' => array(),
+							'a'      => array(
+								'href'   => array(),
+								'target' => array(),
+							),
+						)
+					);
+					?>
+				</p>
 			</div>
 			<?php
 		}

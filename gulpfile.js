@@ -1,233 +1,151 @@
-// Package json.
-const pkg = require( './package.json' );
-
-// See https://github.com/austinpray/asset-builder
-const manifest = require( 'asset-builder' )( './src/manifest.json' );
-
-// `path` - Paths to base asset directories. With trailing slashes.
-// - `path.source` - Path to the source files. Default: `assets/`
-// - `path.dist` - Path to the build directory. Default: `dist/`
-const path = manifest.paths;
-
-// `globs` - These ultimately end up in their respective `gulp.src`.
-// - `globs.js` - Array of asset-builder JS dependency objects. Example:
-//   ```
-//   {type: "js", name: "main.js", globs: []}
-//   ```
-// - `globs.css` - Array of asset-builder CSS dependency objects. Example:
-//   ```
-//   {type: "css", name: "main.css", globs: []}
-//   ```
-// - `globs.fonts` - Array of font path globs.
-// - `globs.images` - Array of image path globs.
-// - `globs.bower` - Array of all the main Bower files.
-const globs = manifest.globs;
-
-const DEST_CSS = path.dist + 'css';
-const DEST_JS = path.dist + 'js';
-
+/**
+ * Define required packages.
+ */
 const gulp = require( 'gulp' );
 const autoprefixer = require( 'autoprefixer' );
-const cleanCSS = require( 'gulp-clean-css' );
+const cleancss = require( 'gulp-clean-css' );
+const clone = require( 'gulp-clone' );
 const concat = require( 'gulp-concat' );
-const cssbeautify = require( 'gulp-cssbeautify' );
-const dartSass = require( 'sass' );
 const del = require( 'del' );
-const discardDuplicates = require( 'postcss-discard-duplicates' );
+const duplicates = require( 'postcss-discard-duplicates' );
 const flatten = require( 'gulp-flatten' );
 const gcmq = require( 'gulp-group-css-media-queries' );
-const gulpSass = require( 'gulp-sass' );
 const imagemin = require( 'gulp-imagemin' );
-const lazypipe = require( 'lazypipe' );
 const merge = require( 'merge-stream' );
 const plumber = require( 'gulp-plumber' );
 const postcss = require( 'gulp-postcss' );
 const rename = require( 'gulp-rename' );
-const strip = require( 'gulp-strip-css-comments' );
-const uglify = require( 'gulp-terser' );
-const wpPot = require( 'wp-pot' );
+const sass = require( 'gulp-sass' )( require( 'sass' ) );
+const terser = require( 'gulp-terser' );
 
-const scss = gulpSass( dartSass );
-
-// ## Reusable Pipelines
-// See https://github.com/OverZealous/lazypipe
-
-// ### CSS processing pipeline
-// Example
-// ```
-// gulp.src(cssFiles)
-//   .pipe(cssTasks("main.css")
-//   .pipe(gulp.dest(path.dist + "styles"))
-// ```
-const cssTasks = ( filename ) => {
-	return lazypipe()
-		.pipe( plumber )
-		.pipe( () =>
-			scss( {
-				outputStyle: 'expanded',
-				precision: 10,
-				includePaths: [ '.' ],
-			} )
-		)
-		.pipe( () => strip() )
-		.pipe( gcmq )
-		.pipe( concat, filename )
-		.pipe( () => postcss( [ discardDuplicates(), autoprefixer() ] ) )
-		.pipe( () =>
-			cssbeautify( {
-				autosemicolon: true,
-			} )
-		)();
+/**
+ * Paths to base asset directories. With trailing slashes.
+ * - `paths.src` - Path to the source files. Default: `src/`
+ * - `paths.dist` - Path to the build directory. Default: `assets/`
+ */
+const paths = {
+	src: 'src/',
+	dist: 'assets/',
 };
 
-// ### Build css
-// `gulp styles` - Compiles, combines, and optimizes  CSS and project CSS.
-// By default this task will only log a warning if a precompiler error is
-// raised.
-function buildCSS( done ) {
-	const merged = merge();
+/**
+ * Build CSS.
+ *
+ * @param {Function} done
+ */
+const buildCSS = ( done ) => {
+	const entries = {
+		admin: [ 'src/scss/admin.scss' ],
+		frontend: [ 'src/scss/frontend.scss' ],
+	};
 
-	manifest.forEachDependency( 'css', function( dep ) {
-		merged.add(
-			gulp
-				.src( dep.globs, {
-					base: 'css',
-				} )
-				.pipe( cssTasks( dep.name ) )
-		);
-	} );
+	for ( const [ name, path ] of Object.entries( entries ) ) {
+		const baseSource = gulp
+			.src( path )
+			.pipe( plumber() )
+			.pipe( sass( { outputStyle: 'expanded' } ) )
+			.pipe( gcmq() )
+			.pipe( concat( 'merged.css' ) )
+			.pipe( postcss( [ duplicates(), autoprefixer() ] ) )
+			.pipe( cleancss( { format: 'beautify' } ) )
+			.pipe( rename( { basename: name } ) );
 
-	merged
-		.pipe( gulp.dest( DEST_CSS ) )
-		.pipe(
-			cleanCSS( {
-				compatibility: 'ie8',
-			} )
-		)
-		.pipe(
-			rename( {
-				suffix: '.min',
-			} )
-		)
-		.pipe( gulp.dest( DEST_CSS ) );
+		const minified = baseSource
+			.pipe( clone() )
+			.pipe( cleancss() )
+			.pipe( rename( { suffix: '.min' } ) );
+
+		merge( baseSource, minified ).pipe( gulp.dest( paths.dist + 'css' ) );
+	}
+
 	done();
-}
-
-// ### JS processing pipeline
-// Example
-// ```
-// gulp.src(jsFiles)
-//   .pipe(jsTasks("main.js")
-//   .pipe(gulp.dest(path.dist + "scripts"))
-// ```
-const jsTasks = ( filename ) => {
-	return lazypipe().pipe( plumber ).pipe( concat, filename )();
 };
 
-// ### Build JS
-// `gulp scripts` - compiles, combines, and optimizes JS
-// and project JS.
-function buildJS( done ) {
-	const merged = merge();
+/**
+ * Build JS.
+ *
+ * @param {Function} done
+ */
+const buildJS = ( done ) => {
+	const entries = {
+		admin: [ 'src/js/admin.js' ],
+		frontend: [ 'src/js/frontend.js' ],
+	};
 
-	manifest.forEachDependency( 'js', function( dep ) {
-		merged.add(
-			gulp
-				.src( dep.globs, {
-					base: 'js',
-				} )
-				.pipe( jsTasks( dep.name ) )
-		);
-	} );
+	for ( const [ name, path ] of Object.entries( entries ) ) {
+		const baseSource = gulp
+			.src( path )
+			.pipe( plumber() )
+			.pipe( concat( 'merged.js' ) )
+			.pipe( rename( { basename: name } ) );
 
-	merged
-		.pipe( gulp.dest( DEST_JS ) )
-		.pipe( uglify() )
-		.pipe(
-			rename( {
-				suffix: '.min',
-			} )
-		)
-		.pipe( gulp.dest( DEST_JS ) );
+		const minified = baseSource
+			.pipe( clone() )
+			.pipe( terser() )
+			.pipe( rename( { suffix: '.min' } ) );
+
+		merge( baseSource, minified ).pipe( gulp.dest( paths.dist + 'js' ) );
+	}
 
 	done();
-}
+};
 
-// ### Build Fonts
-// `gulp fonts` - Grabs all the fonts and outputs them in a flattened directory
-// structure. See: https://github.com/armed/gulp-flatten
-function buildFonts( done ) {
-	gulp.src( globs.fonts )
+/**
+ * Build Fonts
+ *
+ * @param {Function} done
+ */
+const buildFonts = ( done ) => {
+	gulp.src( paths.src + 'fonts/**/*' )
 		.pipe( flatten() )
-		.pipe( gulp.dest( path.dist + 'fonts' ) );
+		.pipe( gulp.dest( paths.dist + 'fonts' ) );
 
 	done();
-}
+};
 
-// ### Build Images
-// `gulp images` - Run lossless compression on all the images.
-function buildImages( done ) {
-	gulp.src( globs.images )
+/**
+ * Build Images
+ *
+ * @param {Function} done
+ */
+const buildImages = ( done ) => {
+	gulp.src( paths.src + 'images/**/*' )
 		.pipe(
 			imagemin( {
 				progressive: true,
 				interlaced: true,
-				svgoPlugins: [
-					{
-						removeUnknownsAndDefaults: false,
-					},
-				],
+				svgoPlugins: [ { removeUnknownsAndDefaults: false } ],
 			} )
 		)
-		.pipe( gulp.dest( path.dist + 'images' ) );
+		.pipe( gulp.dest( paths.dist + 'images' ) );
 
 	done();
-}
+};
 
-// ### Clean
-// `gulp clean` - Deletes the build folder entirely.
-function cleanAssets( done ) {
-	del.sync( path.dist );
-
-	done();
-}
-
-// ### Make Pot
-function makePot( done ) {
-	wpPot( {
-		destFile: `./languages/${ pkg.name }.pot`,
-		domain: pkg.name,
-		package: `${ pkg.pluginName } ${ pkg.version }`,
-		src: '**/*.php',
-	} );
+/**
+ * Clean the build directory.
+ *
+ * @param {Function} done
+ */
+const cleanAssets = ( done ) => {
+	del.sync( paths.dist );
 
 	done();
-}
+};
 
-// ### Watch
-// `gulp watch` - Use BrowserSync to proxy your dev server and synchronize code
-// changes across devices. Specify the hostname of your dev server at
-// `manifest.config.devUrl`. When a modification is made to an asset, run the
-// build step for that asset and inject the changes into the page.
-// See: http://www.browsersync.io
-function watch( done ) {
-	gulp.watch( [ path.source + 'css/**/*' ], gulp.parallel( buildCSS ) );
-	gulp.watch( [ path.source + 'js/**/*' ], buildJS );
-	gulp.watch( [ path.source + 'images/**/*' ], buildImages );
-	gulp.watch( [ path.source + 'fonts/**/*' ], buildFonts );
+/**
+ * Runs parallel tasks for .js compiling with webpack and .scss compiling
+ *
+ * @param {Function} done
+ */
+const watchAssets = ( done ) => {
+	gulp.watch( 'src/**/*.scss', gulp.series( buildCSS ) );
+	gulp.watch( 'src/**/*.js', gulp.series( buildJS ) );
+	gulp.watch( 'src/fonts/**/*', gulp.series( buildFonts ) );
+	gulp.watch( 'src/images/**/*', gulp.series( buildImages ) );
 
 	done();
-}
+};
 
-// Export Methods
-const build = gulp.series( cleanAssets, buildCSS, buildFonts, buildImages, buildJS, makePot );
-
-exports.css = buildCSS;
-exports.js = buildJS;
-exports.images = buildImages;
-exports.fonts = buildFonts;
-exports.clean = cleanAssets;
-exports.makepot = makePot;
-exports.build = build;
-exports.watch = watch;
-exports.default = build;
+gulp.task( 'build', gulp.series( cleanAssets, buildCSS, buildJS, buildFonts, buildImages ) );
+gulp.task( 'watch', gulp.series( watchAssets ) );

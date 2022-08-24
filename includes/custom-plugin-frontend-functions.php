@@ -1,22 +1,19 @@
 <?php
 /**
- * Custom Plugin frontend functions & definations.
- *
  * Functions for frontend specific things.
  *
- * @package Custom_Plugin
- * @subpackage Custom_Plugin\Functions
  * @since 1.0.0
+ * @package Custom_Plugin
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Undocumented function
+ * Write function description here.
  *
  * @since 1.0.0
  */
-function custom_plugin_frontend_function_1() {
-	// Write your code here.
+function custom_plugin_frontend_function() {
+	// Write your function code here.
 }

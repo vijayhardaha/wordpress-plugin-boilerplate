@@ -2,16 +2,16 @@
 /**
  * Plugin Name: Custom Plugin
  * Plugin URI: https://github.com/vijayhardaha/
- * Description: This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description: This is a short description of your plugin.
  * Version: 1.0.0
  * Author: Vijay Hardaha
  * Author URI: https://twitter.com/vijayhardaha/
- * Text Domain: custom-plugin
- * Domain Path: /languages/
- * Requires at least: 5.4
- * Requires PHP: 5.6
  * License: GNU General Public License v2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: custom-plugin
+ * Domain Path: /languages/
+ * Requires at least: 5.8
+ * Requires PHP: 7.2
  *
  * @package Custom_Plugin
  */

@@ -3,12 +3,12 @@
 /**
  * Define Packages.
  */
+const del = require( 'del' );
 const fs = require( 'fs' ).promises;
+const ora = require( 'ora' );
 const path = require( 'path' );
 const prompts = require( 'prompts' );
-const ora = require( 'ora' );
 const replace = require( 'replace-in-file' );
-const rimraf = require( 'rimraf' );
 
 // Valid files and path to be used for replace and rename.
 const validKeys = [
@@ -121,11 +121,9 @@ const updatePackageJson = async () => {
 	let pkg = await fs.readFile( './package.json' );
 	pkg = JSON.parse( pkg );
 	delete pkg.scripts.setup;
-	delete pkg.devDependencies[ 'setup;' ];
 	delete pkg.devDependencies.prompts;
 	delete pkg.devDependencies.ora;
 	delete pkg.devDependencies[ 'replace-in-file' ];
-	delete pkg.devDependencies.rimraf;
 	await fs.writeFile( './package.json', JSON.stringify( pkg, null, 2 ) );
 };
 
@@ -181,21 +179,13 @@ const updatePackageJson = async () => {
 		// Start the replacement in files.
 		await replace( options );
 
+		// Update package json.
 		await updatePackageJson();
 
+		// Delete files.
+		await del( [ 'setup.js', '.git' ] );
+
 		spinner.succeed( 'Complete!' );
-
-		rimraf( './setup.js', ( error ) => {
-			if ( error ) {
-				throw new Error( error );
-			}
-		} );
-
-		rimraf( './.git', ( error ) => {
-			if ( error ) {
-				throw new Error( error );
-			}
-		} );
 
 		// Resolve the promise at the end.
 		return Promise.resolve();

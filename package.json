@@ -19,6 +19,7 @@
 		"dev": "gulp watch",
 		"prebuild": "npm run fix",
 		"build": "gulp build",
+    "pot": "wp i18n make-pot . languages/custom-plugin.pot",
 		"fix:css": "stylelint src/scss --fix",
 		"fix:js": "eslint src/js --fix",
 		"fix:php": "composer run-script fix",

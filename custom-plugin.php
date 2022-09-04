@@ -17,8 +17,7 @@
  * @package Custom_Plugin
  */
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
 
 if ( ! function_exists( 'get_plugin_data' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/plugin.php';

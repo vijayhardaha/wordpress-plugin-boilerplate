@@ -1,18 +1,14 @@
 <?php
 /**
- * Custom Plugin class for plugin setup.
+ * Main class for plugin setup.
  *
- * @since 1.0.0
  * @package Custom_Plugin
  */
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
 
 /**
  * Main Custom_Plugin Class.
- *
- * @class Custom_Plugin
  */
 final class Custom_Plugin {
 
@@ -39,13 +35,9 @@ final class Custom_Plugin {
 	 * @var array Array of required plugins.
 	 */
 	private $required_plugins = array(
-		'woocommerce/woocommerce.php'       => array(
+		'woocommerce/woocommerce.php' => array(
 			'url'  => 'https://wordpress.org/plugins/woocommerce/',
 			'name' => 'WooCommerce',
-		),
-		'classic-editor/classic-editor.php' => array(
-			'url'  => 'https://wordpress.org/plugins/classic-editor/',
-			'name' => 'Classic Editor',
 		),
 	);
 
@@ -313,8 +305,8 @@ final class Custom_Plugin {
 	protected function deactivate_plugin() {
 		deactivate_plugins( CUSTOM_PLUGIN_PLUGIN_FILE );
 
-		if ( isset( $_GET['activate'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			unset( $_GET['activate'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		if ( isset( $_GET['activate'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			unset( $_GET['activate'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 	}
 

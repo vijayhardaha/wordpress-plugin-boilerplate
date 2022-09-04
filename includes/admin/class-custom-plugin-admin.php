@@ -2,12 +2,10 @@
 /**
  * Custom Plugin Admin Class.
  *
- * @since 1.0.0
  * @package Custom_Plugin
  */
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
 
 if ( class_exists( 'Custom_Plugin_Admin' ) ) {
 	return new Custom_Plugin_Admin();
@@ -15,8 +13,6 @@ if ( class_exists( 'Custom_Plugin_Admin' ) ) {
 
 /**
  * Custom_Plugin_Admin Class.
- *
- * @class Custom_Plugin_Admin
  */
 class Custom_Plugin_Admin {
 
@@ -51,7 +47,7 @@ class Custom_Plugin_Admin {
 	 * @since 1.0.0
 	 */
 	public function admin_menu() {
-		add_menu_page( __( 'Custom Plugin', 'custom-plugin' ), __( 'Custom Plugin', 'custom-plugin' ), 'manage_options', 'custom-plugin-page', array( $this, 'render_admin_menu_page' ), 'dashicons-wordpress', '60' );
+		add_menu_page( __( 'Custom Plugin', 'custom-plugin' ), __( 'Custom Plugin', 'custom-plugin' ), 'manage_options', 'custom-plugin-page', array( $this, 'render_admin_menu_page' ), 'dashicons-wordpress', 60 );
 		add_submenu_page( 'custom-plugin-page', __( 'Submenu Item', 'custom-plugin' ), __( 'Submenu Item', 'custom-plugin' ), 'manage_options', 'custom-plugin-page-submenu', array( $this, 'render_submenu_page' ) );
 	}
 
@@ -97,7 +93,7 @@ class Custom_Plugin_Admin {
 		// Admin styles for custom_plugin pages only.
 		if ( $this->is_valid_screen() ) {
 			// Styles.
-			wp_enqueue_style( 'custom-plugin-admin-styles', custom_plugin()->plugin_url() . '/assets/css/admin' . $suffix . '.css', array(), CUSTOM_PLUGIN_VERSION );
+			wp_enqueue_style( 'custom-plugin-admin', custom_plugin()->plugin_url() . '/assets/css/admin' . $suffix . '.css', array(), CUSTOM_PLUGIN_VERSION );
 
 			// Scripts.
 			wp_enqueue_script( 'custom-plugin-admin', custom_plugin()->plugin_url() . '/assets/js/admin' . $suffix . '.js', array( 'jquery' ), CUSTOM_PLUGIN_VERSION, true );

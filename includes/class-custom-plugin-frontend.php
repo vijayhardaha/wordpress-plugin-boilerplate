@@ -2,12 +2,10 @@
 /**
  * Custom Plugin Frontend Class.
  *
- * @since 1.0.0
  * @package Custom_Plugin
  */
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
 
 if ( class_exists( 'Custom_Plugin_Frontend' ) ) {
 	return new Custom_Plugin_Frontend();
@@ -15,8 +13,6 @@ if ( class_exists( 'Custom_Plugin_Frontend' ) ) {
 
 /**
  * Custom_Plugin_Frontend Class.
- *
- * @class Custom_Plugin_Frontend
  */
 class Custom_Plugin_Frontend {
 
@@ -51,7 +47,7 @@ class Custom_Plugin_Frontend {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		// Styles.
-		wp_enqueue_style( 'custom-plugin-frontend-styles', custom_plugin()->plugin_url() . '/assets/css/frontend' . $suffix . '.css', array(), CUSTOM_PLUGIN_VERSION );
+		wp_enqueue_style( 'custom-plugin-frontend', custom_plugin()->plugin_url() . '/assets/css/frontend' . $suffix . '.css', array(), CUSTOM_PLUGIN_VERSION );
 
 		// Scripts.
 		wp_enqueue_script( 'custom-plugin-frontend', custom_plugin()->plugin_url() . '/assets/js/frontend' . $suffix . '.js', array( 'jquery' ), CUSTOM_PLUGIN_VERSION, true );

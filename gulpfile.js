@@ -139,13 +139,15 @@ const cleanAssets = ( done ) => {
  * @param {Function} done
  */
 const watchAssets = ( done ) => {
-	gulp.watch( 'src/**/*.scss', gulp.series( buildCSS ) );
-	gulp.watch( 'src/**/*.js', gulp.series( buildJS ) );
+	gulp.watch( 'src/scss/**/*.scss', gulp.series( buildCSS ) );
+	gulp.watch( 'src/js/**/*.js', gulp.series( buildJS ) );
 	gulp.watch( 'src/fonts/**/*', gulp.series( buildFonts ) );
 	gulp.watch( 'src/images/**/*', gulp.series( buildImages ) );
 
 	done();
 };
 
+gulp.task( 'css', gulp.series( buildCSS, ) );
+gulp.task( 'js', gulp.series( buildJS ) );
 gulp.task( 'build', gulp.series( cleanAssets, buildCSS, buildJS, buildFonts, buildImages ) );
 gulp.task( 'watch', gulp.series( watchAssets ) );

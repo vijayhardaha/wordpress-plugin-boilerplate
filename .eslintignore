@@ -11,4 +11,5 @@
 assets/
 includes/
 languages/
+src/js/vendors/
 src/js/**/*.min.js

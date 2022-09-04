@@ -6,12 +6,13 @@
  * Version: 1.0.0
  * Author: Vijay Hardaha
  * Author URI: https://twitter.com/vijayhardaha/
- * License: GNU General Public License v2 or later
+ * License: GPLv2+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: custom-plugin
  * Domain Path: /languages/
  * Requires at least: 5.8
- * Requires PHP: 7.2
+ * Requires PHP: 7.0
+ * Tested up to: 6.0
  *
  * @package Custom_Plugin
  */

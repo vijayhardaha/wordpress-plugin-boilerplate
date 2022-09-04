@@ -4,17 +4,17 @@ A Wordpress starter pack with pre-configured Gulp to set up a custom Wordpress P
 
 ## Getting started
 
--   Clone the GitHub repository into your plugins directory.
--   `git clone https://github.com/vijayhardaha/wordpress-plugin-boilerplate.git wp-demo-plugin`
--   Use your desired plugin name in place of **_wp-demo-plugin_** in above command.
--   Navigate to the cloned directory using `cd` command.
--   In the plugin directory run `npm i` and `composer install`.
--   Run `npm run setup` to start automated setup process.
--   You will be prompt to enter the plugin name. Use the desired unique plugin name in input.\
-    These are some examples of plugin names: **WP Mail Checker**, **Bulk Email Sender**, **WP Users Importer**
--   After a valid input, In a few seconds, you'll see **Complete!** message if everything goes ok.
--   Run `npm run dev` to start development.
--   Run `npm run build` to build the assets files & .pot file.
+- Clone the GitHub repository into your plugins directory.
+- `git clone https://github.com/vijayhardaha/wordpress-plugin-boilerplate.git wp-demo-plugin`
+- Use your desired plugin name in place of **_wp-demo-plugin_** in above command.
+- Navigate to the cloned directory using `cd` command.
+- In the plugin directory run `npm i` and `composer install`.
+- Run `npm run setup` to start automated setup process.
+- You will be prompt to enter the plugin name. Use the desired unique plugin name in input.\
+  These are some examples of plugin names: **WP Mail Checker**, **Bulk Email Sender**, **WP Users Importer**
+- After a valid input, In a few seconds, you'll see **Complete!** message if everything goes ok.
+- Run `npm run dev` to start development.
+- Run `npm run build` to build the assets files & .pot file.
 
 ## Important keywords
 

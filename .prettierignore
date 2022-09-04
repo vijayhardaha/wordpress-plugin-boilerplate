@@ -11,3 +11,6 @@ assets/
 includes/
 languages/
 src/
+**/*.js
+**/*.css
+**/*.scss

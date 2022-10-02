@@ -3,12 +3,12 @@
 /**
  * Define Packages.
  */
-const del = require( 'del' );
-const fs = require( 'fs' ).promises;
-const ora = require( 'ora' );
-const path = require( 'path' );
-const prompts = require( 'prompts' );
-const replace = require( 'replace-in-file' );
+import del from 'del';
+import { promises as fs } from 'fs';
+import ora from 'ora';
+import { join } from 'path';
+import prompts from 'prompts';
+import replace from 'replace-in-file';
 
 // Valid files and path to be used for replace and rename.
 const validKeys = [
@@ -38,7 +38,7 @@ const isValidPath = ( filePath ) => ( validKeys.filter( ( key ) => filePath.matc
 const scan = async ( dir = './', results = [] ) => {
 	const items = await fs.readdir( dir );
 	for ( const item of items ) {
-		const itemPath = path.join( dir, item );
+		const itemPath = join( dir, item );
 		if ( isValidPath( itemPath ) ) {
 			const stat = await fs.stat( itemPath );
 			if ( stat.isDirectory() ) {

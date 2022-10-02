@@ -1,22 +1,24 @@
 /**
  * Define required packages.
  */
-const gulp = require( 'gulp' );
-const autoprefixer = require( 'autoprefixer' );
-const cleancss = require( 'gulp-clean-css' );
-const clone = require( 'gulp-clone' );
-const concat = require( 'gulp-concat' );
-const del = require( 'del' );
-const duplicates = require( 'postcss-discard-duplicates' );
-const flatten = require( 'gulp-flatten' );
-const gcmq = require( 'gulp-group-css-media-queries' );
-const imagemin = require( 'gulp-imagemin' );
-const merge = require( 'merge-stream' );
-const plumber = require( 'gulp-plumber' );
-const postcss = require( 'gulp-postcss' );
-const rename = require( 'gulp-rename' );
-const sass = require( 'gulp-sass' )( require( 'sass' ) );
-const terser = require( 'gulp-terser' );
+import gulp from 'gulp';
+import autoprefixer from 'autoprefixer';
+import cleancss from 'gulp-clean-css';
+import clone from 'gulp-clone';
+import concat from 'gulp-concat';
+import { deleteSync } from 'del';
+import duplicates from 'postcss-discard-duplicates';
+import flatten from 'gulp-flatten';
+import gcmq from 'gulp-group-css-media-queries';
+import imagemin from 'gulp-imagemin';
+import merge from 'merge-stream';
+import plumber from 'gulp-plumber';
+import postcss from 'gulp-postcss';
+import rename from 'gulp-rename';
+import dartSass from 'sass';
+import gulpSass from 'gulp-sass';
+const sass = gulpSass( dartSass );
+import terser from 'gulp-terser';
 
 /**
  * Paths to base asset directories. With trailing slashes.
@@ -40,8 +42,7 @@ const buildCSS = ( done ) => {
 	};
 
 	for ( const [ name, path ] of Object.entries( entries ) ) {
-		const baseSource = gulp
-			.src( path )
+		const baseSource = gulp.src( path )
 			.pipe( plumber() )
 			.pipe( sass( { outputStyle: 'expanded' } ) )
 			.pipe( gcmq() )
@@ -73,8 +74,7 @@ const buildJS = ( done ) => {
 	};
 
 	for ( const [ name, path ] of Object.entries( entries ) ) {
-		const baseSource = gulp
-			.src( path )
+		const baseSource = gulp.src( path )
 			.pipe( plumber() )
 			.pipe( concat( 'merged.js' ) )
 			.pipe( rename( { basename: name } ) );
@@ -128,7 +128,7 @@ const buildImages = ( done ) => {
  * @param {Function} done
  */
 const cleanAssets = ( done ) => {
-	del.sync( paths.dist );
+	deleteSync( paths.dist );
 
 	done();
 };
@@ -147,7 +147,10 @@ const watchAssets = ( done ) => {
 	done();
 };
 
-gulp.task( 'css', gulp.series( buildCSS, ) );
-gulp.task( 'js', gulp.series( buildJS ) );
-gulp.task( 'build', gulp.series( cleanAssets, buildCSS, buildJS, buildFonts, buildImages ) );
-gulp.task( 'watch', gulp.series( watchAssets ) );
+const css = gulp.series( buildCSS, );
+const js = gulp.series( buildJS );
+const build = gulp.series( cleanAssets, buildCSS, buildJS, buildFonts, buildImages );
+const watcher = gulp.series( watchAssets );
+
+export { css, js, build };
+export { watcher as watch };

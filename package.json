@@ -34,7 +34,7 @@
 		"prezip": "rm -rf custom-plugin.zip",
 		"zip": "zip -r custom-plugin.zip ./*.php assets includes languages -x '**/.DS_Store'",
 		"makepot": "wp i18n make-pot . --exclude=\"node_modules,vendor\" --slug=custom-plugin",
-		"setup": "node setup.js && npm install"
+		"setup": "node setup.mjs && npm install"
 	},
 	"devDependencies": {
 		"@wordpress/browserslist-config": "^5.1.0",

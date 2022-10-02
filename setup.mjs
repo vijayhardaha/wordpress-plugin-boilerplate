@@ -3,7 +3,7 @@
 /**
  * Define Packages.
  */
-import del from 'del';
+import { deleteSync as del } from 'del';
 import { promises as fs } from 'fs';
 import ora from 'ora';
 import { join } from 'path';
@@ -183,7 +183,7 @@ const updatePackageJson = async () => {
 		await updatePackageJson();
 
 		// Delete files.
-		await del( [ 'setup.js', '.git' ] );
+		await del( [ 'setup.mjs', '.git' ] );
 
 		spinner.succeed( 'Complete!' );
 

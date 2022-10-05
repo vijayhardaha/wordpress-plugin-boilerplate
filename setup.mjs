@@ -13,7 +13,7 @@ import replace from 'replace-in-file';
 // Valid files and path to be used for replace and rename.
 const validKeys = [
 	'custom-plugin',
-	'gulpfile.js',
+	'gulpfile.mjs',
 	'includes',
 	'languages',
 	'package.json',
@@ -81,7 +81,7 @@ const isString = ( string ) => typeof string === 'string' && string.length;
  */
 const changeCase = ( string = '', type = '' ) => {
 	if ( ! isString( string ) ) {
-		throw 'Plugin name is not a string';
+		throw 'Plugin name should be a string.';
 	}
 
 	let str = string;
@@ -183,7 +183,7 @@ const updatePackageJson = async () => {
 		await updatePackageJson();
 
 		// Delete files.
-		await del( [ 'setup.mjs', '.git' ] );
+		await del( [ 'setup.mjs', '.git', 'README.md' ] );
 
 		spinner.succeed( 'Complete!' );
 

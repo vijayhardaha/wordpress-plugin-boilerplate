@@ -6,18 +6,19 @@ Thumbs.db
 *.log
 logs/
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Build
+# Build & Tests
 *.sql
 *.zip
 build/
 coverage/
 dist/
 
-# Project
+# Dependencies
 jspm_packages/
 node_modules/
-vendor/
 
 # Composer
 /tests/phpunit/build
@@ -52,5 +53,5 @@ test-results.json
 *.patch
 *.rej
 
-# PHP lint
+# PHP Lint
 phpcs-report.xml

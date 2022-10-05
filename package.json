@@ -37,7 +37,7 @@
 		"setup": "node setup.mjs && npm install"
 	},
 	"devDependencies": {
-		"@wordpress/browserslist-config": "^5.1.0",
+		"@wordpress/browserslist-config": "^5.2.0",
 		"@wordpress/eslint-plugin": "^13.2.0",
 		"@wordpress/prettier-config": "^2.1.0",
 		"@wordpress/stylelint-config": "^21.1.0",

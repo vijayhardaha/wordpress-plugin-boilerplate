@@ -17,17 +17,40 @@ import postcss from 'gulp-postcss';
 import rename from 'gulp-rename';
 import dartSass from 'sass';
 import gulpSass from 'gulp-sass';
-const sass = gulpSass( dartSass );
 import terser from 'gulp-terser';
+
+const sass = gulpSass( dartSass );
 
 /**
  * Paths to base asset directories. With trailing slashes.
  * - `paths.src` - Path to the source files. Default: `src/`
- * - `paths.dist` - Path to the build directory. Default: `assets/`
+ * - `paths.dest` - Path to the build directory. Default: `assets/`
  */
 const paths = {
 	src: 'src/',
-	dist: 'assets/',
+	dest: 'assets/',
+	scss: {
+		src: {
+			admin: [ 'src/scss/admin.scss' ],
+			frontend: [ 'src/scss/frontend.scss' ],
+		},
+		dest: 'assets/css',
+	},
+	js: {
+		src: {
+			admin: [ 'src/js/admin.js' ],
+			frontend: [ 'src/js/frontend.js' ],
+		},
+		dest: 'assets/js',
+	},
+	images: {
+		src: 'src/images/**/*',
+		dest: 'assets/images',
+	},
+	fonts: {
+		src: 'src/fonts/**/*',
+		dest: 'assets/fonts',
+	},
 };
 
 /**
@@ -36,13 +59,9 @@ const paths = {
  * @param {Function} done
  */
 const buildCSS = ( done ) => {
-	const entries = {
-		admin: [ 'src/scss/admin.scss' ],
-		frontend: [ 'src/scss/frontend.scss' ],
-	};
-
-	for ( const [ name, path ] of Object.entries( entries ) ) {
-		const baseSource = gulp.src( path )
+	for ( const [ name, path ] of Object.entries( paths.scss.src ) ) {
+		const baseSource = gulp
+			.src( path )
 			.pipe( plumber() )
 			.pipe( sass( { outputStyle: 'expanded' } ) )
 			.pipe( gcmq() )
@@ -56,7 +75,7 @@ const buildCSS = ( done ) => {
 			.pipe( cleancss() )
 			.pipe( rename( { suffix: '.min' } ) );
 
-		merge( baseSource, minified ).pipe( gulp.dest( paths.dist + 'css' ) );
+		merge( baseSource, minified ).pipe( gulp.dest( paths.scss.dest ) );
 	}
 
 	done();
@@ -68,13 +87,9 @@ const buildCSS = ( done ) => {
  * @param {Function} done
  */
 const buildJS = ( done ) => {
-	const entries = {
-		admin: [ 'src/js/admin.js' ],
-		frontend: [ 'src/js/frontend.js' ],
-	};
-
-	for ( const [ name, path ] of Object.entries( entries ) ) {
-		const baseSource = gulp.src( path )
+	for ( const [ name, path ] of Object.entries( paths.js.src ) ) {
+		const baseSource = gulp
+			.src( path )
 			.pipe( plumber() )
 			.pipe( concat( 'merged.js' ) )
 			.pipe( rename( { basename: name } ) );
@@ -84,7 +99,7 @@ const buildJS = ( done ) => {
 			.pipe( terser() )
 			.pipe( rename( { suffix: '.min' } ) );
 
-		merge( baseSource, minified ).pipe( gulp.dest( paths.dist + 'js' ) );
+		merge( baseSource, minified ).pipe( gulp.dest( paths.js.dest ) );
 	}
 
 	done();
@@ -96,9 +111,7 @@ const buildJS = ( done ) => {
  * @param {Function} done
  */
 const buildFonts = ( done ) => {
-	gulp.src( paths.src + 'fonts/**/*' )
-		.pipe( flatten() )
-		.pipe( gulp.dest( paths.dist + 'fonts' ) );
+	gulp.src( paths.fonts.src ).pipe( flatten() ).pipe( gulp.dest( paths.fonts.dest ) );
 
 	done();
 };
@@ -109,7 +122,7 @@ const buildFonts = ( done ) => {
  * @param {Function} done
  */
 const buildImages = ( done ) => {
-	gulp.src( paths.src + 'images/**/*' )
+	gulp.src( paths.images.src )
 		.pipe(
 			imagemin( {
 				progressive: true,
@@ -117,7 +130,7 @@ const buildImages = ( done ) => {
 				svgoPlugins: [ { removeUnknownsAndDefaults: false } ],
 			} )
 		)
-		.pipe( gulp.dest( paths.dist + 'images' ) );
+		.pipe( gulp.dest( paths.images.dest ) );
 
 	done();
 };
@@ -128,7 +141,7 @@ const buildImages = ( done ) => {
  * @param {Function} done
  */
 const cleanAssets = ( done ) => {
-	deleteSync( paths.dist );
+	deleteSync( paths.dest );
 
 	done();
 };
@@ -139,15 +152,15 @@ const cleanAssets = ( done ) => {
  * @param {Function} done
  */
 const watchAssets = ( done ) => {
-	gulp.watch( 'src/scss/**/*.scss', gulp.series( buildCSS ) );
-	gulp.watch( 'src/js/**/*.js', gulp.series( buildJS ) );
-	gulp.watch( 'src/fonts/**/*', gulp.series( buildFonts ) );
-	gulp.watch( 'src/images/**/*', gulp.series( buildImages ) );
+	gulp.watch( paths.src + 'scss/**/*.scss', gulp.series( buildCSS ) );
+	gulp.watch( paths.src + 'js/**/*.js', gulp.series( buildJS ) );
+	gulp.watch( paths.src + 'fonts/**/*', gulp.series( buildFonts ) );
+	gulp.watch( paths.src + 'images/**/*', gulp.series( buildImages ) );
 
 	done();
 };
 
-const css = gulp.series( buildCSS, );
+const css = gulp.series( buildCSS );
 const js = gulp.series( buildJS );
 const build = gulp.series( cleanAssets, buildCSS, buildJS, buildFonts, buildImages );
 const watcher = gulp.series( watchAssets );

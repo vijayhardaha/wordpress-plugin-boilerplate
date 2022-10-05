@@ -4,64 +4,87 @@ A Wordpress starter pack with pre-configured Gulp to set up a custom Wordpress P
 
 ## Getting started
 
--   Clone the GitHub repository into your plugins directory.
--   `git clone https://github.com/vijayhardaha/wordpress-plugin-boilerplate.git wp-demo-plugin`
--   Use your desired plugin name in place of **_wp-demo-plugin_** in above command.
--   Navigate to the cloned directory using `cd` command.
--   In the plugin directory run `npm i` and `composer install`.
+Before running any of the scripts, you must complete several steps:
+
+1. Clone the GitHub repository into your plugins directory.
+1. In the plugin directory run `npm i && composer install`.
+
+After cloning repository and installing the dependencies, you need to complete setup process using these steps:
+
 -   Run `npm run setup` to start automated setup process.
--   You will be prompt to enter the plugin name. Use the desired unique plugin name in input.\
-    These are some examples of plugin names: **WP Mail Checker**, **Bulk Email Sender**, **WP Users Importer**
--   After a valid input, In a few seconds, you'll see **Complete!** message if everything goes ok.
--   Run `npm run dev` to start development.
--   Run `npm run build` to build the assets files & .pot file.
+-   Write the desired plugin name in prompt input. e.g. `WP Mail Checker` `Bulk Email Sender`
+-   Automated script will setup plugin name and relative keywords in all the plugin files and you will see `Complete!` message after a successful process, otherwise you'll see error messages.
 
-## Important keywords
+### Watch and Build
 
-| Keyword       | Description                                                  |
-| ------------- | ------------------------------------------------------------ |
-| custom-plugin | Used as prefix/postfix in class/Fn(s) filenames.             |
-| Custom Plugin | Used as a plugin name across all plugin files.               |
-| Custom_Plugin | Used in the final class name & as other class name prefixes. |
-| CUSTOM_PLUGIN | Used in constants prefix.                                    |
-| custom-plugin | Used as WordPress text domain and prefix for enqueue assets. |
-| custom_plugin | Used as main Fn name and as other Fn(s) name prefix.         |
+-   Run `npm run dev` to compile your files automatically whenever you've made changes to the associated files.
+-   Run `npm run build` to compile files for release.
+
+### Lint and Fix
+
+The plugin has a total of 8 scripts for lint and fix. There are 3-3 scripts set for lint & fix the `css, js, php` individually and 2 combined scripts to lint & fix `css, js, php` together.
+
+-   Run `lint:css` to lint `scss` files.
+-   Run `lint:js` to lint `js` files.
+-   Run `lint:php` to lint `php` files.
+-   Run `lint` to lint `css, js, php` files together.
+-   Run `lint-fix:css` to fix `scss` files.
+-   Run `lint-fix:js` to fix `js` files.
+-   Run `lint-fix:php` to fix `php` files.
+-   Run `lint-fix` to fix `css, js, php` files together.
+
+### Generate POT(languages) file
+
+1. Install WP-CLI and add it to PATH (check out [official guide](https://wp-cli.org/#installing))
+1. Run `npm run makepot`
+
+### Important keywords
+
+| Keyword         | Used as                                              |
+| --------------- | ---------------------------------------------------- |
+| `custom-plugin` | Files `prefix` or `postfix`                          |
+| `custom-plugin` | Plugin `text-domain`, Assets enqueue handle `prefix` |
+| `Custom Plugin` | Plugin `name` across all plugin files                |
+| `Custom_Plugin` | Final class `name`, Class name `prefix`              |
+| `custom_plugin` | Main function `name`, functions name `prefix`        |
+| `CUSTOM_PLUGIN` | Constants `prefix`                                   |
 
 ## How setup works?
 
-In this plugin boilerplate code above **Important keywords** are used in a way that helps the setup code to match and replace the keywords with your given plugin name.
+In Plugin Boilerplate files **Important Keywords** ☝️ are used as `placeholders` which are replaced by an automated setup process with your given plugin name.
 
-`npm run setup` is a one-time command, After successful completion, the setup code and script will be removed from the `package.json` and some of the packages that are used in the setup will be removed as well and you'll only have packages that are used in plugin development ahead.
+`npm run setup` is a one-time command, After successful completion, `setup.mjs`, `.git`, `README.md` files/directories will be deleted and `setup` script will be removed from the `package.json`
+
+The setup process’s dependencies will be removed as well and you’ll be left with dependencies that will be used in your plugin development.
 
 ## Plugin structure
 
-**custom-plugin.php**\
-Main plugin file which contains all the plugin information and some defined CONST and a global functions that returns main class instance.
+### custom-plugin.php
 
-**gulpfile.js**\
-It has all the tasks setup for **_js, css, image, and font_** files.
+The main plugin file contains all the plugin information and some defined `CONST` and a global function that returns the main class instance.
 
-**languages**\
-This directory contains a .pot file that will be used for translation.
+### gulpfile.mjs
 
-**includes**\
-This directory contains all the php files.\
-class-based files will start with `class-` prefix and functions files will end with `-functions.php` postfix.\
+It has all the tasks setup for `css, js, image, font` files.
+
+### includes
+
+This directory has all the php files.\
+class files will start with `class-` prefix and functions files will end with `-functions.php` postfix.\
 All the backend-related files will be inside the `admin` directory.
 
-**src**\
-This directory contains all the source files for plugin assets.\
-**_js, css, image, and font_** files will be in the related directory.\
-This setup uses [asset-builder](https://www.npmjs.com/package/asset-builder) package, Check their documentations to know more about it.
+### src
 
-**assets**\
-This directory contains all the compressed & optimized **_js, css, image, and font_** files.\
-All the build assets will be auto-generated with the help of **gulp** tasks in this directory, You don't have to write/create anything inside it.
+This directory has all the source files for plugin assets.
+
+### assets
+
+This directory has all the compressed & optimized `css, js, image, font` files.\
+All the build assets will be auto-generated with the help of **gulp** tasks in this directory, You don't have to & should not write/create anything inside it since it will be deleted and recreated with `build` script.
 
 ## License
 
-WordPress Plugin Boilerplate, Copyright (C) 2021-2022, Vijay Hardaha.\
-WordPress Plugin Boilerplate is distributed under the terms of the GNU GPL.
+Copyright (C) 2021-2022, Vijay Hardaha. WordPress Plugin Boilerplate is distributed under the terms of the GNU GPL.
 
 ## Contributions
 

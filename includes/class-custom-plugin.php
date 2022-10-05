@@ -13,6 +13,13 @@ defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
 final class Custom_Plugin {
 
 	/**
+	 * Plugin version.
+	 *
+	 * @var string
+	 */
+	public $version = '1.0.0';
+
+	/**
 	 * This class instance.
 	 *
 	 * @since 1.0.0
@@ -37,28 +44,6 @@ final class Custom_Plugin {
 	}
 
 	/**
-	 * Custom_Plugin Constructor.
-	 *
-	 * @since 1.0.0
-	 */
-	public function __construct() {
-		$this->define_constants();
-
-		register_activation_hook( CUSTOM_PLUGIN_PLUGIN_FILE, array( $this, 'activation_check' ) );
-
-		register_shutdown_function( array( $this, 'log_errors' ) );
-
-		add_action( 'admin_init', array( $this, 'check_environment' ) );
-		add_action( 'admin_init', array( $this, 'add_plugin_notices' ) );
-		add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
-
-		// If the environment check fails, initialize the plugin.
-		if ( $this->is_environment_compatible() ) {
-			add_action( 'plugins_loaded', array( $this, 'init_plugin' ) );
-		}
-	}
-
-	/**
 	 * Cloning instances is forbidden due to singleton pattern.
 	 *
 	 * @since 1.0.0
@@ -74,6 +59,28 @@ final class Custom_Plugin {
 	 */
 	public function __wakeup() {
 		_doing_it_wrong( __FUNCTION__, sprintf( 'You cannot unserialize instances of %s.', esc_html( get_class( $this ) ) ), '1.0.0' );
+	}
+
+	/**
+	 * Custom_Plugin Constructor.
+	 *
+	 * @since 1.0.0
+	 */
+	public function __construct() {
+		$this->define_constants();
+		$this->includes();
+		$this->init_hooks();
+	}
+
+	/**
+	 * Hook into actions and filters.
+	 *
+	 * @since 1.0.0
+	 */
+	private function init_hooks() {
+		register_shutdown_function( array( $this, 'log_errors' ) );
+
+		add_action( 'init', array( $this, 'init' ), 0 );
 	}
 
 	/**
@@ -100,16 +107,9 @@ final class Custom_Plugin {
 	 * @since 1.0.0
 	 */
 	private function define_constants() {
-		if ( ! function_exists( 'get_plugin_data' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		$plugin_data = get_plugin_data( CUSTOM_PLUGIN_PLUGIN_FILE );
-
 		$this->define( 'CUSTOM_PLUGIN_ABSPATH', dirname( CUSTOM_PLUGIN_PLUGIN_FILE ) . '/' );
 		$this->define( 'CUSTOM_PLUGIN_PLUGIN_BASENAME', plugin_basename( CUSTOM_PLUGIN_PLUGIN_FILE ) );
-		$this->define( 'CUSTOM_PLUGIN_PLUGIN_NAME', $plugin_data['Name'] );
-		$this->define( 'CUSTOM_PLUGIN_VERSION', $plugin_data['Version'] );
+		$this->define( 'CUSTOM_PLUGIN_VERSION', $this->version );
 	}
 
 	/**
@@ -126,10 +126,34 @@ final class Custom_Plugin {
 	}
 
 	/**
+	 * Returns true if the request is a non-legacy REST API request.
+	 *
+	 * Legacy REST requests should still run some extra code for backwards compatibility.
+	 *
+	 * @since 1.0.0
+	 * @return bool
+	 */
+	public function is_rest_api_request() {
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			return false;
+		}
+
+		$rest_prefix         = trailingslashit( rest_get_url_prefix() );
+		$is_rest_api_request = ( false !== strpos( $_SERVER['REQUEST_URI'], $rest_prefix ) ); // phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+		/**
+		 * Whether this is a REST API request.
+		 *
+		 * @since 1.0.0
+		 */
+		return apply_filters( 'custom_plugin_is_rest_api_request', $is_rest_api_request );
+	}
+
+	/**
 	 * What type of request is this?
 	 *
 	 * @since 1.0.0
-	 * @param  string $type Admin, ajax, cron or frontend.
+	 * @param string $type admin, ajax, cron or frontend.
 	 * @return bool
 	 */
 	private function is_request( $type ) {
@@ -141,7 +165,7 @@ final class Custom_Plugin {
 			case 'cron':
 				return defined( 'DOING_CRON' );
 			case 'frontend':
-				return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
+				return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' ) && ! $this->is_rest_api_request();
 		}
 	}
 
@@ -187,12 +211,11 @@ final class Custom_Plugin {
 	 * @since 1.0.0
 	 */
 	public function load_plugin_textdomain() {
-		if ( function_exists( 'determine_locale' ) ) {
-			$locale = determine_locale();
-		} else {
-			$locale = is_admin() ? get_user_locale() : get_locale();
-		}
+		$locale = determine_locale();
 
+		/**
+		 * Filter to adjust the Custom Plugin locale to use for translations.
+		 */
 		$locale = apply_filters( 'plugin_locale', $locale, 'custom-plugin' );
 
 		unload_textdomain( 'custom-plugin' );
@@ -201,18 +224,11 @@ final class Custom_Plugin {
 	}
 
 	/**
-	 * Hook into actions and filters.
+	 * Init when WordPress Initialises.
 	 *
 	 * @since 1.0.0
 	 */
-	public function init_plugin() {
-		if ( ! $this->plugins_compatible() ) {
-			return;
-		}
-
-		// Include required files.
-		$this->includes();
-
+	public function init() {
 		// Before init action.
 		do_action( 'before_custom_plugin_init' );
 
@@ -222,6 +238,7 @@ final class Custom_Plugin {
 		// Init action.
 		do_action( 'custom_plugin_init' );
 	}
+
 
 	/**
 	 * Get the plugin url.

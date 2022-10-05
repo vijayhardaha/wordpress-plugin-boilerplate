@@ -19,10 +19,6 @@
 
 defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
 
-if ( ! function_exists( 'get_plugin_data' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/plugin.php';
-}
-
 if ( ! defined( 'CUSTOM_PLUGIN_PLUGIN_FILE' ) ) {
 	define( 'CUSTOM_PLUGIN_PLUGIN_FILE', __FILE__ );
 }

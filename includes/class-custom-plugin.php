@@ -21,27 +21,6 @@ final class Custom_Plugin {
 	private static $instance;
 
 	/**
-	 * Admin notices to add.
-	 *
-	 * @since 1.0.0
-	 * @var array Array of admin notices.
-	 */
-	private $notices = array();
-
-	/**
-	 * Required plugins to check.
-	 *
-	 * @since 1.0.0
-	 * @var array Array of required plugins.
-	 */
-	private $required_plugins = array(
-		'woocommerce/woocommerce.php' => array(
-			'url'  => 'https://wordpress.org/plugins/woocommerce/',
-			'name' => 'WooCommerce',
-		),
-	);
-
-	/**
 	 * Main Custom_Plugin Instance.
 	 *
 	 * Ensures only one instance of Custom_Plugin is loaded or can be loaded.
@@ -53,6 +32,7 @@ final class Custom_Plugin {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 		}
+
 		return self::$instance;
 	}
 
@@ -120,22 +100,24 @@ final class Custom_Plugin {
 	 * @since 1.0.0
 	 */
 	private function define_constants() {
+		if ( ! function_exists( 'get_plugin_data' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
 		$plugin_data = get_plugin_data( CUSTOM_PLUGIN_PLUGIN_FILE );
+
 		$this->define( 'CUSTOM_PLUGIN_ABSPATH', dirname( CUSTOM_PLUGIN_PLUGIN_FILE ) . '/' );
 		$this->define( 'CUSTOM_PLUGIN_PLUGIN_BASENAME', plugin_basename( CUSTOM_PLUGIN_PLUGIN_FILE ) );
 		$this->define( 'CUSTOM_PLUGIN_PLUGIN_NAME', $plugin_data['Name'] );
 		$this->define( 'CUSTOM_PLUGIN_VERSION', $plugin_data['Version'] );
-		$this->define( 'CUSTOM_PLUGIN_MIN_PHP_VERSION', $plugin_data['RequiresPHP'] );
-		$this->define( 'CUSTOM_PLUGIN_MIN_WP_VERSION', $plugin_data['RequiresWP'] );
 	}
 
 	/**
 	 * Define constant if not already set.
 	 *
+	 * @since 1.0.0
 	 * @param string      $name     Constant name.
 	 * @param string|bool $value    Constant value.
-	 *
-	 * @since 1.0.0
 	 */
 	private function define( $name, $value ) {
 		if ( ! defined( $name ) ) {
@@ -147,7 +129,7 @@ final class Custom_Plugin {
 	 * What type of request is this?
 	 *
 	 * @since 1.0.0
-	 * @param string $type Admin, ajax, cron or frontend.
+	 * @param  string $type Admin, ajax, cron or frontend.
 	 * @return bool
 	 */
 	private function is_request( $type ) {
@@ -161,209 +143,6 @@ final class Custom_Plugin {
 			case 'frontend':
 				return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
 		}
-	}
-
-	/**
-	 * Checks the server environment and other factors and deactivates plugins as necessary.
-	 *
-	 * @since 1.0.0
-	 * @link http://wptavern.com/how-to-prevent-wordpress-plugins-from-activating-on-sites-with-incompatible-hosting-environments
-	 */
-	public function activation_check() {
-		if ( ! $this->is_environment_compatible() ) {
-
-			$this->deactivate_plugin();
-
-			wp_die(
-				sprintf(
-					/* translators: 1: Plugin Name 2: Incompatible Environment Message */
-					esc_html__( '%1$s could not be activated. %2$s', 'custom-plugin' ),
-					esc_html( CUSTOM_PLUGIN_PLUGIN_NAME ),
-					esc_html( $this->get_environment_message() )
-				)
-			);
-
-		}
-	}
-
-	/**
-	 * Checks the environment on loading WordPress, just in case the environment changes after activation.
-	 *
-	 * @since 1.0.0
-	 */
-	public function check_environment() {
-		if ( ! $this->is_environment_compatible() && is_plugin_active( CUSTOM_PLUGIN_PLUGIN_BASENAME ) ) {
-
-			$this->deactivate_plugin();
-
-			$this->add_admin_notice(
-				'bad_environment',
-				'error',
-				sprintf(
-					/* translators: 1: Plugin Name 2: Incompatible Environment Message */
-					__( '%1$s has been deactivated. %2$s', 'custom-plugin' ),
-					esc_html( CUSTOM_PLUGIN_PLUGIN_NAME ),
-					esc_html( $this->get_environment_message() )
-				)
-			);
-
-		}
-	}
-
-	/**
-	 * Adds notices for missing compatibilities & dependencies.
-	 *
-	 * @since 1.0.0
-	 */
-	public function add_plugin_notices() {
-		if ( ! $this->is_wp_compatible() ) {
-
-			$this->add_admin_notice(
-				'update_wordpress',
-				'error',
-				sprintf(
-					/* translators: 1: Plugin Name 2: Minimum WP Version 3: Update Url 4: Close Anchor Tag */
-					__( '%1$s requires WordPress version %2$s or higher. Please %3$supdate WordPress &raquo;%4$s', 'custom-plugin' ),
-					CUSTOM_PLUGIN_PLUGIN_NAME,
-					CUSTOM_PLUGIN_MIN_WP_VERSION,
-					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">',
-					'</a>'
-				)
-			);
-
-		}
-
-		$missing_dependencies = $this->missing_dependencies();
-
-		if ( ! empty( $missing_dependencies ) ) {
-
-			$this->add_admin_notice(
-				'install_required_plugins',
-				'error',
-				sprintf(
-					/* translators: 1: Plugin Name 2: Required Plugins Names */
-					__( '%1$s  is enabled but not effective. It requires %2$s in order to work.', 'custom-plugin' ),
-					CUSTOM_PLUGIN_PLUGIN_NAME,
-					join( ', ', $missing_dependencies )
-				)
-			);
-
-		}
-	}
-
-	/**
-	 * Determines if the required plugins are compatible.
-	 *
-	 * @since 1.0.0
-	 * @return bool
-	 */
-	private function plugins_compatible() {
-		return $this->is_wp_compatible() && empty( $this->missing_dependencies() );
-	}
-
-	/**
-	 * Find the missing dependency plugins names.
-	 *
-	 * @since 1.0.0
-	 * @return Array
-	 */
-	private function missing_dependencies() {
-		$missing_dependencies = array();
-
-		if ( empty( $this->required_plugins ) ) {
-			return $missing_dependencies;
-		}
-
-		foreach ( $this->required_plugins as $plugin_base => $plugin ) {
-			if ( ! is_plugin_active( $plugin_base ) ) {
-				$missing_dependencies[] = sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( $plugin['url'] ), $plugin['name'] );
-			}
-		}
-
-		return $missing_dependencies;
-	}
-
-	/**
-	 * Determines if the WordPress compatible.
-	 *
-	 * @since 1.0.0
-	 * @return bool
-	 */
-	private function is_wp_compatible() {
-		if ( ! CUSTOM_PLUGIN_MIN_WP_VERSION ) {
-			return true;
-		}
-
-		return version_compare( get_bloginfo( 'version' ), CUSTOM_PLUGIN_MIN_WP_VERSION, '>=' );
-	}
-
-	/**
-	 * Deactivates the plugin.
-	 *
-	 * @since 1.0.0
-	 */
-	protected function deactivate_plugin() {
-		deactivate_plugins( CUSTOM_PLUGIN_PLUGIN_FILE );
-
-		if ( isset( $_GET['activate'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			unset( $_GET['activate'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		}
-	}
-
-	/**
-	 * Adds an admin notice to be displayed.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $slug    The slug for the notice.
-	 * @param string $class   The css class for the notice.
-	 * @param string $message The notice message.
-	 */
-	private function add_admin_notice( $slug, $class, $message ) {
-		$this->notices[ $slug ] = array(
-			'class'   => $class,
-			'message' => $message,
-		);
-	}
-
-	/**
-	 * Displays any admin notices added with Custom_Plugin::add_admin_notice()
-	 *
-	 * @since 1.0.0
-	 */
-	public function admin_notices() {
-		foreach ( (array) $this->notices as $notice_key => $notice ) {
-			?>
-			<div class="<?php echo esc_attr( $notice['class'] ); ?>">
-				<p><?php echo wp_kses( $notice['message'], array( 'strong' => array(), 'a' => array( 'href' => array(), 'target' => array() ) ) ); // @codingStandardsIgnoreLine ?></p>
-			</div>
-			<?php
-		}
-	}
-
-	/**
-	 * Determines if the server environment is compatible with this plugin.
-	 *
-	 * @since 1.0.0
-	 * @return bool
-	 */
-	private function is_environment_compatible() {
-		return version_compare( phpversion(), CUSTOM_PLUGIN_MIN_PHP_VERSION, '>=' );
-	}
-
-	/**
-	 * Gets the message for display when the environment is incompatible with this plugin.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	private function get_environment_message() {
-		return sprintf(
-			/* translators: 1: Minimum PHP Version 2: Current PHP Version */
-			__( 'The minimum PHP version required for this plugin is %1$s. You are running %2$s.', 'custom-plugin' ),
-			CUSTOM_PLUGIN_MIN_PHP_VERSION,
-			phpversion()
-		);
 	}
 
 	/**

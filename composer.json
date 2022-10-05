@@ -15,7 +15,7 @@
 		}
 	},
 	"scripts": {
-		"lint-fix": "vendor/bin/phpcs --standard=phpcs.xml --runtime-set ignore_errors_on_exit true --runtime-set ignore_warnings_on_exit true",
+		"lint-fix": "vendor/bin/phpcbf --standard=phpcs.xml --runtime-set ignore_errors_on_exit true --runtime-set ignore_warnings_on_exit true",
 		"lint": "vendor/bin/phpcs --standard=phpcs.xml --runtime-set ignore_errors_on_exit true --runtime-set ignore_warnings_on_exit true"
 	}
 }

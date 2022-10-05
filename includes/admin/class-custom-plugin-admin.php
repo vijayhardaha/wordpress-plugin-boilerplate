@@ -22,23 +22,11 @@ class Custom_Plugin_Admin {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		// Includes files.
-		add_action( 'init', array( $this, 'includes' ) );
-
 		// Add menus.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 
 		// Enqueue assets.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
-	}
-
-	/**
-	 * Include classes/functions files that we need within admin.
-	 *
-	 * @since 1.0.0
-	 */
-	public function includes() {
-		// Include your required backend files here.
 	}
 
 	/**
@@ -79,6 +67,7 @@ class Custom_Plugin_Admin {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -92,6 +81,7 @@ class Custom_Plugin_Admin {
 
 		// Admin styles for custom_plugin pages only.
 		if ( $this->is_valid_screen() ) {
+
 			// Styles.
 			wp_enqueue_style( 'custom-plugin-admin', custom_plugin()->plugin_url() . '/assets/css/admin' . $suffix . '.css', array(), CUSTOM_PLUGIN_VERSION );
 

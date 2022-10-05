@@ -15,6 +15,7 @@ final class Custom_Plugin {
 	/**
 	 * Plugin version.
 	 *
+	 * @since 1.0.0
 	 * @var string
 	 */
 	public $version = '1.0.0';
@@ -153,6 +154,7 @@ final class Custom_Plugin {
 	 * What type of request is this?
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $type admin, ajax, cron or frontend.
 	 * @return bool
 	 */

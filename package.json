@@ -45,7 +45,6 @@
 		"del": "^7.0.0",
 		"eslint": "^8.24.0",
 		"eslint-plugin-jsdoc": "^39.3.6",
-		"esm": "^3.2.25",
 		"gulp": "^4.0.2",
 		"gulp-clean-css": "^4.3.0",
 		"gulp-clone": "^2.0.1",

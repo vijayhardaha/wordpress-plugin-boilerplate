@@ -1,45 +1,58 @@
-# Operating System
+# Operating System files
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
-logs/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Build & Tests
-*.sql
-*.zip
-build/
-coverage/
-dist/
-
-# Dependencies
-jspm_packages/
-node_modules/
-
-# Composer
-/tests/phpunit/build
-bin/composer/**/vendor/
-lib/vendor/
-vendor/
+# Grunt
+none
 
 # Sass
 .sass-cache/
 
-# Eslint Cache
-.eslintcache
-
 # NPM
 .npm
+
+# Logs
+*.log
+logs/
+
+# Eslint Cache
+.eslintcache
 
 # REPL
 .node_repl_history
 
 # node-waf
 .lock-wscript
+
+# Environment files
+.pnpm-debug.log
+npm-debug.log
+wp-cli.local.yml
+yarn-error.log
+
+# Build files
+*.sql
+*.swp
+*.zip
+
+# Built packages
+build/
+coverage/
+dist/
+
+# Project files
+node_modules/
+vendor/
+
+# Composer
+bin/composer/**/vendor/
+contributors.html
+contributors.md
+lib/vendor/
+vendor/
+
+# PHP lint
+phpcs-report.xml
 
 # Unit tests
 tmp/
@@ -52,6 +65,3 @@ test-results.json
 *.orig
 *.patch
 *.rej
-
-# PHP Lint
-phpcs-report.xml

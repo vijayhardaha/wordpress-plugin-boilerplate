@@ -37,14 +37,14 @@
 		"setup": "node setup.mjs && pnpm install"
 	},
 	"devDependencies": {
-		"@wordpress/browserslist-config": "^5.2.0",
-		"@wordpress/eslint-plugin": "^13.3.0",
-		"@wordpress/prettier-config": "^2.2.0",
-		"@wordpress/stylelint-config": "^21.2.0",
-		"autoprefixer": "^10.4.12",
+		"@wordpress/browserslist-config": "^5.13.0",
+		"@wordpress/eslint-plugin": "^14.3.0",
+		"@wordpress/prettier-config": "^2.13.0",
+		"@wordpress/stylelint-config": "^21.13.0",
+		"autoprefixer": "^10.4.14",
 		"del": "^7.0.0",
-		"eslint": "^8.25.0",
-		"eslint-plugin-jsdoc": "^39.3.6",
+		"eslint": "^8.37.0",
+		"eslint-plugin-jsdoc": "^40.1.1",
 		"gulp": "^4.0.2",
 		"gulp-clean-css": "^4.3.0",
 		"gulp-clone": "^2.0.1",
@@ -58,14 +58,14 @@
 		"gulp-sass": "^5.1.0",
 		"gulp-terser": "^2.1.0",
 		"merge-stream": "^2.0.0",
-		"ora": "^6.1.2",
-		"postcss": "^8.4.18",
-		"postcss-discard-duplicates": "^5.1.0",
+		"ora": "^6.3.0",
+		"postcss": "^8.4.21",
+		"postcss-discard-duplicates": "^6.0.0",
 		"prompts": "^2.4.2",
 		"replace-in-file": "^6.3.5",
-		"sass": "^1.55.0",
+		"sass": "^1.60.0",
 		"stylelint": "^14.14.0",
-		"stylelint-config-property-sort-order-smacss": "^9.0.0",
-		"stylelint-order": "^5.0.0"
+		"stylelint-config-property-sort-order-smacss": "^9.1.0",
+		"stylelint-order": "^6.0.3"
 	}
 }

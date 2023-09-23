@@ -5,9 +5,11 @@
  * @package Custom_Plugin
  */
 
-defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
+// Prevent direct access to this file.
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 if ( class_exists( 'Custom_Plugin_Admin' ) ) {
+	// The class already exists, so return an instance of it.
 	return new Custom_Plugin_Admin();
 }
 
@@ -35,7 +37,10 @@ class Custom_Plugin_Admin {
 	 * @since 1.0.0
 	 */
 	public function admin_menu() {
+		// Add a top-level menu item.
 		add_menu_page( __( 'Custom Plugin', 'custom-plugin' ), __( 'Custom Plugin', 'custom-plugin' ), 'manage_options', 'custom-plugin-page', array( $this, 'render_admin_menu_page' ), 'dashicons-wordpress', 60 );
+
+		// Add a submenu item under the top-level menu item.
 		add_submenu_page( 'custom-plugin-page', __( 'Submenu Item', 'custom-plugin' ), __( 'Submenu Item', 'custom-plugin' ), 'manage_options', 'custom-plugin-page-submenu', array( $this, 'render_submenu_page' ) );
 	}
 
@@ -46,9 +51,11 @@ class Custom_Plugin_Admin {
 	 * @return array
 	 */
 	public function is_valid_screen() {
+		// Get the current screen.
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
 
+		// Define an array of valid screen IDs for the plugin.
 		$valid_screen_ids = apply_filters(
 			'custom_plugin_valid_admin_screen_ids',
 			array(
@@ -79,7 +86,7 @@ class Custom_Plugin_Admin {
 	public function enqueue_assets() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		// Admin styles for custom_plugin pages only.
+		// Enqueue admin styles and scripts for valid plugin screens.
 		if ( $this->is_valid_screen() ) {
 
 			// Styles.
@@ -123,4 +130,5 @@ class Custom_Plugin_Admin {
 	}
 }
 
+// Create an instance of the Custom_Plugin_Admin class and return it.
 return new Custom_Plugin_Admin();

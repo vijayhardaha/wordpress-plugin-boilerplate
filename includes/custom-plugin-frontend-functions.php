@@ -1,14 +1,15 @@
 <?php
 /**
- * Functions for frontend specific things.
+ * Frontend-specific functions for the Custom_Plugin.
  *
  * @package Custom_Plugin
  */
 
-defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
+// Prevent direct access to this file.
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 /**
- * Write function description here.
+ * A description of the custom_plugin_frontend_function.
  *
  * @since 1.0.0
  */

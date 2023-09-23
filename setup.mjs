@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
 
 /**
- * Define Packages.
+ * Import required packages.
  */
-import { deleteSync as del } from 'del';
-import { promises as fs } from 'fs';
-import ora from 'ora';
-import { join } from 'path';
-import prompts from 'prompts';
-import replace from 'replace-in-file';
+import { deleteSync as del } from 'del'; // Import deleteSync from del package for asset cleanup.
+import { promises as fs } from 'fs'; // Import promises from fs package for file operations.
+import ora from 'ora'; // Import ora for displaying progress spinner.
+import { join } from 'path'; // Import join from path for path manipulation.
+import prompts from 'prompts'; // Import prompts for user input.
+import replace from 'replace-in-file'; // Import replace for text replacement.
 
 // Valid files and path to be used for replace and rename.
 const validKeys = [
@@ -26,13 +26,16 @@ const validKeys = [
  * @param {string} filePath Path value.
  * @return {boolean} Validation status.
  */
-const isValidPath = ( filePath ) => ( validKeys.filter( ( key ) => filePath.match( new RegExp( key, 'g' ) ) || filePath === key ).length ? true : false );
+const isValidPath = ( filePath ) =>
+	validKeys.some(
+		( key ) => filePath.match( new RegExp( key, 'g' ) ) || filePath === key
+	);
 
 /**
- * Scan dir recursively.
+ * Recursively scan a directory for valid files.
  *
  * @param {string} dir     Path value.
- * @param {Array}  results Array to restore the recursive values.
+ * @param {Array}  results Array to store the scanned files.
  * @return {Array} Returns scanned files array.
  */
 const scan = async ( dir = './', results = [] ) => {
@@ -52,32 +55,34 @@ const scan = async ( dir = './', results = [] ) => {
 };
 
 /**
- * Replace "custom-plugin" text in files with new file prefix name.
+ * Rename files by replacing "custom-plugin" with a new file prefix name.
  *
- * @param {Array}  files Array of files path.
- * @param {string} key   String that has to be replaced with "custom-plugin" text.
+ * @param {Array}  files Array of file paths.
+ * @param {string} key   String to replace "custom-plugin" text.
  */
 const renameFiles = async ( files, key = '' ) => {
 	for ( const oldpath of files ) {
-		const newpath = key.length ? oldpath.replace( 'custom-plugin', key ) : oldpath;
+		const newpath = key.length
+			? oldpath.replace( 'custom-plugin', key )
+			: oldpath;
 		await fs.rename( oldpath, newpath );
 	}
 };
 
 /**
- * Check if string type is "String".
+ * Check if a value is a non-empty string.
  *
  * @param {string} string String text.
- * @return {boolean} Returns true if string else false.
+ * @return {boolean} Returns true if the value is a non-empty string, else false.
  */
 const isString = ( string ) => typeof string === 'string' && string.length;
 
 /**
- * Change the case of string.
+ * Change the case of a string.
  *
- * @param {string} string String to be coverted.
- * @param {string} type   In which type to be converted, accecpt 4 type [domain,constant,function,class]
- * @return {string} Retuns modified string.
+ * @param {string} string String to be converted.
+ * @param {string} type   Type to convert to (domain, constant, function, class).
+ * @return {string} Returns the modified string.
  */
 const changeCase = ( string = '', type = '' ) => {
 	if ( ! isString( string ) ) {
@@ -90,14 +95,22 @@ const changeCase = ( string = '', type = '' ) => {
 		.map( ( word ) =>
 			word
 				.split( '' )
-				.map( ( letter, i ) => ( 0 === i ? letter.toUpperCase() : letter.toLowerCase() ) )
+				.map( ( letter, i ) =>
+					0 === i ? letter.toUpperCase() : letter.toLowerCase()
+				)
 				.join( '' )
 		)
 		.join( ' ' );
+
 	str = str
 		.split( ' ' )
-		.map( ( word, i ) => ( 0 === i && [ 'wp', 'wc' ].includes( word.toLowerCase() ) ? word.toUpperCase() : word ) )
+		.map( ( word, i ) =>
+			0 === i && [ 'wp', 'wc' ].includes( word.toLowerCase() )
+				? word.toUpperCase()
+				: word
+		)
 		.join( ' ' );
+
 	switch ( type ) {
 		case 'domain':
 			str = str.split( ' ' ).join( '-' ).toLowerCase();
@@ -117,6 +130,9 @@ const changeCase = ( string = '', type = '' ) => {
 	return str;
 };
 
+/**
+ * Update the package.json file.
+ */
 const updatePackageJson = async () => {
 	let pkg = await fs.readFile( './package.json' );
 	pkg = JSON.parse( pkg );
@@ -128,14 +144,17 @@ const updatePackageJson = async () => {
 };
 
 /**
- * Start the async process.
+ * Start the asynchronous process.
  */
 ( async () => {
 	const answers = await prompts( {
 		type: 'text',
 		name: 'name',
 		message: 'What will be your Plugin name?',
-		validate: ( value ) => ( value.trim().length && value.trim().match( /^[a-zA-Z ]*$/ ) ? true : 'Please provide a valid plugin name. Example: WP Bulk Uploader' ),
+		validate: ( value ) =>
+			value.trim().length && value.trim().match( /^[a-zA-Z ]*$/ )
+				? true
+				: 'Please provide a valid plugin name. Example: WP Bulk Uploader',
 	} );
 
 	const spinner = ora( { text: 'Processing...' } );
@@ -159,30 +178,38 @@ const updatePackageJson = async () => {
 
 		spinner.start();
 
-		// Read all the file that need to be renamed.
+		// Read all the files that need to be renamed.
 		const files = await scan( './' );
 		if ( ! files.length ) {
 			throw 'Unable to find files for replacements. Please try to reclone the site and run the setup again.';
 		}
 
 		// Rename "custom-plugin" word in all the matched files
-		// with new file prefix.
+		// with the new file prefix.
 		await renameFiles( files, changeCase( pluginName, 'domain' ) );
 
-		// Replae in files options.
+		// Replace text in files options.
 		const options = {
-			files: files.map( ( f ) => f.replace( 'custom-plugin', changeCase( pluginName, 'domain' ) ) ),
-			from: [ /Custom Plugin/g, /Custom_Plugin/g, /CUSTOM_PLUGIN/g, /custom-plugin/g, /custom_plugin/g ],
+			files: files.map( ( f ) =>
+				f.replace( 'custom-plugin', changeCase( pluginName, 'domain' ) )
+			),
+			from: [
+				/Custom Plugin/g,
+				/Custom_Plugin/g,
+				/CUSTOM_PLUGIN/g,
+				/custom-plugin/g,
+				/custom_plugin/g,
+			],
 			to: replacements,
 		};
 
 		// Start the replacement in files.
 		await replace( options );
 
-		// Update package json.
+		// Update package.json.
 		await updatePackageJson();
 
-		// Delete files.
+		// Delete unnecessary files.
 		await del( [ 'setup.mjs', '.git', 'README.md' ] );
 
 		spinner.succeed( 'Complete!' );

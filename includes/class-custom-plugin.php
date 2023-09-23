@@ -1,11 +1,12 @@
 <?php
 /**
- * Main class for plugin setup.
+ * Main class for setting up the Custom Plugin.
  *
  * @package Custom_Plugin
  */
 
-defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
+// Prevent direct access to this file.
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 /**
  * Main Custom_Plugin Class.
@@ -24,7 +25,7 @@ final class Custom_Plugin {
 	 * This class instance.
 	 *
 	 * @since 1.0.0
-	 * @var Custom_Plugin single instance of this class.
+	 * @var Custom_Plugin Single instance of this class.
 	 */
 	private static $instance;
 
@@ -34,7 +35,7 @@ final class Custom_Plugin {
 	 * Ensures only one instance of Custom_Plugin is loaded or can be loaded.
 	 *
 	 * @since 1.0.0
-	 * @return Custom_Plugin - Main instance.
+	 * @return Custom_Plugin Main instance.
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -45,7 +46,7 @@ final class Custom_Plugin {
 	}
 
 	/**
-	 * Cloning instances is forbidden due to singleton pattern.
+	 * Cloning instances is forbidden due to the singleton pattern.
 	 *
 	 * @since 1.0.0
 	 */
@@ -54,7 +55,7 @@ final class Custom_Plugin {
 	}
 
 	/**
-	 * Unserializing instances is forbidden due to singleton pattern.
+	 * Unserializing instances is forbidden due to the singleton pattern.
 	 *
 	 * @since 1.0.0
 	 */
@@ -114,11 +115,11 @@ final class Custom_Plugin {
 	}
 
 	/**
-	 * Define constant if not already set.
+	 * Define a constant if it's not already set.
 	 *
 	 * @since 1.0.0
-	 * @param string      $name     Constant name.
-	 * @param string|bool $value    Constant value.
+	 * @param string      $name  Constant name.
+	 * @param string|bool $value Constant value.
 	 */
 	private function define( $name, $value ) {
 		if ( ! defined( $name ) ) {
@@ -129,7 +130,7 @@ final class Custom_Plugin {
 	/**
 	 * Returns true if the request is a non-legacy REST API request.
 	 *
-	 * Legacy REST requests should still run some extra code for backwards compatibility.
+	 * Legacy REST requests should still run some extra code for backward compatibility.
 	 *
 	 * @since 1.0.0
 	 * @return bool
@@ -151,11 +152,11 @@ final class Custom_Plugin {
 	}
 
 	/**
-	 * What type of request is this?
+	 * Check what type of request this is.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $type admin, ajax, cron or frontend.
+	 * @param string $type admin, ajax, cron, or frontend.
 	 * @return bool
 	 */
 	private function is_request( $type ) {
@@ -172,7 +173,7 @@ final class Custom_Plugin {
 	}
 
 	/**
-	 * Include required core files used in admin and on the frontend.
+	 * Include required core files used in both admin and on the frontend.
 	 *
 	 * @since 1.0.0
 	 */
@@ -202,7 +203,7 @@ final class Custom_Plugin {
 	}
 
 	/**
-	 * Load Localisation files.
+	 * Load localization files.
 	 *
 	 * Note: the first-loaded translation file overrides any following ones if the same translation is present.
 	 *
@@ -217,6 +218,8 @@ final class Custom_Plugin {
 
 		/**
 		 * Filter to adjust the Custom Plugin locale to use for translations.
+		 *
+		 * @since 1.0.0
 		 */
 		$locale = apply_filters( 'plugin_locale', $locale, 'custom-plugin' );
 
@@ -226,7 +229,7 @@ final class Custom_Plugin {
 	}
 
 	/**
-	 * Init when WordPress Initialises.
+	 * Initialize when WordPress initializes.
 	 *
 	 * @since 1.0.0
 	 */
@@ -234,16 +237,15 @@ final class Custom_Plugin {
 		// Before init action.
 		do_action( 'before_custom_plugin_init' );
 
-		// Set up localisation.
+		// Set up localization.
 		$this->load_plugin_textdomain();
 
 		// Init action.
 		do_action( 'custom_plugin_init' );
 	}
 
-
 	/**
-	 * Get the plugin url.
+	 * Get the plugin URL.
 	 *
 	 * @since 1.0.0
 	 * @return string

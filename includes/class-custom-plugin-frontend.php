@@ -5,9 +5,11 @@
  * @package Custom_Plugin
  */
 
-defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
+// Prevent direct access to this file.
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 if ( class_exists( 'Custom_Plugin_Frontend' ) ) {
+	// The class already exists, so return an instance of it.
 	return new Custom_Plugin_Frontend();
 }
 
@@ -22,7 +24,7 @@ class Custom_Plugin_Frontend {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		// Enqueue assets.
+		// Add action to enqueue assets when WordPress loads scripts/styles.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 	}
 
@@ -34,13 +36,13 @@ class Custom_Plugin_Frontend {
 	public function enqueue_assets() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		// Styles.
+		// Enqueue custom styles.
 		wp_enqueue_style( 'custom-plugin-frontend', custom_plugin()->plugin_url() . '/assets/css/frontend' . $suffix . '.css', array(), CUSTOM_PLUGIN_VERSION );
 
-		// Scripts.
+		// Enqueue custom scripts.
 		wp_enqueue_script( 'custom-plugin-frontend', custom_plugin()->plugin_url() . '/assets/js/frontend' . $suffix . '.js', array( 'jquery' ), CUSTOM_PLUGIN_VERSION, true );
 
-		// Localize scripts.
+		// Localize scripts with custom parameters.
 		$localize_params = array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 		);
@@ -48,4 +50,5 @@ class Custom_Plugin_Frontend {
 	}
 }
 
+// Create an instance of the Custom_Plugin_Frontend class and return it.
 return new Custom_Plugin_Frontend();

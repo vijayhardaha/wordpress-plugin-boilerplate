@@ -1,14 +1,15 @@
 <?php
 /**
- * Core Functions available globally on frontend and admin both.
+ * Core Functions available globally for both frontend and admin in the Custom_Plugin.
  *
  * @package Custom_Plugin
  */
 
-defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
+// Prevent direct access to this file.
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 /**
- * Write function description here.
+ * A description of the custom_plugin_core_function.
  *
  * @since 1.0.0
  */

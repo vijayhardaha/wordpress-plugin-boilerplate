@@ -17,13 +17,15 @@
  * @package Custom_Plugin
  */
 
-defined( 'ABSPATH' ) || die( 'Don\'t run this file directly!' );
+// Prevent direct access to this file.
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 if ( ! defined( 'CUSTOM_PLUGIN_PLUGIN_FILE' ) ) {
+	// Define the plugin file path constant if not already defined.
 	define( 'CUSTOM_PLUGIN_PLUGIN_FILE', __FILE__ );
 }
 
-// Include the main Custom_Plugin class.
+// Include the main Custom_Plugin class if it's not already defined.
 if ( ! class_exists( 'Custom_Plugin', false ) ) {
 	include_once dirname( __FILE__ ) . '/includes/class-custom-plugin.php';
 }
@@ -32,11 +34,11 @@ if ( ! class_exists( 'Custom_Plugin', false ) ) {
  * Returns the main instance of Custom_Plugin.
  *
  * @since 1.0.0
- * @return Custom_Plugin
+ * @return Custom_Plugin The main Custom_Plugin instance.
  */
 function custom_plugin() {
 	return Custom_Plugin::instance();
 }
 
-// Global for backwards compatibility.
+// Global variable for backwards compatibility.
 $GLOBALS['custom_plugin'] = custom_plugin();

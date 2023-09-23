@@ -1,66 +1,66 @@
-# Operating System files.
-.DS_Store
-Thumbs.db
+# Ignore operating system-specific files
+.DS_Store           # macOS system file
+Thumbs.db           # Windows thumbnail cache file
 
-# Grunt.
+# Ignore Grunt build artifacts
 none
 
-# Sass.
+# Ignore Sass cache
 .sass-cache/
 
-# NPM.
+# Ignore NPM-related files
 .npm
 
-# Logs.
+# Ignore log files
 *.log
 logs/
 
-# Eslint Cache.
+# Ignore ESLint cache
 .eslintcache
 
-# REPL.
+# Ignore REPL history file
 .node_repl_history
 
-# node-waf.
+# Ignore node-waf build lock file
 .lock-wscript
 
-# Environment files.
+# Ignore environment-related files
 .pnpm-debug.log
 npm-debug.log
 wp-cli.local.yml
 yarn-error.log
 
-# Build files.
+# Ignore build-related files
 *.sql
 *.swp
 *.zip
 
-# Built packages.
+# Ignore built packages and build directories
 build/
 coverage/
 dist/
 
-# Project files.
+# Ignore project-specific directories
 node_modules/
 vendor/
 
-# Composer.
+# Ignore Composer-related files
 bin/composer/**/vendor/
 contributors.html
 contributors.md
 lib/vendor/
 vendor/
 
-# PHP lint.
+# Ignore PHP lint report file
 phpcs-report.xml
 
-# Unit tests.
+# Ignore unit test temporary directory
 tmp/
 
-# Test Results.
+# Ignore test results file
 test-results.json
 
-# Patches.
+# Ignore patch files
 *.diff
 *.orig
 *.patch

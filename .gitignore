@@ -1,6 +1,6 @@
 # Ignore operating system-specific files
-.DS_Store           # macOS system file
-Thumbs.db           # Windows thumbnail cache file
+.DS_Store
+Thumbs.db
 
 # Ignore Grunt build artifacts
 none

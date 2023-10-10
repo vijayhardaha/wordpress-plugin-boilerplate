@@ -7,6 +7,7 @@
 	<exclude-pattern>*/tests/*</exclude-pattern> <!-- Exclude test directories. -->
 	<exclude-pattern>*/vendor/*</exclude-pattern> <!-- Exclude vendor directories. -->
 	<exclude-pattern>*/node_modules/*</exclude-pattern> <!-- Exclude node_modules directories. -->
+	<exclude-pattern type="relative">^woocommerce/</exclude-pattern> <!-- Exclude the woocommerce directory. -->
 
 	<!-- Specify that only PHP files should be checked. -->
 	<arg name="extensions" value="php"/>
@@ -41,7 +42,7 @@
 	<!-- Rule for WordPress Internationalization (I18n) with specific text domains. -->
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="custom-plugin"/>
+			<property name="text_domain" type="array" value="woocommerce"/>
 		</properties>
 	</rule>
 
@@ -68,14 +69,14 @@
 	<!-- Rule for validated and sanitized input with custom sanitizing functions. -->
 	<rule ref="WordPress.Security.ValidatedSanitizedInput">
 		<properties>
-			<property name="customSanitizingFunctions" type="array" value=""/>
+			<property name="customSanitizingFunctions" type="array" value="wc_clean,wc_sanitize_tooltip,wc_format_decimal,wc_stock_amount"/>
 		</properties>
 	</rule>
 
 	<!-- Rule for escaping output with custom escaping functions. -->
 	<rule ref="WordPress.Security.EscapeOutput">
 		<properties>
-			<property name="customEscapingFunctions" type="array" value=""/>
+			<property name="customEscapingFunctions" type="array" value="wc_help_tip,wc_sanitize_tooltip,wc_selected,wc_kses_notice,wc_esc_json"/>
 		</properties>
 	</rule>
 </ruleset>

@@ -11,9 +11,6 @@ devDependencies:
   '@wordpress/eslint-plugin':
     specifier: ^16.0.0
     version: 16.0.0(@babel/core@7.19.3)(eslint@8.50.0)(prettier@3.0.3)(typescript@4.8.4)
-  '@wordpress/prettier-config':
-    specifier: ^2.25.0
-    version: 2.25.0(prettier@3.0.3)
   '@wordpress/stylelint-config':
     specifier: ^21.25.0
     version: 21.25.0(postcss@8.4.30)(stylelint@14.16.1)

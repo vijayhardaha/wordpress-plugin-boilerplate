@@ -26,9 +26,9 @@ const validKeys = [
  * @param {string} filePath Path value.
  * @return {boolean} Validation status.
  */
-const isValidPath = (filePath) =>
+const isValidPath = ( filePath ) =>
 	validKeys.some(
-		(key) => filePath.match(new RegExp(key, 'g')) || filePath === key
+		( key ) => filePath.match( new RegExp( key, 'g' ) ) || filePath === key
 	);
 
 /**
@@ -38,16 +38,16 @@ const isValidPath = (filePath) =>
  * @param {Array}  results Array to store the scanned files.
  * @return {Array} Returns scanned files array.
  */
-const scan = async (dir = './', results = []) => {
-	const items = await fs.readdir(dir);
-	for (const item of items) {
-		const itemPath = join(dir, item);
-		if (isValidPath(itemPath)) {
-			const stat = await fs.stat(itemPath);
-			if (stat.isDirectory()) {
-				await scan(itemPath, results);
+const scan = async ( dir = './', results = [] ) => {
+	const items = await fs.readdir( dir );
+	for ( const item of items ) {
+		const itemPath = join( dir, item );
+		if ( isValidPath( itemPath ) ) {
+			const stat = await fs.stat( itemPath );
+			if ( stat.isDirectory() ) {
+				await scan( itemPath, results );
 			} else {
-				results.push(itemPath);
+				results.push( itemPath );
 			}
 		}
 	}
@@ -60,12 +60,12 @@ const scan = async (dir = './', results = []) => {
  * @param {Array}  files Array of file paths.
  * @param {string} key   String to replace "custom-plugin" text.
  */
-const renameFiles = async (files, key = '') => {
-	for (const oldpath of files) {
+const renameFiles = async ( files, key = '' ) => {
+	for ( const oldpath of files ) {
 		const newpath = key.length
-			? oldpath.replace('custom-plugin', key)
+			? oldpath.replace( 'custom-plugin', key )
 			: oldpath;
-		await fs.rename(oldpath, newpath);
+		await fs.rename( oldpath, newpath );
 	}
 };
 
@@ -75,7 +75,7 @@ const renameFiles = async (files, key = '') => {
  * @param {string} string String text.
  * @return {boolean} Returns true if the value is a non-empty string, else false.
  */
-const isString = (string) => typeof string === 'string' && string.length;
+const isString = ( string ) => typeof string === 'string' && string.length;
 
 /**
  * Change the case of a string.
@@ -84,45 +84,45 @@ const isString = (string) => typeof string === 'string' && string.length;
  * @param {string} type   Type to convert to (domain, constant, function, class).
  * @return {string} Returns the modified string.
  */
-const changeCase = (string = '', type = '') => {
-	if (!isString(string)) {
-		throw new Error('Plugin name should be a string.');
+const changeCase = ( string = '', type = '' ) => {
+	if ( ! isString( string ) ) {
+		throw new Error( 'Plugin name should be a string.' );
 	}
 
 	let str = string;
 	str = str
-		.split(' ')
-		.map((word) =>
+		.split( ' ' )
+		.map( ( word ) =>
 			word
-				.split('')
-				.map((letter, i) =>
+				.split( '' )
+				.map( ( letter, i ) =>
 					0 === i ? letter.toUpperCase() : letter.toLowerCase()
 				)
-				.join('')
+				.join( '' )
 		)
-		.join(' ');
+		.join( ' ' );
 
 	str = str
-		.split(' ')
-		.map((word, i) =>
-			0 === i && ['wp', 'wc'].includes(word.toLowerCase())
+		.split( ' ' )
+		.map( ( word, i ) =>
+			0 === i && [ 'wp', 'wc' ].includes( word.toLowerCase() )
 				? word.toUpperCase()
 				: word
 		)
-		.join(' ');
+		.join( ' ' );
 
-	switch (type) {
+	switch ( type ) {
 		case 'domain':
-			str = str.split(' ').join('-').toLowerCase();
+			str = str.split( ' ' ).join( '-' ).toLowerCase();
 			break;
 		case 'constant':
-			str = str.split(' ').join('_').toUpperCase();
+			str = str.split( ' ' ).join( '_' ).toUpperCase();
 			break;
 		case 'function':
-			str = str.split(' ').join('_').toLowerCase();
+			str = str.split( ' ' ).join( '_' ).toLowerCase();
 			break;
 		case 'class':
-			str = str.split(' ').join('_');
+			str = str.split( ' ' ).join( '_' );
 			break;
 		default:
 			break;
@@ -134,30 +134,30 @@ const changeCase = (string = '', type = '') => {
  * Update the package.json file.
  */
 const updatePackageJson = async () => {
-	let pkg = await fs.readFile('./package.json');
-	pkg = JSON.parse(pkg);
+	let pkg = await fs.readFile( './package.json' );
+	pkg = JSON.parse( pkg );
 	delete pkg.scripts.setup;
 	delete pkg.devDependencies.prompts;
 	delete pkg.devDependencies.ora;
-	delete pkg.devDependencies['replace-in-file'];
-	await fs.writeFile('./package.json', JSON.stringify(pkg, null, 2));
+	delete pkg.devDependencies[ 'replace-in-file' ];
+	await fs.writeFile( './package.json', JSON.stringify( pkg, null, 2 ) );
 };
 
 /**
  * Start the asynchronous process.
  */
-(async () => {
-	const answers = await prompts({
+( async () => {
+	const answers = await prompts( {
 		type: 'text',
 		name: 'name',
 		message: 'What will be your Plugin name?',
-		validate: (value) =>
-			value.trim().length && value.trim().match(/^[a-zA-Z ]*$/)
+		validate: ( value ) =>
+			value.trim().length && value.trim().match( /^[a-zA-Z ]*$/ )
 				? true
 				: 'Please provide a valid plugin name. Example: WP Bulk Uploader',
-	});
+	} );
 
-	const spinner = ora({ text: 'Processing...' });
+	const spinner = ora( { text: 'Processing...' } );
 
 	try {
 		// Store plugin name from input.
@@ -165,22 +165,22 @@ const updatePackageJson = async () => {
 
 		const replacements = [
 			// Title case: {Custom Plugin}.
-			changeCase(pluginName),
+			changeCase( pluginName ),
 			// Pascal case with snake case: {Custom_Plugin}.
-			changeCase(pluginName, 'class'),
+			changeCase( pluginName, 'class' ),
 			// Upper case with snake case: {CUSTOM_PLUGIN}
-			changeCase(pluginName, 'constant'),
+			changeCase( pluginName, 'constant' ),
 			// Lower case with kebab case: {custom-plugin}
-			changeCase(pluginName, 'domain'),
+			changeCase( pluginName, 'domain' ),
 			// Lower case with snake case: {custom_plugin}
-			changeCase(pluginName, 'function'),
+			changeCase( pluginName, 'function' ),
 		];
 
 		spinner.start();
 
 		// Read all the files that need to be renamed.
-		const files = await scan('./');
-		if (!files.length) {
+		const files = await scan( './' );
+		if ( ! files.length ) {
 			throw new Error(
 				'Unable to find files for replacements. Please try to reclone the site and run the setup again.'
 			);
@@ -188,12 +188,12 @@ const updatePackageJson = async () => {
 
 		// Rename "custom-plugin" word in all the matched files
 		// with the new file prefix.
-		await renameFiles(files, changeCase(pluginName, 'domain'));
+		await renameFiles( files, changeCase( pluginName, 'domain' ) );
 
 		// Replace text in files options.
 		const options = {
-			files: files.map((f) =>
-				f.replace('custom-plugin', changeCase(pluginName, 'domain'))
+			files: files.map( ( f ) =>
+				f.replace( 'custom-plugin', changeCase( pluginName, 'domain' ) )
 			),
 			from: [
 				/Custom Plugin/g,
@@ -206,22 +206,22 @@ const updatePackageJson = async () => {
 		};
 
 		// Start the replacement in files.
-		await replace(options);
+		await replace( options );
 
 		// Update package.json.
 		await updatePackageJson();
 
 		// Delete unnecessary files.
-		await del(['setup.mjs', '.git', 'README.md']);
+		await del( [ 'setup.mjs', '.git', 'README.md' ] );
 
-		spinner.succeed('Complete!');
+		spinner.succeed( 'Complete!' );
 
 		// Resolve the promise at the end.
 		return Promise.resolve();
-	} catch (err) {
-		spinner.fail('Failed!');
-		console.error('Runtime Exception:', err.message); // Print only the error message
-		console.error('Stack Trace:', err.stack); // Print the full stack trace for debugging
+	} catch ( err ) {
+		spinner.fail( 'Failed!' );
+		console.error( 'Runtime Exception:', err.message ); // Print only the error message
+		console.error( 'Stack Trace:', err.stack ); // Print the full stack trace for debugging
 		process.exitCode = 7; // Set the exit code to indicate an error
 	}
-})();
+} )();

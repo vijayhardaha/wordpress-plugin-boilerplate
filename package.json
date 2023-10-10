@@ -16,7 +16,6 @@
 		"extends @wordpress/browserslist-config"
 	],
 	"scripts": {
-		"prepare": "husky install",
 		"dev": "gulp watch",
 		"build": "gulp build",
 		"build:css": "gulp css",
@@ -35,12 +34,12 @@
 		"setup": "node setup.mjs && pnpm install"
 	},
 	"devDependencies": {
-		"@wordpress/browserslist-config": "^5.25.0",
-		"@wordpress/eslint-plugin": "^16.0.0",
-		"@wordpress/stylelint-config": "^21.25.0",
+		"@wordpress/browserslist-config": "^5.26.0",
+		"@wordpress/eslint-plugin": "^17.0.0",
+		"@wordpress/stylelint-config": "^21.26.0",
 		"autoprefixer": "^10.4.16",
 		"del": "^7.1.0",
-		"eslint": "^8.50.0",
+		"eslint": "^8.51.0",
 		"eslint-plugin-jsdoc": "^46.8.2",
 		"gulp": "^4.0.2",
 		"gulp-clean-css": "^4.3.0",
@@ -57,11 +56,11 @@
 		"merge-stream": "^2.0.0",
 		"npm-run-all": "^4.1.5",
 		"ora": "^7.0.1",
-		"postcss": "^8.4.30",
+		"postcss": "^8.4.31",
 		"postcss-discard-duplicates": "^6.0.0",
 		"prompts": "^2.4.2",
 		"replace-in-file": "^7.0.1",
-		"sass": "^1.68.0",
+		"sass": "^1.69.1",
 		"stylelint": "^14.16.1",
 		"stylelint-config-property-sort-order-smacss": "^9.1.0",
 		"stylelint-order": "^6.0.3"

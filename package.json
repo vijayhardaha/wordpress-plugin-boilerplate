@@ -17,6 +17,7 @@
 	],
 	"scripts": {
 		"dev": "gulp watch",
+		"prebuild": "run-s lint-fix",
 		"build": "gulp build",
 		"build:css": "gulp css",
 		"build:js": "gulp js",

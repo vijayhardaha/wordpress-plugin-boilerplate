@@ -2,7 +2,7 @@
 	"name": "custom-plugin",
 	"version": "1.0.0",
 	"description": "Empower your WordPress plugin development with our starter pack, featuring Gulp pre-configured for effortlessly creating a custom WordPress Plugin Boilerplate in under a minute.",
-	"license": "GPLv2+",
+	"license": "GPL-2.0-or-later",
 	"author": "Vijay Hardaha <https://twitter.com/vijayhardaha>",
 	"homepage": "https://github.com/vijayhardaha/wordpress-plugin-boilerplate#readme",
 	"repository": {

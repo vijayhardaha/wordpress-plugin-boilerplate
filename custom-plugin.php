@@ -6,7 +6,7 @@
  * Version: 1.0.0
  * Author: Vijay Hardaha
  * Author URI: https://twitter.com/vijayhardaha/
- * License: GPLv2+
+ * License: GPL-2.0-or-later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: custom-plugin
  * Domain Path: /languages/

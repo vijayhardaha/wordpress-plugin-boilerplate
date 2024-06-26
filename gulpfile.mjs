@@ -111,7 +111,7 @@ const buildJS = ( done ) => {
  * @param {Function} done - Callback function to signal completion.
  */
 const buildFonts = ( done ) => {
-	gulp.src( paths.fonts.src )
+	gulp.src( paths.fonts.src, { encoding: false } )
 		.pipe( flatten() ) // Flatten font files to avoid nested directories.
 		.pipe( gulp.dest( paths.fonts.dest ) ); // Output font files.
 
@@ -124,7 +124,7 @@ const buildFonts = ( done ) => {
  * @param {Function} done - Callback function to signal completion.
  */
 const buildImages = ( done ) => {
-	gulp.src( paths.images.src )
+	gulp.src( paths.images.src, { encoding: false } )
 		.pipe(
 			imagemin( {
 				progressive: true,

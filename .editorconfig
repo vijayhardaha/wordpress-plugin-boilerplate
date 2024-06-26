@@ -13,8 +13,6 @@ charset = utf-8
 end_of_line = lf
 # Indentation size is 4 spaces.
 indent_size = 4
-# Tab width is 4 spaces.
-tab_width = 4
 # Use tabs for indentation.
 indent_style = tab
 # Insert a final newline at the end of the file.
@@ -31,7 +29,6 @@ trim_trailing_whitespace = false
 trim_trailing_whitespace = false
 indent_style = space
 indent_size = 2
-tab_width = 2
 
 [*.json]
 # Use tabs for indentation specifically for .json files.

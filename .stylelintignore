@@ -1,9 +1,124 @@
-# Files & Directories related to build & test tools.
-# Exclude the node_modules directory from version control.
-/node_modules
-# Exclude the vendor directory from version control.
-/vendor
+# =======================================================================
+# Stylelint Ignore
+# =======================================================================
+# Purpose: Defines the files and directories that the Stylelint engine
+#          should skip to prevent linting build artifacts, external
+#          libraries, or generated CSS.
+# Docs:    https://stylelint.io/user-guide/ignore
+# =======================================================================
 
-# Plugin files and folders.
-# Exclude the assets directory from version control.
+# ----------------------------------------------------------------------
+# Dependencies
+# ----------------------------------------------------------------------
+# Packages ship CSS (Bootstrap, Tailwind, WP plugins/themes).
+node_modules/
+vendor/
+
+# ----------------------------------------------------------------------
+# Build & Compilation Output
+# ----------------------------------------------------------------------
+# Next.js generates CSS chunks; SvelteKit generates component CSS;
+# bundlers emit compiled stylesheets.
+.next/
+.svelte-kit/
+build/
+dist/
+out/
+
+# ----------------------------------------------------------------------
+# Cache Directories
+# ----------------------------------------------------------------------
+# Build tool caches that may contain transformed CSS.
+.cache/
+.eslintcache
+.gulp/
+.parcel-cache/
+.rollup.cache/
+.stylelintcache
+.turbo/
+.vite/
+.vitest/
+.webpack/
+
+# ----------------------------------------------------------------------
+# Testing & Coverage
+# ----------------------------------------------------------------------
+# Istanbul and Playwright generate HTML reports with inline CSS.
+.jest/
+.nyc_output/
+blob-report/
+coverage/
+playwright-report/
+test-results/
+vitest-results/
+
+# ----------------------------------------------------------------------
+# Temporary Files
+# ----------------------------------------------------------------------
+.tmp/
+tmp/
+
+# ----------------------------------------------------------------------
+# Deployment Config
+# ----------------------------------------------------------------------
+# Platform config dirs — safe to skip, no CSS worth linting.
+.netlify/
+.vercel/
+.wrangler/
+
+# ----------------------------------------------------------------------
+# Public & Static Assets
+# ----------------------------------------------------------------------
+# Committed CSS assets, vendor stylesheets, theme CSS (WordPress).
 assets/
+public/
+static/
+
+# ----------------------------------------------------------------------
+# Ai Coding Tools
+# ----------------------------------------------------------------------
+# AI agent caches and generated files.
+.aider
+.amazonq
+.augmith
+.agent
+.agents
+.bolt
+.charliepython
+.claude
+.cline
+.codex
+.copilot
+.continue
+.crush
+.cursor
+.devin
+.fallow
+.gemini
+.gptscript
+.jina
+.kilo
+.kilocode
+.maestro
+.mistral
+.manus
+.midjourney
+.nexus
+.opencode
+.perplexity
+.pi
+.qoder
+.qwen
+.replit
+.starcode
+.supercursor
+.vibe
+.windsurf
+.xai
+
+# ----------------------------------------------------------------------
+# Minified & Generated
+# ----------------------------------------------------------------------
+# Never lint minified or pre-compiled stylesheets.
+*.min.css
+*.min.map

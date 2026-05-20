@@ -1,35 +1,73 @@
-# This file is for unifying the coding style for different editors and IDEs.
-# For more information, visit editorconfig.org.
+# ======================================================================
+# EditorConfig
+# ======================================================================
+# Purpose: Shared EditorConfig to enforce consistent formatting across
+#          editors
+# Docs:    https://editorconfig.org/
+# ======================================================================
+# Usage:
+# 	- Ensure your editor supports EditorConfig (most IDEs support it
+#     by default)
+# 	- Rules are applied top-to-bottom; more specific file globs override
+# 	  earlier rules
+# 	- Update this file to change team-wide defaults; prefer small,
+# 	  focused sections
+# ======================================================================
 
-# WordPress Coding Standards:
-# https://make.wordpress.org/core/handbook/coding-standards/
-
+# Stop searching for other .editorconfig files in parent directories
 root = true
 
+# ----------------------------------------------------------------------
+# Global Settings (Applied to all files)
+# ----------------------------------------------------------------------
 [*]
-# Set the character set to UTF-8.
+# Ensure cross-platform compatibility with standard UTF-8 encoding
 charset = utf-8
-# Use LF (linefeed) for line endings.
+
+# Use Unix-style line feeds (\n) to prevent "mismatched line ending"
+# Git warnings
 end_of_line = lf
-# Indentation size is 4 spaces.
-indent_size = 4
-# Use tabs for indentation.
-indent_style = tab
-# Insert a final newline at the end of the file.
-insert_final_newline = true
-# Trim trailing whitespace at the end of lines.
-trim_trailing_whitespace = true
 
-[*.txt]
-# Disable trimming trailing whitespace for .txt files.
-trim_trailing_whitespace = false
-
-[*.{md,json,yml}]
-# Disable trimming trailing whitespace and use spaces for indentation for specific file types.
-trim_trailing_whitespace = false
+# Project standard: Spaces are the industry standard for consistency
 indent_style = space
+
+# Default indent size (Will be overridden by specific languages below)
 indent_size = 2
 
-[*.json]
-# Use tabs for indentation specifically for .json files.
-indent_style = tab
+# Clean up: remove invisible spaces at the end of lines on save
+trim_trailing_whitespace = true
+
+# Standards: Ensure files end with a blank line for POSIX compatibility
+insert_final_newline = true
+
+# ----------------------------------------------------------------------
+# Language Specific Overrides
+# ----------------------------------------------------------------------
+# Applies language-specific EditorConfig rules that override the global
+# settings for targeted file types.
+# ----------------------------------------------------------------------
+
+# ---- Stylesheet languages ----
+# Standard: 2 spaces for CSS/SASS to avoid deep nesting indentation
+[*.{css,scss,sass}]
+indent_size = 2
+
+# ---- Scripting languages ----
+# Standard: 2 spaces for JS/TS and related files
+[*.{js,ts,mjs,cjs,jsx,tsx}]
+indent_size = 2
+
+# ---- Shell scripts ----
+# Standard: 2 spaces for Bash scripts
+[*.{sh,bash}]
+indent_size = 2
+
+# ---- Data & documentation ----
+# Standard: 2 spaces for JSON/YAML/Markdown files
+[*.{md,mdx,json,jsonc,yml,yaml}]
+indent_size = 2
+
+# ---- Backend languages ----
+# Standard: 4 spaces for Python/PHP (PEP8 / PSR-12)
+[*.{py,php}]
+indent_size = 4

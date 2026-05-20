@@ -13,30 +13,27 @@ REPO_REF="${BOILERPLATE_REF:-HEAD}"
 #
 print_header() {
   local title="$1"
+  local width=60
+  local line=$(printf "---%.0s" $(seq 1 $width))
+  # Center title
+  local title_len=${#title}
+  local pad=$(( (width - title_len) / 2 ))
+  local pad_rest=$(( width - title_len - pad ))
   echo
-  echo "============================================================"
-  echo "==== ${title}"
-  echo "============================================================"
+  echo "$line"
+  printf "%*s%s%*s\n" "$pad" "" "$title" "$pad_rest" ""
+  echo "$line"
 }
 
 #
-# Print a standardized section footer block.
-# Usage: print_footer "Status Message"
-#
-print_footer() {
-  local message="$1"
-  echo "============================================================"
-  echo "==== ${message}"
-  echo "============================================================"
-  echo
+# Success message helper
+success() {
+  echo "✅ Success: $1"
 }
 
-#
-# Print an error footer and exit with non-zero status.
-# Usage: fail "Message"
-#
+# Error helper – prints error icon and exits
 fail() {
-  print_footer "ERROR: $1"
+  echo "❌ Error: $1"
   exit 1
 }
 
@@ -112,7 +109,7 @@ change_case() {
 main() {
   print_header "WordPress Plugin Boilerplate Installer"
   echo "This installer downloads the boilerplate from GitHub and prepares it."
-  print_footer "Starting"
+  success "Starting"
 
   require_cmd "tar"
   require_cmd "find"
@@ -150,7 +147,7 @@ main() {
   echo "Class Prefix     : $class_case"
   echo "Constant Prefix  : $constant_case"
   echo "Function Prefix  : $function_case"
-  print_footer "Name formats generated"
+  success "Name formats generated"
 
   # Final plugin folder name uses the kebab-case slug.
   local target_dir="${PWD}/${domain_case}"
@@ -159,7 +156,7 @@ main() {
   # Stop early if target directory already exists to avoid overwriting.
   [[ -e "$target_dir" ]] && fail "Target directory already exists: $target_dir"
   echo "Target directory is available: $target_dir"
-  print_footer "Directory validation complete"
+  success "Directory validation complete"
 
   print_header "Downloading Boilerplate"
   # Download and unpack in a temporary workspace.
@@ -191,7 +188,7 @@ main() {
   rm -rf "$tmp_dir"
 
   echo "Boilerplate extracted to: $target_dir"
-  print_footer "Download complete"
+  success "Download complete"
 
   cd "$target_dir"
 
@@ -221,7 +218,7 @@ main() {
   [[ ${#replace_files[@]} -eq 0 ]] && fail "Unable to find files for replacements."
 
   echo "Found ${#replace_files[@]} files to process."
-  print_footer "File discovery complete"
+  success "File discovery complete"
 
   print_header "Renaming Paths"
   # Rename files/directories that include the default slug.
@@ -237,7 +234,7 @@ main() {
   done
 
   echo "Renamed ${rename_count} paths."
-  print_footer "Path rename complete"
+  success "Path rename complete"
 
   print_header "Replacing File Content"
   local replaced_count=0
@@ -252,23 +249,24 @@ main() {
   done
 
   echo "Updated ${replaced_count} files."
-  print_footer "Content replacement complete"
+  success "Content replacement complete"
 
   print_header "Cleanup"
   # Cleanup scaffolding-only metadata from generated plugin.
-  rm -f README.md bun.lock bun.lockb || true
+  rm -f README.md AGENTS.md bun.lock bun.lockb || true
   rm -rf .git || true
   echo "Removed: README.md, bun.lock, bun.lockb, .git (if present)."
-  print_footer "Cleanup complete"
+  success "Cleanup complete"
 
   print_header "Complete"
   echo "Your plugin boilerplate is ready at: $target_dir"
   echo "Next step: cd $domain_case && bun install && composer install"
-  print_footer "Success"
-# Cleanup: remove installer script after successful run
-if [ -f "$0" ]; then
-  rm -f "$0"
-fi
+  success "Success"
+
+  # Cleanup: remove installer script after successful run
+  if [ -f "$0" ]; then
+    rm -f "$0"
+  fi
 }
 
 main "$@"

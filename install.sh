@@ -210,6 +210,7 @@ main() {
         -path './languages/*' -o \
         -name 'gulpfile.mjs' -o \
         -name 'package.json' -o \
+        -name 'composer.json' -o \
         -name 'phpcs.xml' \
       \) \
       | sort

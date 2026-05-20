@@ -2,14 +2,36 @@
 /**
  * Main class for setting up the Custom Plugin.
  *
+ * @version 1.0.0
  * @package Custom_Plugin
+ * @author Vijay Hardaha <https://pph.me/vijayhardaha/>
+ *
+ * Copyright (C) 2026 Vijay Hardaha
+ *
+ * Licensed under the GNU General Public License v2 or later.
+ * You may redistribute and/or modify this software under
+ * the terms of the GPL as published by the Free Software Foundation.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Attribution: This code is part of the Custom Plugin plugin, developed by
+ *
+ * ██╗   ██╗██╗     ██╗ █████╗ ██╗   ██╗    ██╗  ██╗ █████╗ ██████╗ ██████╗  █████╗ ██╗  ██╗ █████╗
+ * ██║   ██║██║     ██║██╔══██╗╚██╗ ██╔╝    ██║  ██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗██║  ██║██╔══██╗
+ * ██║   ██║██║     ██║███████║ ╚████╔╝     ███████║███████║██████╔╝██║  ██║███████║███████║███████║
+ * ╚██╗ ██╔╝██║██   ██║██╔══██║  ╚██╔╝      ██╔══██║██╔══██║██╔══██╗██║  ██║██╔══██║██╔══██║██╔══██║
+ *  ╚████╔╝ ██║╚█████╔╝██║  ██║   ██║       ██║  ██║██║  ██║██║  ██║██████╔╝██║  ██║██║  ██║██║  ██║
+ *   ╚═══╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝   ╚═╝       ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝
  */
 
-// Prevent direct access to this file.
-defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
+// Exit if undefined.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Main Custom_Plugin Class.
+ *
+ * @since 1.0.0
  */
 final class Custom_Plugin {
 
@@ -19,7 +41,7 @@ final class Custom_Plugin {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	public $version = '1.0.0';
+	public $version = CUSTOM_PLUGIN_PLUGIN_VERSION;
 
 	/**
 	 * This class instance.
@@ -133,9 +155,9 @@ final class Custom_Plugin {
 	 * Legacy REST requests should still run some extra code for backward compatibility.
 	 *
 	 * @since 1.0.0
-	 * @return bool
+	 * @return bool True if the request is a REST API request, false otherwise.
 	 */
-	public function is_rest_api_request() {
+	public function is_rest_api_request(): bool {
 		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
 			return false;
 		}
@@ -157,9 +179,9 @@ final class Custom_Plugin {
 	 * @since 1.0.0
 	 *
 	 * @param string $type admin, ajax, cron, or frontend.
-	 * @return bool
+	 * @return bool True if the request matches the given type, false otherwise.
 	 */
-	private function is_request( $type ) {
+	private function is_request( string $type ): bool {
 		switch ( $type ) {
 			case 'admin':
 				return is_admin();
@@ -248,9 +270,9 @@ final class Custom_Plugin {
 	 * Get the plugin URL.
 	 *
 	 * @since 1.0.0
-	 * @return string
+	 * @return string Fully qualified URL to the plugin's root directory.
 	 */
-	public function plugin_url() {
+	public function plugin_url(): string {
 		return untrailingslashit( plugins_url( '/', CUSTOM_PLUGIN_PLUGIN_FILE ) );
 	}
 
@@ -258,9 +280,9 @@ final class Custom_Plugin {
 	 * Get the plugin path.
 	 *
 	 * @since 1.0.0
-	 * @return string
+	 * @return string Filesystem path to the plugin's root directory.
 	 */
-	public function plugin_path() {
+	public function plugin_path(): string {
 		return untrailingslashit( plugin_dir_path( CUSTOM_PLUGIN_PLUGIN_FILE ) );
 	}
 
@@ -268,9 +290,9 @@ final class Custom_Plugin {
 	 * Get Ajax URL.
 	 *
 	 * @since 1.0.0
-	 * @return string
+	 * @return string URL to admin-ajax.php for handling Ajax requests.
 	 */
-	public function ajax_url() {
+	public function ajax_url(): string {
 		return admin_url( 'admin-ajax.php', 'relative' );
 	}
 }

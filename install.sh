@@ -266,7 +266,7 @@ main() {
   echo "Removed: README.md, bun.lock, bun.lockb, .git (if present)."
   success "Cleanup complete"
 
-  print_header "Complete"
+  print_header 9 "Complete"
   echo "Your plugin boilerplate is ready at: $target_dir"
   echo "Next step: cd $domain_case && bun install && composer install"
   success "Success"

@@ -26,9 +26,19 @@ print_header() {
 }
 
 #
-# Success message helper
+# Print an informational message (in-progress / starting step).
+# Usage: info "Starting"
+#
+info() {
+  echo "ℹ️  $1"
+}
+
+#
+# Success message helper (completed step).
+# Usage: success "Name formats generated"
+#
 success() {
-  echo "✅ Success: $1"
+  echo "✅ $1"
 }
 
 # Error helper – prints error icon and exits
@@ -109,7 +119,7 @@ change_case() {
 main() {
   print_header "WordPress Plugin Boilerplate Installer"
   echo "This installer downloads the boilerplate from GitHub and prepares it."
-  success "Starting"
+  info "Starting"
 
   require_cmd "tar"
   require_cmd "find"

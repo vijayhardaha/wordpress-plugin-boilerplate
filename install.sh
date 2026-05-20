@@ -23,14 +23,6 @@ print_header() {
 }
 
 #
-# Print an informational message (in-progress / starting step).
-# Usage: info "Starting"
-#
-info() {
-  echo "ℹ️  $1"
-}
-
-#
 # Success message helper (completed step).
 # Usage: success "Name formats generated"
 #
@@ -116,7 +108,7 @@ change_case() {
 main() {
   print_header 1 "WordPress Plugin Boilerplate Installer"
   echo "This installer downloads the boilerplate from GitHub and prepares it."
-  info "Starting"
+  echo
 
   require_cmd "tar"
   require_cmd "find"
@@ -130,7 +122,7 @@ main() {
   # Prompt until a valid plugin name is provided.
   local plugin_name=""
   while true; do
-    read -r -p "What will be your Plugin name? " plugin_name
+    read -r -p "Q. What will be your Plugin name? " plugin_name
     plugin_name="$(echo "$plugin_name" | tr -s ' ' | sed 's/^ *//;s/ *$//')"
 
     if validate_plugin_name "$plugin_name"; then

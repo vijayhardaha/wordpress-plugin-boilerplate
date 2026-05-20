@@ -9,7 +9,7 @@ A modern WordPress plugin starter with PHP structure, frontend/admin assets, lin
 Run this in your WordPress plugins directory (for example `wp-content/plugins`):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/vijayhardaha/wordpress-plugin-boilerplate/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/vijayhardaha/wordpress-plugin-boilerplate/refs/heads/master/install.sh | bash
 ```
 
 The installer will:

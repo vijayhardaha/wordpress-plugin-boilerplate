@@ -253,9 +253,9 @@ main() {
 
   print_header 8 "Cleanup"
   # Cleanup scaffolding-only metadata from generated plugin.
-  rm -f README.md AGENTS.md bun.lock bun.lockb || true
+  rm -f README.md AGENTS.md bun.lock bun.lockb composer.lock || true
   rm -rf .git || true
-  echo "Removed: README.md, bun.lock, bun.lockb, .git (if present)."
+  echo "Removed: README.md, bun.lock, bun.lockb, composer.lock, .git (if present)."
   success "Cleanup complete"
 
   print_header 9 "Complete"

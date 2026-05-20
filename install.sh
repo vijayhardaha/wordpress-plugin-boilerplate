@@ -9,19 +9,16 @@ REPO_REF="${BOILERPLATE_REF:-HEAD}"
 
 #
 # Print a standardized section header block.
-# Usage: print_header "Section Title"
+# Usage: print_header <number> "Section Title"
 #
 print_header() {
-  local title="$1"
+  local num="$1"
+  local title="$2"
   local width=60
   local line=$(printf '%*s' "$width" | tr ' ' '-')
-  # Center title
-  local title_len=${#title}
-  local pad=$(( (width - title_len) / 2 ))
-  local pad_rest=$(( width - title_len - pad ))
   echo
   echo "$line"
-  printf "%*s%s%*s\n" "$pad" "" "$title" "$pad_rest" ""
+  echo "${num}.  ${title}"
   echo "$line"
 }
 
@@ -117,7 +114,7 @@ change_case() {
 # Usage: main
 #
 main() {
-  print_header "WordPress Plugin Boilerplate Installer"
+  print_header 1 "WordPress Plugin Boilerplate Installer"
   echo "This installer downloads the boilerplate from GitHub and prepares it."
   info "Starting"
 
@@ -151,7 +148,7 @@ main() {
   domain_case="$(change_case "$plugin_name" domain)"
   function_case="$(change_case "$plugin_name" function)"
 
-  print_header "Validated Plugin Name"
+  print_header 2 "Validated Plugin Name"
   echo "Plugin Name      : $plugin_name"
   echo "Directory / Slug : $domain_case"
   echo "Class Prefix     : $class_case"
@@ -162,13 +159,13 @@ main() {
   # Final plugin folder name uses the kebab-case slug.
   local target_dir="${PWD}/${domain_case}"
 
-  print_header "Validating Target Directory"
+  print_header 3 "Validating Target Directory"
   # Stop early if target directory already exists to avoid overwriting.
   [[ -e "$target_dir" ]] && fail "Target directory already exists: $target_dir"
   echo "Target directory is available: $target_dir"
   success "Directory validation complete"
 
-  print_header "Downloading Boilerplate"
+  print_header 4 "Downloading Boilerplate"
   # Download and unpack in a temporary workspace.
   local tmp_dir archive_url archive_file
   tmp_dir="$(mktemp -d)"
@@ -202,7 +199,7 @@ main() {
 
   cd "$target_dir"
 
-  print_header "Collecting Files"
+  print_header 5 "Collecting Files"
   # Gather files that contain boilerplate placeholders.
   mapfile -t replace_files < <(
     find . \
@@ -231,7 +228,7 @@ main() {
   echo "Found ${#replace_files[@]} files to process."
   success "File discovery complete"
 
-  print_header "Renaming Paths"
+  print_header 6 "Renaming Paths"
   # Rename files/directories that include the default slug.
   mapfile -t rename_targets < <(find . -depth -name '*custom-plugin*' | sort)
   local rename_count=0
@@ -247,7 +244,7 @@ main() {
   echo "Renamed ${rename_count} paths."
   success "Path rename complete"
 
-  print_header "Replacing File Content"
+  print_header 7 "Replacing File Content"
   local replaced_count=0
   # Replace all placeholder tokens in file content.
   for f in "${replace_files[@]}"; do
@@ -262,7 +259,7 @@ main() {
   echo "Updated ${replaced_count} files."
   success "Content replacement complete"
 
-  print_header "Cleanup"
+  print_header 8 "Cleanup"
   # Cleanup scaffolding-only metadata from generated plugin.
   rm -f README.md AGENTS.md bun.lock bun.lockb || true
   rm -rf .git || true

@@ -1,0 +1,53 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+    paths:
+      - "**.php"
+      - "**.js"
+      - "**.mjs"
+      - "package.json"
+      - "phpcs.xml"
+      - ".github/workflows/lint.yml"
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction
+
+      - name: Check file formatting
+        run: bun run format:check
+
+      - name: Run PHPCS
+        run: composer lint

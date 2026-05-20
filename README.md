@@ -9,7 +9,7 @@ A modern WordPress plugin starter with PHP structure, frontend/admin assets, lin
 Run this in your WordPress plugins directory (for example `wp-content/plugins`):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/vijayhardaha/wordpress-plugin-boilerplate/refs/heads/master/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/vijayhardaha/wordpress-plugin-boilerplate/refs/heads/master/install.sh -o install.sh && chmod +x install.sh && ./install.sh && rm -f install.sh
 ```
 
 The installer will:
@@ -35,7 +35,7 @@ bash install.sh
 Move into your generated plugin directory and install dependencies:
 
 ```bash
-pnpm install
+bun install
 composer install
 ```
 
@@ -47,29 +47,29 @@ composer install
 - `perl`
 - `curl` or `wget`
 - `node` (optional, for JS tooling)
-- `pnpm` and `composer` (for dependency install)
+- `bun` and `composer` (for dependency install)
 
 ## Development
 
-- Watch files: `pnpm run dev`
-- Build assets: `pnpm run build`
-- Build CSS only: `pnpm run build:css`
-- Build JS only: `pnpm run build:js`
+- Watch files: `bun run dev`
+- Build assets: `bun run build`
+- Build CSS only: `bun run build:css`
+- Build JS only: `bun run build:js`
 
 ## Linting
 
-- Lint all: `pnpm run lint`
-- Fix all: `pnpm run lint:fix`
-- JS only: `pnpm run eslint`
-- CSS/SCSS only: `pnpm run stylelint`
-- PHP only: `pnpm run phplint`
+- Lint all: `bun run lint`
+- Fix all: `bun run lint:fix`
+- JS only: `bun run eslint`
+- CSS/SCSS only: `bun run stylelint`
+- PHP only: `bun run phplint`
 
 ## Translation
 
 Generate POT file:
 
 ```bash
-pnpm run makepot
+bun run makepot
 ```
 
 Requires `wp-cli` (`wp i18n make-pot`).
@@ -77,7 +77,7 @@ Requires `wp-cli` (`wp i18n make-pot`).
 ## Build Release Zip
 
 ```bash
-pnpm run build:zip
+bun run build:zip
 ```
 
 ## Placeholder Conventions

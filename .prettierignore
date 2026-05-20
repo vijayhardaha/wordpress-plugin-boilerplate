@@ -1,0 +1,178 @@
+# =======================================================================
+# Prettier Ignore
+# =======================================================================
+# Purpose: Tell Prettier which files to skip to avoid formatting
+#          generated or binary files (keeps diffs small and fast).
+# Docs:    https://prettier.io/docs/ignore
+# =======================================================================
+
+# ----------------------------------------------------------------------
+# Dependencies
+# ----------------------------------------------------------------------
+# Large binary folders — never format.
+.bun/
+.pnp/
+.pnp.*
+.pnpm-store/
+node_modules/
+vendor/
+
+# ----------------------------------------------------------------------
+# Build & Compilation Output
+# ----------------------------------------------------------------------
+# Next.js / React
+.next/
+out/
+
+# Svelte
+.svelte-kit/
+
+# Bundler output
+build/
+dist/
+
+# ----------------------------------------------------------------------
+# Cache Directories
+# ----------------------------------------------------------------------
+.cache/
+.eslintcache
+.gulp/
+.parcel-cache/
+.rollup.cache/
+.stylelintcache
+.turbo/
+.vite/
+.vitest/
+.webpack/
+
+# ----------------------------------------------------------------------
+# Testing & Coverage
+# ----------------------------------------------------------------------
+.jest/
+.nyc_output/
+blob-report/
+coverage/
+playwright-report/
+test-results/
+vitest-results/
+
+# ----------------------------------------------------------------------
+# Temporary Files
+# ----------------------------------------------------------------------
+.tmp/
+tmp/
+
+# ----------------------------------------------------------------------
+# Editor & Ide
+# ----------------------------------------------------------------------
+.idea/
+.vscode-insiders/
+
+# ----------------------------------------------------------------------
+# Deployment
+# ----------------------------------------------------------------------
+.netlify/
+.vercel/
+.wrangler/
+
+# ----------------------------------------------------------------------
+# Public & Static Assets
+# ----------------------------------------------------------------------
+# Committed CSS assets, vendor stylesheets, theme CSS (WordPress).
+assets/
+public/
+static/
+
+# ----------------------------------------------------------------------
+# Ai Coding Tools
+# ----------------------------------------------------------------------
+.aider
+.amazonq
+.augmith
+.agent
+.agents
+.bolt
+.charliepython
+.claude
+.cline
+.codex
+.copilot
+.continue
+.crush
+.cursor
+.devin
+.fallow
+.gemini
+.gptscript
+.jina
+.kilo
+.kilocode
+.maestro
+.mistral
+.manus
+.midjourney
+.nexus
+.opencode
+.perplexity
+.pi
+.qoder
+.qwen
+.replit
+.starcode
+.supercursor
+.vibe
+.windsurf
+.xai
+
+# ----------------------------------------------------------------------
+# Environment & Secrets
+# ----------------------------------------------------------------------
+.env
+.env.*
+*.pem
+
+# ----------------------------------------------------------------------
+# Package Manager Lockfiles
+# ----------------------------------------------------------------------
+# Formatting these can cause massive, merge-breaking diffs.
+bun.lock
+composer.lock
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# ----------------------------------------------------------------------
+# Generated & Typings Files
+# ----------------------------------------------------------------------
+*.tsbuildinfo
+next-env.d.ts
+
+# ----------------------------------------------------------------------
+# Common Auto-Generated YAML
+# ----------------------------------------------------------------------
+# These are typically generated or CI-related - not meant to be formatted.
+._circleci/
+.gitlab/
+.gitlab-ci.yml
+azure-pipelines.yml
+bitbucket-pipelines.yml
+docker-compose.yaml
+docker-compose.yml
+*.kubeconfig
+
+# ----------------------------------------------------------------------
+# Minified & Generated Files
+# ----------------------------------------------------------------------
+# Never format minified code; it breaks the "minified" purpose.
+*.min.css
+*.min.js
+*.min.map
+
+# ----------------------------------------------------------------------
+# Logs
+# ----------------------------------------------------------------------
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -1,0 +1,1 @@
+/Users/vijay/.agents/global-rules/common.md

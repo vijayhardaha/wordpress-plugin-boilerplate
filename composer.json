@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "name": "viko/wordpress-plugin-boilerplate",
+  "name": "viko/custom-plugin",
   "description": "This is a short description of your plugin.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",

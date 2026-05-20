@@ -1,94 +1,110 @@
 # WordPress Plugin Boilerplate
 
-Empower your WordPress plugin development with our starter pack, comes pre-configured with Gulp, designed to help you set up a custom WordPress Plugin boilerplate in minutes.
+A modern WordPress plugin starter with PHP structure, frontend/admin assets, linting, and build tooling preconfigured.
 
-## Getting Started
+## Install
 
-To get started, follow these simple steps:
+### Option 1: Install directly from GitHub (recommended)
 
-1. Clone this GitHub repository into your WordPress plugins directory.
-2. In the plugin directory, run the following command: **`pnpm i && composer install`**
+Run this in your WordPress plugins directory (for example `wp-content/plugins`):
 
-After completing these initial steps, let's dive into setting up your plugin for success:
+```bash
+curl -fsSL https://raw.githubusercontent.com/vijayhardaha/wordpress-plugin-boilerplate/main/install.sh | bash
+```
 
--   **Automated Setup:** Execute **`pnpm run setup`** to launch the automated setup process.
--   **Plugin Name:** Input your desired plugin name when prompted, such as "WP Mail Checker" or "Bulk Email Sender."
--   **Seamless Configuration:** Our script will intelligently update the plugin name and related keywords throughout your plugin files. Look for the **"Complete!"** message upon successful completion, or troubleshooting messages if needed.
+The installer will:
 
-### Development and Building
+1. Ask for your plugin name.
+2. Validate the name.
+3. Generate slug/class/function/constant formats.
+4. Download boilerplate source from GitHub.
+5. Create a new plugin directory using the generated slug.
+6. Replace boilerplate placeholders.
+7. Remove setup-only files (`.git`, `README.md`, `bun.lock`, `bun.lockb`).
 
-Simplify your development workflow with these commands:
+### Option 2: Clone and run locally
 
--   **Watch for Changes:** Use `pnpm run dev` to automatically compile your files whenever changes are made.
--   **Build for Release:** When ready, run `pnpm run build` to compile your files for release.
+```bash
+git clone https://github.com/vijayhardaha/wordpress-plugin-boilerplate.git
+cd wordpress-plugin-boilerplate
+bash install.sh
+```
 
-### Linting and Code Fixing
+## After Install
 
-Maintain code quality effortlessly with a suite of 8 scripts:
+Move into your generated plugin directory and install dependencies:
 
--   `lint:css` for SCSS file linting.
--   `lint:js` for JavaScript file linting.
--   `lint:php` for PHP file linting.
--   `lint` to check CSS, JavaScript, and PHP files together.
--   `lint-fix:css` to automatically fix SCSS files.
--   `lint-fix:js` for automatic JavaScript file fixes.
--   `lint-fix:php` to correct PHP file issues.
--   `lint-fix` to tackle CSS, JavaScript, and PHP issues together.
+```bash
+pnpm install
+composer install
+```
 
-### Generate POT (Languages) File
+## Prerequisites
 
-1. **Install WP-CLI:** Follow the [official guide](https://wp-cli.org/#installing) and add it to your PATH.
-2. **Create POT File:** Execute `pnpm run makepot` to generate a POT file for languages.
+- `bash`
+- `tar`
+- `find`
+- `perl`
+- `curl` or `wget`
+- `node` (optional, for JS tooling)
+- `pnpm` and `composer` (for dependency install)
 
-### Key Insights
+## Development
 
-To provide clarity, here are the essential keywords in use:
+- Watch files: `pnpm run dev`
+- Build assets: `pnpm run build`
+- Build CSS only: `pnpm run build:css`
+- Build JS only: `pnpm run build:js`
 
-| Keyword         | Usage                                                                |
-| --------------- | -------------------------------------------------------------------- |
-| `custom-plugin` | Used as a prefix or postfix in various files.                        |
-| `custom-plugin` | Serves as the plugin's text domain and assets enqueue handle prefix. |
-| `Custom Plugin` | Represents the plugin's name across all plugin files.                |
-| `Custom_Plugin` | Used as the final class name and class name prefix.                  |
-| `custom_plugin` | Used as the main function name and functions name prefix.            |
-| `CUSTOM_PLUGIN` | Used as a prefix for constants.                                      |
+## Linting
 
-## What's Happening Behind the Scenes?
+- Lint all: `pnpm run lint`
+- Fix all: `pnpm run lint:fix`
+- JS only: `pnpm run eslint`
+- CSS/SCSS only: `pnpm run stylelint`
+- PHP only: `pnpm run phplint`
 
-When configuring your plugin using the Plugin Boilerplate, the **Key Insights** mentioned earlier serve as placeholders. These placeholders are dynamically replaced with the plugin name you provide during setup.
+## Translation
 
-Running `pnpm run setup` is a one-time command that initiates this process. Upon successful completion, it performs several important actions:
+Generate POT file:
 
-1. **Cleanup:** It removes `setup.mjs`, `.git`, and `README.md` files/directories, ensuring a clean start for your project.
-2. **Script Removal:** The `setup` script itself is deleted from your `package.json` to prevent unintended reconfiguration.
-3. **Dependency Optimization:** Dependencies that were specific to the setup process are removed, leaving only the essential dependencies needed for your plugin development.
+```bash
+pnpm run makepot
+```
 
-This streamlined setup process ensures your plugin starts on the right foot, eliminating unnecessary clutter and dependencies while setting the stage for efficient development.
+Requires `wp-cli` (`wp i18n make-pot`).
 
-## Plugin Structure
+## Build Release Zip
 
-Your WordPress plugin is organized as follows:
+```bash
+pnpm run build:zip
+```
 
--   **`custom-plugin.php`**: The main plugin file contains essential information, initializes constants, and provides a global function to access the primary class instance.
+## Placeholder Conventions
 
--   **`gulpfile.mjs`**: This file houses Gulp tasks responsible for automating various aspects of your plugin development, such as CSS preprocessing, JavaScript bundling, and asset optimization.
+The installer replaces these boilerplate placeholders:
 
--   **`includes`**: Within this directory, you'll find PHP files, organized into classes and function files. Class files start with a `class-` prefix, while function files end with a `-functions.php` postfix. The `admin` subdirectory contains backend-related files.
+| Placeholder     | Purpose                                                 |
+| --------------- | ------------------------------------------------------- |
+| `custom-plugin` | Text domain, slug, asset handles, file/directory naming |
+| `custom_plugin` | Function name prefix                                    |
+| `Custom Plugin` | Human-readable plugin name                              |
+| `Custom_Plugin` | Class name prefix                                       |
+| `CUSTOM_PLUGIN` | Constant name prefix                                    |
 
--   **`src`**: The `src` directory houses source files for your plugin's assets, such as raw CSS, JavaScript, images, and fonts. You can make modifications to these source files during development.
+## Project Structure
 
--   **`assets`**: In this directory, you'll find the compiled and optimized assets, including minified CSS and JavaScript files, as well as optimized images and fonts. These build assets are automatically generated by the Gulp tasks configured in the `gulpfile.mjs`. Please avoid manual modifications in this directory, as these files are regenerated during the `build` process.
-
-This structured approach ensures your plugin remains organized, maintainable, and efficient throughout its development lifecycle.
+- `custom-plugin.php`: Plugin bootstrap and singleton boot.
+- `includes/`: Core, admin, and frontend PHP classes/functions.
+- `src/`: Editable source assets (`scss`, `js`, images/fonts placeholders).
+- `assets/`: Built/minified assets generated from `src/`.
+- `gulpfile.mjs`: Build/watch pipeline.
+- `bin/`: Packaging and POT helper scripts.
 
 ## License
 
-Copyright (C) 2021-2023, Vijay Hardaha. WordPress Plugin Boilerplate is distributed under the terms of the GNU GPL.
+GPL-2.0-or-later. See `LICENSE`.
 
 ## Contributions
 
-We welcome contributions from the WordPress community to make this starter pack even better!
-
----
-
-Made with ❤ by [Vijay Hardaha](https://twitter.com/vijayhardaha)
+Contributions and improvements are welcome.

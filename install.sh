@@ -5,7 +5,7 @@ set -euo pipefail
 # Source repository details for boilerplate download.
 REPO_OWNER="vijayhardaha"
 REPO_NAME="wordpress-plugin-boilerplate"
-REPO_REF="${BOILERPLATE_REF:-main}"
+REPO_REF="${BOILERPLATE_REF:-HEAD}"
 
 #
 # Print a standardized section header block.
@@ -165,7 +165,7 @@ main() {
   # Download and unpack in a temporary workspace.
   local tmp_dir archive_url archive_file
   tmp_dir="$(mktemp -d)"
-  archive_url="https://codeload.github.com/${REPO_OWNER}/${REPO_NAME}/tar.gz/refs/heads/${REPO_REF}"
+  archive_url="https://codeload.github.com/${REPO_OWNER}/${REPO_NAME}/tar.gz/${REPO_REF}"
   archive_file="${tmp_dir}/boilerplate.tar.gz"
 
   echo "Repository : ${REPO_OWNER}/${REPO_NAME}"
@@ -263,7 +263,7 @@ main() {
 
   print_header "Complete"
   echo "Your plugin boilerplate is ready at: $target_dir"
-  echo "Next step: cd $domain_case && pnpm install && composer install"
+  echo "Next step: cd $domain_case && bun install && composer install"
   print_footer "Success"
 }
 

@@ -265,6 +265,10 @@ main() {
   echo "Your plugin boilerplate is ready at: $target_dir"
   echo "Next step: cd $domain_case && bun install && composer install"
   print_footer "Success"
+# Cleanup: remove installer script after successful run
+if [ -f "$0" ]; then
+  rm -f "$0"
+fi
 }
 
 main "$@"

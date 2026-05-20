@@ -14,7 +14,7 @@ REPO_REF="${BOILERPLATE_REF:-HEAD}"
 print_header() {
   local title="$1"
   local width=60
-  local line=$(printf "---%.0s" $(seq 1 $width))
+  local line=$(printf '%*s' "$width" | tr ' ' '-')
   # Center title
   local title_len=${#title}
   local pad=$(( (width - title_len) / 2 ))

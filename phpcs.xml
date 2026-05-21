@@ -25,8 +25,8 @@
   <arg value="ps" />
   <!-- Strip the filepaths in reports down to the relevant bit. -->
   <arg name="basepath" value="./" />
-  <!-- Check up to 8 files simultaneously. -->
-  <arg name="parallel" value="8" />
+  <!-- Check up to 100 files simultaneously. -->
+  <arg name="parallel" value="100" />
   <!-- Enable caching for faster subsequent runs. -->
   <arg name="cache" value=".phpcs-cache" />
   <!-- Set report width for better display. -->
@@ -36,7 +36,7 @@
   <!-- Minimum supported WordPress version. -->
   <config name="minimum_supported_wp_version" value="6.5" />
   <!-- PHP version to check compatibility against. -->
-  <config name="testVersion" value="8.2" />
+  <config name="testVersion" value="8.3" />
   <!-- Minimum PHP version required. -->
   <config name="php_min_version" value="8.0" />
   <!-- Memory limit for large projects. -->
@@ -51,8 +51,8 @@
   <!-- WordPress Internationalization (I18n). -->
   <rule ref="WordPress.WP.I18n">
     <properties>
-      <property name="text_domain">
-        <element value="custom-plugin" />
+      <property name="text_domain" type="array">
+        <element value="text-domain" />
         <element value="wordpress" />
         <element value="woocommerce" />
       </property>

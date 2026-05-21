@@ -86,18 +86,19 @@ static/
 # ----------------------------------------------------------------------
 # Ai Coding Tools
 # ----------------------------------------------------------------------
-.aider
-.amazonq
-.augmith
 .agent
 .agents
+.aider
+.amazonq
+.antigravitycli
+.augmith
 .bolt
 .charliepython
 .claude
 .cline
 .codex
-.copilot
 .continue
+.copilot
 .crush
 .cursor
 .devin
@@ -108,9 +109,9 @@ static/
 .kilo
 .kilocode
 .maestro
-.mistral
 .manus
 .midjourney
+.mistral
 .nexus
 .opencode
 .perplexity

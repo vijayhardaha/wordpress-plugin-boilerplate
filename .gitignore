@@ -204,18 +204,19 @@ tmp/
 # Ai Coding Tools
 # ----------------------------------------------------------------------
 # Local state, conversation history, and caches from AI agents.
-.aider
-.amazonq
-.augmith
 .agent
 .agents
+.aider
+.amazonq
+.antigravitycli
+.augmith
 .bolt
 .charliepython
 .claude
 .cline
 .codex
-.copilot
 .continue
+.copilot
 .crush
 .cursor
 .devin
@@ -226,9 +227,9 @@ tmp/
 .kilo
 .kilocode
 .maestro
-.mistral
 .manus
 .midjourney
+.mistral
 .nexus
 .opencode
 .perplexity

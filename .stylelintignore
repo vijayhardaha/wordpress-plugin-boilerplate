@@ -78,18 +78,19 @@ static/
 # Ai Coding Tools
 # ----------------------------------------------------------------------
 # AI agent caches and generated files.
-.aider
-.amazonq
-.augmith
 .agent
 .agents
+.aider
+.amazonq
+.antigravitycli
+.augmith
 .bolt
 .charliepython
 .claude
 .cline
 .codex
-.copilot
 .continue
+.copilot
 .crush
 .cursor
 .devin
@@ -100,9 +101,9 @@ static/
 .kilo
 .kilocode
 .maestro
-.mistral
 .manus
 .midjourney
+.mistral
 .nexus
 .opencode
 .perplexity

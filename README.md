@@ -53,8 +53,6 @@ composer install
 
 - Watch files: `bun run dev`
 - Build assets: `bun run build`
-- Build CSS only: `bun run build:css`
-- Build JS only: `bun run build:js`
 
 ## Linting
 

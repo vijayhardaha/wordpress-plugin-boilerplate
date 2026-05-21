@@ -30,5 +30,16 @@
   // Enable stylelint for CSS/SCSS linting and auto-fixing
   "stylelint.enable": true,
   // File types that stylelint will validate
-  "stylelint.validate": ["css", "scss"]
+  "stylelint.validate": ["css", "scss"],
+
+  // ---- PHP Configuration ----
+  // Configure PHP file handling with PHPCS/PHPCBF via PHP_CodeSniffer integration
+  "[php]": {
+    // Run PHPCS/PHPCBF on save to fix style violations and organize imports
+    "editor.codeActionsOnSave": { "source.fixAll": "explicit", "source.organizeImports": "explicit" },
+    // Use PHP_CodeSniffer integration for PHP formatting
+    "editor.defaultFormatter": "valeryanm.vscode-phpsab"
+  },
+  // Point to the WordPress coding standards configuration file (phpcs.xml)
+  "phpsab.standard": "phpcs.xml"
 }

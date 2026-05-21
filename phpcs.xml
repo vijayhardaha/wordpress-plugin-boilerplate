@@ -6,120 +6,120 @@
   name="Custom Plugin"
   uppercaseCommentForbidden="true"
 >
-	<!-- Specify the directory to scan. -->
-	<file>./</file>
+  <!-- Specify the directory to scan. -->
+  <file>./</file>
 
-	<!-- Exclude dependency-related files, generated files, and certain directories from scanning. -->
-	<exclude-pattern>*/tests/*</exclude-pattern>
-	<exclude-pattern>*/vendor/*</exclude-pattern>
-	<exclude-pattern>*/node_modules/*</exclude-pattern>
-	<exclude-pattern>*/build/*</exclude-pattern>
-	<exclude-pattern>*/dist/*</exclude-pattern>
+  <!-- Exclude dependency-related files, generated files, and certain directories from scanning. -->
+  <exclude-pattern>*/tests/*</exclude-pattern>
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+  <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>*/build/*</exclude-pattern>
+  <exclude-pattern>*/dist/*</exclude-pattern>
 
-	<!-- ==================== CLI Arguments ==================== -->
-	<!-- Specify that only PHP files should be checked. -->
-	<arg name="extensions" value="php" />
-	<!-- Show colors in the console. -->
-	<arg value="-colors" />
-	<!-- Show progress and display error codes for each message (source). -->
-	<arg value="ps" />
-	<!-- Strip the filepaths in reports down to the relevant bit. -->
-	<arg name="basepath" value="./" />
-	<!-- Check up to 8 files simultaneously. -->
-	<arg name="parallel" value="8" />
-	<!-- Enable caching for faster subsequent runs. -->
-	<arg name="cache" value=".phpcs-cache" />
-	<!-- Set report width for better display. -->
-	<arg name="report-width" value="120" />
+  <!-- ==================== CLI Arguments ==================== -->
+  <!-- Specify that only PHP files should be checked. -->
+  <arg name="extensions" value="php" />
+  <!-- Show colors in the console. -->
+  <arg value="-colors" />
+  <!-- Show progress and display error codes for each message (source). -->
+  <arg value="ps" />
+  <!-- Strip the filepaths in reports down to the relevant bit. -->
+  <arg name="basepath" value="./" />
+  <!-- Check up to 8 files simultaneously. -->
+  <arg name="parallel" value="8" />
+  <!-- Enable caching for faster subsequent runs. -->
+  <arg name="cache" value=".phpcs-cache" />
+  <!-- Set report width for better display. -->
+  <arg name="report-width" value="120" />
 
-	<!-- ==================== Configuration Settings ==================== -->
-	<!-- Minimum supported WordPress version. -->
-	<config name="minimum_supported_wp_version" value="6.5" />
-	<!-- PHP version to check compatibility against. -->
-	<config name="testVersion" value="8.2" />
-	<!-- Minimum PHP version required. -->
-	<config name="php_min_version" value="8.0" />
-	<!-- Memory limit for large projects. -->
-	<ini name="memory_limit" value="512M" />
+  <!-- ==================== Configuration Settings ==================== -->
+  <!-- Minimum supported WordPress version. -->
+  <config name="minimum_supported_wp_version" value="6.5" />
+  <!-- PHP version to check compatibility against. -->
+  <config name="testVersion" value="8.2" />
+  <!-- Minimum PHP version required. -->
+  <config name="php_min_version" value="8.0" />
+  <!-- Memory limit for large projects. -->
+  <ini name="memory_limit" value="512M" />
 
-	<!-- ==================== WordPress Standards ==================== -->
-	<!-- Include WordPress (Core + Extra) with specific exclusions. -->
-	<rule ref="WordPress">
-		<exclude name="WordPress.Files.FileName" />
-	</rule>
+  <!-- ==================== WordPress Standards ==================== -->
+  <!-- Include WordPress (Core + Extra) with specific exclusions. -->
+  <rule ref="WordPress">
+    <exclude name="WordPress.Files.FileName" />
+  </rule>
 
-	<!-- WordPress Internationalization (I18n). -->
-	<rule ref="WordPress.WP.I18n">
-		<properties>
-			<property name="text_domain">
-				<element value="custom-plugin" />
-				<element value="wordpress" />
-				<element value="woocommerce" />
-			</property>
-		</properties>
-	</rule>
+  <!-- WordPress Internationalization (I18n). -->
+  <rule ref="WordPress.WP.I18n">
+    <properties>
+      <property name="text_domain">
+        <element value="custom-plugin" />
+        <element value="wordpress" />
+        <element value="woocommerce" />
+      </property>
+    </properties>
+  </rule>
 
-	<!-- Class file naming exceptions for abstract/interface files. -->
-	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
-		<exclude-pattern>includes/**/abstract-*.php</exclude-pattern>
-		<exclude-pattern>includes/**/interface-*.php</exclude-pattern>
-		<exclude-pattern>tests/</exclude-pattern>
-	</rule>
+  <!-- Class file naming exceptions for abstract/interface files. -->
+  <rule ref="WordPress.Files.FileName.InvalidClassFileName">
+    <exclude-pattern>includes/**/abstract-*.php</exclude-pattern>
+    <exclude-pattern>includes/**/interface-*.php</exclude-pattern>
+    <exclude-pattern>tests/</exclude-pattern>
+  </rule>
 
-	<!-- WordPress Documentation standards. -->
-	<rule ref="WordPress-Docs" />
+  <!-- WordPress Documentation standards. -->
+  <rule ref="WordPress-Docs" />
 
-	<!-- Security: sanitize and validate input. -->
-	<rule ref="WordPress.Security.ValidatedSanitizedInput">
-		<properties>
-			<property name="customSanitizingFunctions" />
-		</properties>
-	</rule>
+  <!-- Security: sanitize and validate input. -->
+  <rule ref="WordPress.Security.ValidatedSanitizedInput">
+    <properties>
+      <property name="customSanitizingFunctions" />
+    </properties>
+  </rule>
 
-	<!-- Security: escape all output. -->
-	<rule ref="WordPress.Security.EscapeOutput">
-		<properties>
-			<property name="customEscapingFunctions" />
-		</properties>
-	</rule>
+  <!-- Security: escape all output. -->
+  <rule ref="WordPress.Security.EscapeOutput">
+    <properties>
+      <property name="customEscapingFunctions" />
+    </properties>
+  </rule>
 
-	<!-- Allow debug functions during development. -->
-	<rule ref="WordPress.PHP.DevelopmentFunctions">
-		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log" />
-		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r" />
-		<exclude name="WordPress.PHP.DevelopmentFunctions.var_dump" />
-	</rule>
+  <!-- Allow debug functions during development. -->
+  <rule ref="WordPress.PHP.DevelopmentFunctions">
+    <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log" />
+    <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r" />
+    <exclude name="WordPress.PHP.DevelopmentFunctions.var_dump" />
+  </rule>
 
-	<!-- Enforce Yoda conditions. -->
-	<rule ref="WordPress.PHP.YodaConditions" />
+  <!-- Enforce Yoda conditions. -->
+  <rule ref="WordPress.PHP.YodaConditions" />
 
-	<!-- Enforce snake_case variable names. -->
-	<rule ref="WordPress.NamingConventions.ValidVariableName" />
+  <!-- Enforce snake_case variable names. -->
+  <rule ref="WordPress.NamingConventions.ValidVariableName" />
 
-	<!-- ==================== PHPCompatibility Standards ==================== -->
-	<!-- PHPCompatibilityWP with exclusions. -->
-	<rule ref="PHPCompatibilityWP">
-		<exclude-pattern>tests/</exclude-pattern>
-	</rule>
+  <!-- ==================== PHPCompatibility Standards ==================== -->
+  <!-- PHPCompatibilityWP with exclusions. -->
+  <rule ref="PHPCompatibilityWP">
+    <exclude-pattern>tests/</exclude-pattern>
+  </rule>
 
-	<!-- ==================== Universal Standards ==================== -->
-	<!-- Allow mixing functions and OO in same file (common in WP plugins). -->
-	<rule ref="Universal.Files.SeparateFunctionsFromOO">
-		<exclude name="Universal.Files.SeparateFunctionsFromOO.Mixed" />
-	</rule>
+  <!-- ==================== Universal Standards ==================== -->
+  <!-- Allow mixing functions and OO in same file (common in WP plugins). -->
+  <rule ref="Universal.Files.SeparateFunctionsFromOO">
+    <exclude name="Universal.Files.SeparateFunctionsFromOO.Mixed" />
+  </rule>
 
-	<!-- No reserved keyword parameter names. -->
-	<rule ref="Universal.NamingConventions.NoReservedKeywordParameterNames" />
+  <!-- No reserved keyword parameter names. -->
+  <rule ref="Universal.NamingConventions.NoReservedKeywordParameterNames" />
 
-	<!-- ==================== Generic Standards ==================== -->
-	<!-- Generic commenting with exclusions. -->
-	<rule ref="Generic.Commenting">
-		<exclude-pattern>tests/</exclude-pattern>
-	</rule>
+  <!-- ==================== Generic Standards ==================== -->
+  <!-- Generic commenting with exclusions. -->
+  <rule ref="Generic.Commenting">
+    <exclude-pattern>tests/</exclude-pattern>
+  </rule>
 
-	<!-- ==================== Squiz Standards ==================== -->
-	<!-- Allow multiple function parameters on same line. -->
-	<rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
-		<exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.TooMany" />
-	</rule>
+  <!-- ==================== Squiz Standards ==================== -->
+  <!-- Allow multiple function parameters on same line. -->
+  <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
+    <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.TooMany" />
+  </rule>
 </ruleset>

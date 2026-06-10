@@ -221,6 +221,7 @@ tmp/
 .cursor
 .devin
 .fallow
+.freebuff
 .gemini
 .gptscript
 .jina
@@ -233,7 +234,6 @@ tmp/
 .nexus
 .opencode
 .perplexity
-.pi
 .qoder
 .qwen
 .replit

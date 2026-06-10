@@ -150,7 +150,7 @@ const imageMinifyOptions = { progressive: true, interlaced: true, svgoPlugins: [
  * @returns {string|string[]} Full source path or path list.
  */
 const makeSrcPath = (value) => {
-  const toFull = (item) => `${PATHS.src}/${item}`;
+  const toFull = (item) => (item.includes('node_modules') ? item : `${PATHS.src}/${item}`);
 
   return Array.isArray(value) ? value.map(toFull) : toFull(value);
 };
@@ -347,39 +347,37 @@ const displayTotalSize = async () => {
  *
  * @returns {import('stream').Duplex|Promise<void>} Returns a stream that reports asset sizes.
  */
-const buildCSS = () => {
-  if (!isEnabled('scss')) return Promise.resolve();
+const buildCSS = async () => {
+  if (!isEnabled('scss')) return;
 
   const validEntries = getValidEntries(PATHS.scss.src, 'CSS');
   const destination = makeDestPath(PATHS.scss.dest);
 
-  if (validEntries.length === 0) return Promise.resolve();
+  if (validEntries.length === 0) return;
 
-  const outputStreams = validEntries.map(([name, pathValue]) => {
+  const pipeToDest = (sourcePath, minify, name) => {
+    return new Promise((resolve, reject) => {
+      gulp
+        .src(sourcePath)
+        .pipe(plumber({ errorHandler: createErrorHandler(`CSS (${name})`) }))
+        .pipe(sass({ ...sassCompilerOptions }).on('error', sass.logError))
+        .pipe(concat('merged.css'))
+        .pipe(postcss([duplicates(), mergeRules(), autoprefixer()]))
+        .pipe(cleancss(minify ? undefined : { format: 'beautify', level: cssOptimizationLevels }))
+        .pipe(rename({ basename: name, suffix: minify ? '.min' : '' }))
+        .pipe(gulp.dest(destination))
+        .on('end', resolve)
+        .on('error', reject);
+    });
+  };
+
+  for (const [name, pathValue] of validEntries) {
     const sourcePath = makeSrcPath(pathValue);
-    const baseSource = gulp
-      .src(sourcePath)
-      // Keep watch/build alive when a single file fails.
-      .pipe(plumber({ errorHandler: createErrorHandler(`CSS (${name})`) }))
-      // Compile Sass using shared compiler options.
-      .pipe(sass({ ...sassCompilerOptions }).on('error', sass.logError))
-      // Merge entry output into a stable filename before final rename.
-      .pipe(concat('merged.css'))
-      // Normalize CSS with postcss passes (dedupe/merge/prefix).
-      .pipe(postcss([duplicates(), mergeRules(), autoprefixer()]))
-      // Write readable output first.
-      .pipe(cleancss({ format: 'beautify', level: cssOptimizationLevels }))
-      .pipe(rename({ basename: name }));
 
-    const minified = baseSource
-      .pipe(clone())
-      // Emit minified sibling as *.min.css.
-      .pipe(cleancss())
-      .pipe(rename({ suffix: '.min' }));
-    return merge(baseSource, minified).pipe(gulp.dest(destination));
-  });
-
-  return merge(...outputStreams);
+    // Write beautified version first, then minified.
+    await pipeToDest(sourcePath, false, name);
+    await pipeToDest(sourcePath, true, name);
+  }
 };
 
 /**

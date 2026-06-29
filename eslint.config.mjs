@@ -11,4 +11,7 @@
 
 import { createConfig } from '@vijayhardaha/dev-config/eslint';
 
-export default createConfig({ importOrder: false });
+export default createConfig({
+  importOrder: false,
+  plugins: [{ files: ['**/*.js'], languageOptions: { globals: { wp: 'readonly', jQuery: 'readonly' } } }],
+});

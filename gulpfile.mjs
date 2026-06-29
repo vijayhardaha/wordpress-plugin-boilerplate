@@ -9,27 +9,40 @@
  * ======================================================================
  */
 
-import { deleteSync } from 'del'; // Delete files and directories synchronously.
-import { mkdirp } from 'mkdirp'; // Create directories recursively.
-import * as dartSass from 'sass'; // Dart Sass compiler for SCSS to CSS.
-import autoprefixer from 'autoprefixer'; // PostCSS plugin to add vendor prefixes.
-import cleancss from 'gulp-clean-css'; // Minify CSS output.
-import clone from 'gulp-clone'; // Clone streams for multiple outputs.
-import concat from 'gulp-concat'; // Concatenate files into one output.
-import duplicates from 'postcss-discard-duplicates'; // Remove duplicate CSS rules.
-import flatten from 'gulp-flatten'; // Flatten directory structures.
-import fs from 'fs'; // File system module for path validation.
-import gulp from 'gulp'; // Gulp task runner for orchestrating build processes.
-import gulpSass from 'gulp-sass'; // Gulp plugin wrapper for Sass.
-import imagemin from 'gulp-imagemin'; // Optimize image assets.
-import log from 'fancy-log'; // Timestamped logging for task output.
-import merge from 'merge-stream'; // Merge multiple streams into one.
-import mergeRules from 'postcss-merge-rules'; // Merge compatible CSS rules.
-import plumber from 'gulp-plumber'; // Prevent pipe breaks on errors.
-import postcss from 'gulp-postcss'; // Transform CSS with PostCSS plugins.
-import rename from 'gulp-rename'; // Rename output files.
-import size from 'gulp-size'; // Display output file sizes.
-import terser from 'gulp-terser'; // Minify JavaScript with Terser.
+// Node built-ins.
+import fs from 'fs';
+import { gzipSync } from 'zlib';
+
+// Third-party: Sass.
+import * as dartSass from 'sass';
+import gulpSass from 'gulp-sass';
+
+// Third-party: Gulp & plugins.
+import gulp from 'gulp';
+import cleancss from 'gulp-clean-css';
+import clone from 'gulp-clone';
+import concat from 'gulp-concat';
+import flatten from 'gulp-flatten';
+import imagemin, { gifsicle, mozjpeg, optipng, svgo } from 'gulp-imagemin';
+import plumber from 'gulp-plumber';
+import postcss from 'gulp-postcss';
+import rename from 'gulp-rename';
+import terser from 'gulp-terser';
+
+// Third-party: PostCSS plugins.
+import autoprefixer from 'autoprefixer';
+import { cssDeclarationSorter } from 'css-declaration-sorter';
+import duplicates from 'postcss-discard-duplicates';
+import mergeRules from 'postcss-merge-rules';
+import sortMediaQueries from 'postcss-sort-media-queries';
+
+// Third-party: Utilities.
+import { smacssOrder } from '@vijayhardaha/dev-config/gulp-smacss';
+import { deleteSync } from 'del';
+import log from 'fancy-log';
+import merge from 'merge-stream';
+import prettier from 'prettier';
+import through from 'through2';
 
 /**
  * Build path configuration for all asset pipelines.
@@ -82,7 +95,12 @@ const isProduction = process.env.NODE_ENV === 'production';
  *
  * @type {{name?: string, version?: string, author?: string|{name?: string, url?: string}}}
  */
-const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+let packageJson = {};
+try {
+  packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+} catch {
+  log('Warning: package.json not found or invalid — banner metadata will be missing.');
+}
 
 /**
  * CleanCSS optimization levels shared by formatted and minified CSS outputs.
@@ -97,7 +115,7 @@ const cssOptimizationLevels = {
     optimizeFontWeight: true, // Optimize font-weight values
     optimizeOutline: true, // Optimize outline property
     removeNegativePaddings: true, // Remove negative paddings
-    removeQuotes: true, // Remove quotes when unnecessary
+    removeQuotes: false, // Keep quotes to avoid breaking `content` values with special characters
     removeWhitespace: true, // Remove unnecessary whitespace
     roundingPrecision: 2, // Round numbers to N decimal places
     selectorsSortingMethod: 'standard', // How to sort selectors
@@ -132,15 +150,23 @@ const sassCompilerOptions = {
   quietDeps: true,
   silenceDeprecations: ['moz-document'],
   verbose: false,
+  // sass.compiler exposes the underlying dartSass instance via gulp-sass; Logger.silent suppresses all compile warnings.
   logger: sass.compiler.Logger.silent,
 };
 
 /**
- * Shared imagemin options for image optimization tasks.
+ * Imagemin plugin instances for image optimization tasks (gulp-imagemin v8+ API).
  *
- * @type {{progressive: boolean, interlaced: boolean, svgoPlugins: Array<object>}}
+ * Each optimizer is configured individually as a plugin instance.
+ *
+ * @type {Array<import('imagemin').Plugin>}
  */
-const imageMinifyOptions = { progressive: true, interlaced: true, svgoPlugins: [{ removeUnknownsAndDefaults: false }] };
+const imageMinPlugins = [
+  gifsicle({ interlaced: true }),
+  mozjpeg({ progressive: true }),
+  optipng(),
+  svgo({ plugins: [{ name: 'removeUnknownsAndDefaults', active: false }] }),
+];
 
 /**
  * Build a full source path from base source and relative segment.
@@ -163,21 +189,6 @@ const makeSrcPath = (value) => {
  * @returns {string} Full destination path.
  */
 const makeDestPath = (value) => `${PATHS.dest}/${value}`;
-
-/**
- * Ensure a directory exists before read/write operations.
- *
- * @param {string} dir - Directory path to create if missing.
- *
- * @returns {Promise<void>}
- */
-const ensureDir = async (dir) => {
-  try {
-    await mkdirp(dir);
-  } catch (error) {
-    if (error.code !== 'EEXIST') throw error;
-  }
-};
 
 /**
  * Check if a path exists and contains files.
@@ -264,6 +275,45 @@ const createErrorHandler = (taskName) => {
 };
 
 /**
+ * Batch-format CSS files with Prettier using a single Promise.all call.
+ *
+ * Avoids cold-starting Prettier once per file by collecting all files
+ * in the stream and running format concurrently.
+ *
+ * @returns {import('stream').Duplex} Transform stream that emits Prettier-formatted files.
+ */
+const formatCssBatch = () => {
+  /** @type {Array<import('vinyl')>} */
+  const files = [];
+
+  return through.obj(
+    function collect(file, _enc, cb) {
+      files.push(file);
+      cb(null);
+    },
+    function flush(cb) {
+      Promise.all(
+        files.map(async (file) => {
+          try {
+            const formatted = await prettier.format(file.contents.toString(), { parser: 'css' });
+            file.contents = Buffer.from(formatted);
+            return file;
+          } catch (err) {
+            err.message = `Prettier Error: ${err.message}`;
+            throw err;
+          }
+        })
+      )
+        .then(() => {
+          files.forEach((file) => this.push(file));
+          cb(null);
+        })
+        .catch((err) => cb(err));
+    }
+  );
+};
+
+/**
  * Print a startup banner with package metadata and runtime mode.
  *
  * @returns {void}
@@ -300,52 +350,43 @@ const printStartupBanner = () => {
 /**
  * Display total size information for generated CSS/JS assets.
  *
- * @returns {import('stream').Duplex|Promise<void>} Returns a stream that reports asset sizes.
+ * @returns {Promise<void>}
  */
 const displayTotalSize = async () => {
   // Resolve root output directory.
   const destination = makeDestPath('');
-  // Ensure destination exists before reading/reporting.
-  await ensureDir(destination);
 
-  if (!validatePath(destination)) {
-    // Skip when output root is unavailable.
-    log(`Skipping size report: ${destination} does not exist or is empty`);
+  if (!fs.existsSync(destination)) {
+    log(`Skipping size report: ${destination} does not exist`);
     return;
   }
 
   // Quick check for generated files in output root.
   const hasFiles = fs.readdirSync(destination).length > 0;
   if (!hasFiles) {
-    // Skip size plugin on empty output.
     log(`Skipping size report: No files found in ${destination}`);
     return;
   }
 
-  // Configure gzip-aware size reporter.
-  const sizeTracker = size({ showFiles: true, title: 'Asset Output:', gzip: true });
-  const stream = gulp
-    // Read built CSS/JS files from destination.
-    .src(makeDestPath('**/*.{css,js}'))
-    // Print per-file and aggregate sizes.
-    .pipe(sizeTracker)
-    .on('end', () => {
-      // Force finish so gulp waits for final size logs.
-      sizeTracker.emit('finish');
-    });
+  // Normalize separators for cross-platform compatibility (readdirSync returns
+  // backslash-separated paths on Windows when recursive is true).
+  const files = fs
+    .readdirSync(destination, { recursive: true })
+    .map((f) => f.toString().replace(/\\/g, '/'))
+    .filter((f) => f.endsWith('.css') || f.endsWith('.js'));
 
-  await new Promise((resolve, reject) => {
-    // Resolve when size reporting is complete.
-    stream.on('finish', resolve);
-    // Fail task on stream errors.
-    stream.on('error', reject);
-  });
+  for (const file of files) {
+    const fullPath = `${destination}/${file}`;
+    const stats = fs.statSync(fullPath);
+    const gzipped = gzipSync(fs.readFileSync(fullPath));
+    log(`Asset Output: ${file} ${stats.size} B (gzipped ${gzipped.length} B)`);
+  }
 };
 
 /**
  * Compile SCSS to CSS and output both beautified and minified versions.
  *
- * @returns {import('stream').Duplex|Promise<void>} Returns a stream that reports asset sizes.
+ * @returns {Promise<void>}
  */
 const buildCSS = async () => {
   if (!isEnabled('scss')) return;
@@ -355,28 +396,53 @@ const buildCSS = async () => {
 
   if (validEntries.length === 0) return;
 
-  const pipeToDest = (sourcePath, minify, name) => {
-    return new Promise((resolve, reject) => {
-      gulp
-        .src(sourcePath)
-        .pipe(plumber({ errorHandler: createErrorHandler(`CSS (${name})`) }))
-        .pipe(sass({ ...sassCompilerOptions }).on('error', sass.logError))
-        .pipe(concat('merged.css'))
-        .pipe(postcss([duplicates(), mergeRules(), autoprefixer()]))
-        .pipe(cleancss(minify ? undefined : { format: 'beautify', level: cssOptimizationLevels }))
-        .pipe(rename({ basename: name, suffix: minify ? '.min' : '' }))
-        .pipe(gulp.dest(destination))
-        .on('end', resolve)
-        .on('error', reject);
-    });
-  };
-
+  // Sequential: each entry awaits completion before the next starts, ensuring
+  // deterministic output order and avoiding concurrent write conflicts.
   for (const [name, pathValue] of validEntries) {
     const sourcePath = makeSrcPath(pathValue);
 
-    // Write beautified version first, then minified.
-    await pipeToDest(sourcePath, false, name);
-    await pipeToDest(sourcePath, true, name);
+    const baseSource = gulp
+      .src(sourcePath)
+      .pipe(plumber({ errorHandler: createErrorHandler(`CSS (${name})`) }))
+      .pipe(sass({ ...sassCompilerOptions }))
+      .pipe(concat('merged.css'))
+      .pipe(
+        postcss([
+          duplicates(),
+          mergeRules(),
+          autoprefixer(),
+          sortMediaQueries(),
+          cssDeclarationSorter({
+            order: (a, b) => {
+              const aVar = a.startsWith('--');
+              const bVar = b.startsWith('--');
+              if (aVar && !bVar) return -1;
+              if (!aVar && bVar) return 1;
+              const aIndex = smacssOrder.indexOf(a);
+              const bIndex = smacssOrder.indexOf(b);
+              if (aIndex === -1 && bIndex === -1) return 0;
+              if (aIndex === -1) return 1;
+              if (bIndex === -1) return -1;
+              return aIndex - bIndex;
+            },
+          }),
+        ])
+      );
+
+    const beautified = baseSource
+      .pipe(clone())
+      .pipe(cleancss({ format: 'beautify', level: cssOptimizationLevels }))
+      .pipe(formatCssBatch())
+      .pipe(rename({ basename: name }));
+
+    const minified = baseSource
+      .pipe(clone())
+      .pipe(cleancss({ level: cssOptimizationLevels }))
+      .pipe(rename({ basename: name, suffix: '.min' }));
+
+    await new Promise((resolve) => {
+      merge(beautified, minified).pipe(gulp.dest(destination)).on('end', resolve);
+    });
   }
 };
 
@@ -403,14 +469,17 @@ const buildJS = async () => {
       .pipe(concat('merged.js'))
       .pipe(rename({ basename: name }));
 
+    const unminified = baseSource.pipe(clone());
+
     const minified = baseSource
       .pipe(clone())
       // Emit minified sibling as *.min.js.
       .pipe(terser())
       .pipe(rename({ suffix: '.min' }));
 
+    // Both unminified and minified are always written regardless of NODE_ENV.
     await new Promise((resolve) => {
-      merge(baseSource, minified).pipe(gulp.dest(destination)).on('end', resolve);
+      merge(unminified, minified).pipe(gulp.dest(destination)).on('end', resolve);
     });
   }
 };
@@ -464,7 +533,7 @@ const buildImages = async () => {
       // Read image assets as binary.
       .src(sourcePath, { encoding: false })
       // Optimize images with shared settings.
-      .pipe(imagemin(imageMinifyOptions))
+      .pipe(imagemin(imageMinPlugins))
       // Write optimized images to destination.
       .pipe(gulp.dest(destination))
       .on('end', resolve);
@@ -485,45 +554,41 @@ const cleanAssets = async () => {
 /**
  * Watch enabled asset paths and trigger related build tasks.
  *
- * @returns {import('events').EventEmitter|undefined} Returns the watcher EventEmitter when watchers are active, or undefined otherwise.
+ * @returns {void}
  */
 const watchAssets = () => {
-  const watchErrorHandler = createErrorHandler('Watch');
+  // Use a plain inline handler: gulp.watch returns an FSWatcher, not a Transform
+  // stream, so createErrorHandler (which calls this.emit('end')) does not apply.
+  const onWatchError = (err) => log(`Watch Error: ${err.message}`);
   const activeWatchers = [];
 
   if (isEnabled('scss')) {
-    console.log('Starting SCSS file watcher...');
-    activeWatchers.push(
-      gulp.watch(makeSrcPath('scss/**/*.scss'), gulp.series(buildCSS)).on('error', watchErrorHandler)
-    );
+    log('Starting SCSS file watcher...');
+    activeWatchers.push(gulp.watch(makeSrcPath('scss/**/*.scss'), gulp.series(buildCSS)).on('error', onWatchError));
   }
 
   if (isEnabled('js')) {
-    console.log('Starting JS file watcher...');
-    activeWatchers.push(gulp.watch(makeSrcPath('js/**/*.js'), gulp.series(buildJS)).on('error', watchErrorHandler));
+    log('Starting JS file watcher...');
+    activeWatchers.push(gulp.watch(makeSrcPath('js/**/*.js'), gulp.series(buildJS)).on('error', onWatchError));
   }
 
   if (isEnabled('fonts')) {
-    console.log('Starting fonts file watcher...');
-    activeWatchers.push(gulp.watch(makeSrcPath('fonts/**/*'), gulp.series(buildFonts)).on('error', watchErrorHandler));
+    log('Starting fonts file watcher...');
+    activeWatchers.push(gulp.watch(makeSrcPath('fonts/**/*'), gulp.series(buildFonts)).on('error', onWatchError));
   }
 
   if (isEnabled('images')) {
-    console.log('Starting images file watcher...');
-    activeWatchers.push(
-      gulp.watch(makeSrcPath('images/**/*'), gulp.series(buildImages)).on('error', watchErrorHandler)
-    );
+    log('Starting images file watcher...');
+    activeWatchers.push(gulp.watch(makeSrcPath('images/**/*'), gulp.series(buildImages)).on('error', onWatchError));
   }
 
   if (activeWatchers.length > 0) {
-    console.log(
+    log(
       `Watching all enabled asset types (${activeWatchers.length} watcher${activeWatchers.length > 1 ? 's' : ''})...`
     );
   } else {
-    console.log('No asset watchers enabled.');
+    log('No asset watchers enabled.');
   }
-
-  return activeWatchers[0];
 };
 
 // Build CSS assets only.
@@ -533,8 +598,8 @@ const js = gulp.series(buildJS);
 // Run full build pipeline (clean -> assets -> size report).
 const build = gulp.series(cleanAssets, buildCSS, buildJS, buildFonts, buildImages, displayTotalSize);
 // Start watch-only workflow.
-const watcher = gulp.series(watchAssets);
-// Build once, then start watching for changes.
+const watcher = watchAssets;
+// Build once, then start watching for changes. If build fails, watchAssets will not run.
 const dev = gulp.series(build, watchAssets);
 
 // Print startup metadata banner.

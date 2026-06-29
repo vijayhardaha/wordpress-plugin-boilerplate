@@ -31,8 +31,21 @@ node_modules/
 # Dependencies (Php)
 # ----------------------------------------------------------------------
 # Composer dependencies for WordPress / Laravel projects.
-languages/
+/languages
 vendor/
+
+# ----------------------------------------------------------------------
+# Go
+# ----------------------------------------------------------------------
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
 
 # ----------------------------------------------------------------------
 # Build & Compilation Output
@@ -85,6 +98,7 @@ dist/
 
 # Linter / Formatter caches
 .eslintcache
+.ruff_cache
 .stylelintcache
 
 # ----------------------------------------------------------------------
@@ -115,6 +129,18 @@ vitest-results/
 *.swp
 *.swo
 
+# Vim
+[._]*.s[a-v][a-z]
+!*.svg  # comment out if you don't need vector files
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+[._]*.un~
+
 # ----------------------------------------------------------------------
 # System & Os Junk
 # ----------------------------------------------------------------------
@@ -124,6 +150,18 @@ vitest-results/
 .LSOverride
 .Spotlight-V100
 .Trashes
+.AppleDB
+.AppleDesktop
+.DocumentRevisions-V100
+.fseventsd
+.TemporaryItems
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+Icon
+._*
+Network Trash Folder
+Temporary Items
+.apdisk
 
 # Windows
 $RECYCLE.BIN/
@@ -132,7 +170,11 @@ Thumbs.db
 ehthumbs.db
 
 # Linux
-# *~
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
 
 # ----------------------------------------------------------------------
 # Deployment (Platform-Specific)
@@ -185,6 +227,17 @@ storage/logs/
 log/
 logs/
 
+# ----------------------------------------------------------------------
+# Nix
+# ----------------------------------------------------------------------
+result
+result-*
+
+# ----------------------------------------------------------------------
+# Redis
+# ----------------------------------------------------------------------
+*.rdb
+
 # PM2 / Forever / Process Managers
 *.log.*
 .pm2/
@@ -199,6 +252,7 @@ syslog.log
 # Scratch data, prepared commands, local workflow artifacts.
 .tmp/
 tmp/
+coverage.txt
 
 # ----------------------------------------------------------------------
 # Ai Coding Tools
@@ -242,13 +296,14 @@ tmp/
 .vibe
 .windsurf
 .xai
+.gh-cache
 
 # ----------------------------------------------------------------------
 # Seo & Generated Data
 # ----------------------------------------------------------------------
 # Auto-generated files that don't need version control.
-/public/robots.txt
-/public/sitemap*
+*public/robots.txt
+*public/sitemap*
 *sitemap*.xml
 
 # ----------------------------------------------------------------------

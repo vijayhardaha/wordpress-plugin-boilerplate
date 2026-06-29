@@ -95,6 +95,7 @@ static/
 .cursor
 .devin
 .fallow
+.freebuff
 .gemini
 .gptscript
 .jina
@@ -107,7 +108,6 @@ static/
 .nexus
 .opencode
 .perplexity
-.pi
 .qoder
 .qwen
 .replit

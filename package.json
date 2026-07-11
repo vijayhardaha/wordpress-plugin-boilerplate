@@ -80,12 +80,15 @@
     "stylelint-config-standard-scss": "^17.0.0",
     "stylelint-order": "^8.1.1",
     "through2": "^5.0.5",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.63.0"
   },
   "trustedDependencies": [
     "@parcel/watcher",
     "core-js",
+    "gifsicle",
+    "mozjpeg",
+    "optipng-bin",
     "unrs-resolver"
   ]
 }

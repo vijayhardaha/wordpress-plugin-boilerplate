@@ -267,6 +267,7 @@ coverage.txt
 .bolt
 .charliepython
 .claude
+.commandcode
 .cline
 .codex
 .continue
@@ -285,6 +286,8 @@ coverage.txt
 .manus
 .midjourney
 .mistral
+.mimocode
+.openclaude
 .nexus
 .opencode
 .perplexity

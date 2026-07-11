@@ -87,6 +87,7 @@ static/
 .bolt
 .charliepython
 .claude
+.commandcode
 .cline
 .codex
 .continue
@@ -105,6 +106,8 @@ static/
 .manus
 .midjourney
 .mistral
+.mimocode
+.openclaude
 .nexus
 .opencode
 .perplexity

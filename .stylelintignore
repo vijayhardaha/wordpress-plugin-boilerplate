@@ -21,9 +21,9 @@ vendor/
 # bundlers emit compiled stylesheets.
 .next/
 .svelte-kit/
-build/
-dist/
-out/
+/build/
+/dist/
+/out/
 
 # ----------------------------------------------------------------------
 # Cache Directories
@@ -70,9 +70,9 @@ tmp/
 # Public & Static Assets
 # ----------------------------------------------------------------------
 # Committed CSS assets, vendor stylesheets, theme CSS (WordPress).
-assets/
-public/
-static/
+/assets/
+/public/
+/static/
 
 # ----------------------------------------------------------------------
 # Ai Coding Tools

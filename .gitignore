@@ -52,7 +52,7 @@ go.work.sum
 # ----------------------------------------------------------------------
 # Next.js / React
 .next/
-out/
+/out/
 
 # Svelte
 .svelte-kit/
@@ -62,8 +62,8 @@ out/
 next-env.d.ts
 
 # Bundler output
-build/
-dist/
+/build/
+/dist/
 
 # ----------------------------------------------------------------------
 # Cache Directories
@@ -223,9 +223,9 @@ wp-content/debug.log
 wp-content/uploads/debug.log
 
 # Laravel / Symfony / Rails / Django
-storage/logs/
-log/
-logs/
+/storage/logs/
+/log/
+/logs/
 
 # ----------------------------------------------------------------------
 # Nix

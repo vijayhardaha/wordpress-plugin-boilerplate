@@ -17,7 +17,7 @@
     "lint:fix": "bun run eslint:fix && bun run stylelint:fix && bun run phplint:fix",
     "makepot": "bin/makepot.sh",
     "zip": "bin/build.sh",
-    "build:zip": "bun run format && bun run lint && bun run makepot && bun run zip"
+    "build:zip": "bun run build && bun run format && bun run lint && bun run makepot && bun run zip"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"

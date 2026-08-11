@@ -11,13 +11,7 @@ This repository is a WordPress plugin boilerplate for building a plugin with:
 
 ## Rules First
 
-Before making changes, read and follow project rules in `.rules`:
-
-- [.rules/common.md](.rules/common.md)
-- [.rules/javascript.md](.rules/javascript.md)
-- [.rules/wordpress.md](.rules/wordpress.md)
-
-Note: these are symlinks to shared global rule files and are intended to be the primary policy source for this repo.
+Before making changes, follow project conventions documented in this file.
 
 ## High-Level Architecture
 
@@ -68,8 +62,7 @@ Note: these are symlinks to shared global rule files and are intended to be the 
 
 ## Agent Workflow Expectations
 
-1. Read `.rules/*` first.
-2. Identify whether change is runtime PHP, admin UI, frontend UI, or build tooling.
-3. Make minimal targeted edits.
-4. Run relevant lint/build checks for touched areas.
-5. Summarize changed files and any follow-up required.
+1. Identify whether change is runtime PHP, admin UI, frontend UI, or build tooling.
+2. Make minimal targeted edits.
+3. Run relevant lint/build checks for touched areas.
+4. Summarize changed files and any follow-up required.
